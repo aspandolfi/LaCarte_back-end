@@ -9,10 +9,5 @@
     ],
     "exclude": [
       "node_modules"
-    ],
-    "gulp-typescript":{
-        "target": "es6",
-        "module": "commonjs",
-        "outDir": "dist"
-    }
+    ]
   }
