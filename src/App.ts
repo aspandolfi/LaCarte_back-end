@@ -3,6 +3,9 @@ import * as express from 'express';
 import * as logger from 'morgan';
 import * as bodyParser from 'body-parser';
 import HeroRouter from './routes/HeroRouter';
+import "reflect-metadata";
+import {createConnection} from "typeorm";
+import {Photo} from "./entity/Photo";
 
 // Creates and configures an ExpressJS web server.
 class App {
@@ -41,5 +44,31 @@ class App {
   }
 
 }
+  createConnection({
+      type: "postgres",
+      host: "localhost",
+      port: 5432,
+      username: "postgres",
+      password: "123456",
+      database: "test",
+      entities: [
+        __dirname + "/entity/*.js"
+      ],
+      autoSchemaSync: true,
+  }).then(connection => {
+      // Here you can start to work with your entities
+      let photo = new Photo();
+      photo.name = "Me and Bears";
+      photo.description = "I am near polar bears";
+      photo.filename = "photo-with-bears.jpg";
+      photo.views = 1;
+      photo.isPublished = true;
+  
+      return connection.manager
+        .save(photo)
+        .then(photo => {
+            console.log("Photo has been saved");
+        });
+  }).catch(error => console.log(error));
 
 export default new App().express;
