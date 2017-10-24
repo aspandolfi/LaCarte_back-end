@@ -2,7 +2,7 @@
   "name": "lacarte",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/bin/www.js",
+  "main": "www.js",
   "scripts": {
     "start": "node  dist/bin/www.js"
   },
