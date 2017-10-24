@@ -1,0 +1,11 @@
+{
+  "watch": [
+    "src/"
+  ],
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "ignore": [
+    ".e2e-spec.ts"
+  ]
+}
