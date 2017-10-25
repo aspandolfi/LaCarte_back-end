@@ -9,7 +9,11 @@ import { ResponseData } from "../response-data";
 
 @Service()
 export class CardapioService implements IServiceBase<Cardapio> {
-  constructor(@OrmRepository(Cardapio) private repository: Repository<Cardapio>) {}
+  constructor(
+    @OrmRepository(Cardapio) private repository: Repository<Cardapio>
+  ) {}
+
+  private restauranteRepository: Repository<Restaurante>;
 
   public create(props: Cardapio, ...params: any[]): Promise<ResponseData> {
     let idRestaurante = params[0];
@@ -22,14 +26,14 @@ export class CardapioService implements IServiceBase<Cardapio> {
         responseData.status = false;
         responseData.objeto = props;
       } else {
-        // let restaurante: Restaurante;
-        // this.restauranteRepository
-        //   .findOneById(idRestaurante)
-        //   .then(res => (restaurante = res))
-        //   .catch(err => {
-        //     responseData.mensagens.push(err);
-        //     responseData.status = false;
-        //   });
+        let restaurante: Restaurante;
+        this.restauranteRepository
+          .findOneById(idRestaurante)
+          .then(res => (restaurante = res))
+          .catch(err => {
+            responseData.mensagens.push(err);
+            responseData.status = false;
+          });
 
         //verifica se não ocorreu erro ao buscar o restaurante
         if (responseData.mensagens.length == 0) {
