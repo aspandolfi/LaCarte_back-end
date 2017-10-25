@@ -1,3 +1,4 @@
+import { PedidoController } from './../controllers/pedido/pedido.controller';
 import { urlencoded } from 'body-parser';
 import * as express from 'express';
 import * as helmet from 'helmet';
@@ -26,7 +27,8 @@ config
 const app: express.Application = useExpressServer(config, {
   controllers: [
     UserController,
-    CardapioController
+    CardapioController,
+    PedidoController
   ],
   authorizationChecker: async (action: Action, roles: string[]) => {
 

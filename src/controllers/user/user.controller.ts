@@ -1,3 +1,4 @@
+import * as stream from 'stream';
 import { plainToClass } from "class-transformer";
 import {
   Body,
@@ -37,7 +38,7 @@ export class UserController {
   }
 
   @Get()
-  public httpGetAll(): Promise<User[]> {
+  public httpGetAll(): Promise<User[] | string> {
     return this.userService.readAll();
   }
 

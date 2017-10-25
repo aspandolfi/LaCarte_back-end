@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const pedido_controller_1 = require("./../controllers/pedido/pedido.controller");
 const body_parser_1 = require("body-parser");
 const express = require("express");
 const helmet = require("helmet");
@@ -31,7 +32,8 @@ config
 const app = routing_controllers_1.useExpressServer(config, {
     controllers: [
         controllers_1.UserController,
-        controllers_1.CardapioController
+        controllers_1.CardapioController,
+        pedido_controller_1.PedidoController
     ],
     authorizationChecker: (action, roles) => __awaiter(this, void 0, void 0, function* () {
         const token = action.request.headers["authorization"];

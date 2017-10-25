@@ -9,9 +9,7 @@ import { ResponseData } from "../response-data";
 
 @Service()
 export class CardapioService implements IServiceBase<Cardapio> {
-  @OrmRepository(Cardapio) repository: Repository<Cardapio>;
-  @OrmRepository(Restaurante)
-  private restauranteRepository: Repository<Restaurante>;
+  constructor(@OrmRepository(Cardapio) private repository: Repository<Cardapio>) {}
 
   public create(props: Cardapio, ...params: any[]): Promise<ResponseData> {
     let idRestaurante = params[0];
@@ -24,19 +22,19 @@ export class CardapioService implements IServiceBase<Cardapio> {
         responseData.status = false;
         responseData.objeto = props;
       } else {
-        let restaurante: Restaurante;
-        this.restauranteRepository
-          .findOneById(idRestaurante)
-          .then(res => (restaurante = res))
-          .catch(err => {
-            responseData.mensagens.push(err);
-            responseData.status = false;
-          });
+        // let restaurante: Restaurante;
+        // this.restauranteRepository
+        //   .findOneById(idRestaurante)
+        //   .then(res => (restaurante = res))
+        //   .catch(err => {
+        //     responseData.mensagens.push(err);
+        //     responseData.status = false;
+        //   });
 
         //verifica se não ocorreu erro ao buscar o restaurante
         if (responseData.mensagens.length == 0) {
           responseData.mensagens.push("OK!");
-          props.restaurante = restaurante;
+          // props.restaurante = restaurante;
           responseData.objeto = this.repository.persist(props);
         }
       }
@@ -66,7 +64,7 @@ export class CardapioService implements IServiceBase<Cardapio> {
     this.readOne(id).then((res: Cardapio) => (cardapio = res));
     return this.repository.remove(cardapio);
   }
-  public readAll(): Promise<Cardapio[]> {
+  readAll(): Promise<Cardapio[]> {
     return this.repository.find();
   }
 }

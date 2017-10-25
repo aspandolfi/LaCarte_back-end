@@ -1,21 +1,29 @@
+import * as stream from 'stream';
 import { plainToClass } from "class-transformer";
 import {
   Body,
-  Param,
+  Get,
   HttpCode,
   JsonController,
+  Param,
   Post,
-  Get,
   UseBefore
 } from "routing-controllers";
 import { Inject } from "typedi";
 import { ICardapio, Cardapio, CardapioService } from "../../entities/cardapio";
-import Auth from "../../config/passport";
+// import Auth from "../../config/passport";
 
-@UseBefore(() => Auth.authenticate())
+
+let bcrypt = require("bcrypt");
+let compression = require("compression");
+const saltRounds = 0;
+const myPlaintextPassword = "123"; //minha senha
+const someOtherPlaintextPassword = '1234'; //senha a ser testada
+
+// @UseBefore(() => Auth.authenticate())
 @JsonController("/cardapio")
 export class CardapioController {
-  @Inject() private cardapioService: CardapioService;
+  @Inject() private userService: CardapioService;
 
   @Post()
   @HttpCode(201)
@@ -24,18 +32,25 @@ export class CardapioController {
       required: true
     })
     props: ICardapio
-  ): Promise<Cardapio | any> {
+  ): Promise<any> {
     let cardapio = plainToClass(Cardapio, props);
-    return this.cardapioService.create(cardapio);
+    return this.userService.create(cardapio);
   }
 
   @Get()
-  public httpGetAll(): Promise<Cardapio[]> {
-    return this.cardapioService.readAll();
+  public httpGetAll(): Promise<Cardapio[] | string> {
+    return this.userService.readAll();
   }
 
   @Get("/:id")
+  @UseBefore(compression())
   public httpGet(@Param("id") id: number): Promise<any> {
-    return this.cardapioService.readOne(id);
+    //testando criptografia na senha
+    var salt = bcrypt.genSaltSync(saltRounds);
+    var hash = bcrypt.hashSync(myPlaintextPassword, salt);
+    console.log(hash)
+    console.log(bcrypt.compareSync(myPlaintextPassword, hash));
+    console.log(bcrypt.compareSync(someOtherPlaintextPassword, hash));
+    return this.userService.readOne(id);
   }
 }

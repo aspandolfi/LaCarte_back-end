@@ -50,6 +50,6 @@ __decorate([
     __metadata("design:type", Array)
 ], Cardapio.prototype, "produtos", void 0);
 Cardapio = __decorate([
-    typeorm_1.Entity("cardapios")
+    typeorm_1.Entity()
 ], Cardapio);
 exports.Cardapio = Cardapio;

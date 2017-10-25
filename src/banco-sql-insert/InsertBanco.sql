@@ -66,14 +66,14 @@ INSERT INTO public.produto_adicionais(
             valor, "createdAt", "updatedAt", version, produto, adicionais)
     VALUES (2.00, '12-12-2017' , '12-12-2017', 1, 1, 1);
 
-INSERT INTO public.cardapios(
+INSERT INTO public.cardapio(
             nome, descricao, ativo,  "createdAt", "updatedAt", version,
             restaurante)
     VALUES ('cardapio da casa', 'todos os produtos', true, '12-12-2017' , '12-12-2017', 1,
             1);
 
-INSERT INTO public.produto_cardapios_cardapios_id(
-            "produtoId", "cardapiosId")
+INSERT INTO public.produto_cardapios_cardapio_id(
+            "produtoId", "cardapioId")
     VALUES (1, 1);
 
 INSERT INTO public.item_pedido(
