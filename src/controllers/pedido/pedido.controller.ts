@@ -12,7 +12,7 @@ import { Inject } from "typedi";
 import { IPedido, Pedido, PedidoService } from "../../entities/pedido";
 import Auth from "../../config/passport";
 
-@UseBefore(() => Auth.authenticate())
+// @UseBefore(() => Auth.authenticate())
 @JsonController("/pedido")
 export class PedidoController {
   @Inject() private pedidoService: PedidoService;
