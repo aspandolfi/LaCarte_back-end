@@ -1,0 +1,1 @@
+export * from './produto-adicionais.controller';
