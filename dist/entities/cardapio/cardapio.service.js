@@ -34,14 +34,14 @@ let CardapioService = class CardapioService {
                 responseData.objeto = props;
             }
             else {
-                let restaurante;
-                this.restauranteRepository
-                    .findOneById(idRestaurante)
-                    .then(res => (restaurante = res))
-                    .catch(err => {
-                    responseData.mensagens.push(err);
-                    responseData.status = false;
-                });
+                // let restaurante: Restaurante;
+                // this.restauranteRepository
+                //   .findOneById(idRestaurante)
+                //   .then(res => (restaurante = res))
+                //   .catch(err => {
+                //     responseData.mensagens.push(err);
+                //     responseData.status = false;
+                //   });
                 //verifica se não ocorreu erro ao buscar o restaurante
                 if (responseData.mensagens.length == 0) {
                     responseData.mensagens.push("OK!");

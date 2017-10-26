@@ -23,7 +23,7 @@ const someOtherPlaintextPassword = '1234'; //senha a ser testada
 // @UseBefore(() => Auth.authenticate())
 @JsonController("/cardapio")
 export class CardapioController {
-  @Inject() private userService: CardapioService;
+  @Inject() private cardapioService: CardapioService;
 
   @Post()
   @HttpCode(201)
@@ -34,12 +34,12 @@ export class CardapioController {
     props: ICardapio
   ): Promise<any> {
     let cardapio = plainToClass(Cardapio, props);
-    return this.userService.create(cardapio);
+    return this.cardapioService.create(cardapio);
   }
 
   @Get()
   public httpGetAll(): Promise<Cardapio[] | string> {
-    return this.userService.readAll();
+    return this.cardapioService.readAll();
   }
 
   @Get("/:id")
@@ -51,6 +51,6 @@ export class CardapioController {
     console.log(hash)
     console.log(bcrypt.compareSync(myPlaintextPassword, hash));
     console.log(bcrypt.compareSync(someOtherPlaintextPassword, hash));
-    return this.userService.readOne(id);
+    return this.cardapioService.readOne(id);
   }
 }

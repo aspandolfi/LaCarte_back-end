@@ -26,10 +26,10 @@ const someOtherPlaintextPassword = '1234'; //senha a ser testada
 let CardapioController = class CardapioController {
     httpPost(props) {
         let cardapio = class_transformer_1.plainToClass(cardapio_1.Cardapio, props);
-        return this.userService.create(cardapio);
+        return this.cardapioService.create(cardapio);
     }
     httpGetAll() {
-        return this.userService.readAll();
+        return this.cardapioService.readAll();
     }
     httpGet(id) {
         //testando criptografia na senha
@@ -38,13 +38,13 @@ let CardapioController = class CardapioController {
         console.log(hash);
         console.log(bcrypt.compareSync(myPlaintextPassword, hash));
         console.log(bcrypt.compareSync(someOtherPlaintextPassword, hash));
-        return this.userService.readOne(id);
+        return this.cardapioService.readOne(id);
     }
 };
 __decorate([
     typedi_1.Inject(),
     __metadata("design:type", cardapio_1.CardapioService)
-], CardapioController.prototype, "userService", void 0);
+], CardapioController.prototype, "cardapioService", void 0);
 __decorate([
     routing_controllers_1.Post(),
     routing_controllers_1.HttpCode(201),
