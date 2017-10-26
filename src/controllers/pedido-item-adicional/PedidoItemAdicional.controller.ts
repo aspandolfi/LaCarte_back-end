@@ -13,9 +13,9 @@ import {IitemPedidoAdicional,  ItemPedidoAdicional ,  ItemPedidoAdicionalService
 import Auth from "../../config/passport";
 
 // @UseBefore(() => Auth.authenticate())
-@JsonController("/ItemPedidoAdicional ")
-export class ItemPedidoAdicionalssController {
-  @Inject() private  ItemPedidoAdicionalService: ItemPedidoAdicionalService;
+@JsonController("/pedidoadicionais")
+export class PedidoItemAdicionalController {
+  @Inject() private  itemPedidoAdicionalService: ItemPedidoAdicionalService;
 
   @Post()
   @HttpCode(201)
@@ -26,16 +26,16 @@ export class ItemPedidoAdicionalssController {
     props: IitemPedidoAdicional
   ): Promise<ItemPedidoAdicional | any> {
     let itemPedidoAdicional = plainToClass(ItemPedidoAdicional, props);
-    return this.ItemPedidoAdicionalService.create(itemPedidoAdicional);
+    return this.itemPedidoAdicionalService.create(itemPedidoAdicional);
   }
 
   @Get()
   public httpGetAll(): Promise<ItemPedidoAdicional[]> {
-    return this.ItemPedidoAdicionalService.readAll();
+    return this.itemPedidoAdicionalService.readAll();
   }
 
   @Get("/:id")
   public httpGet(@Param("id") id: number): Promise<any> {
-    return this.ItemPedidoAdicionalService.readOne(id);
+    return this.itemPedidoAdicionalService.readOne(id);
   }
 }

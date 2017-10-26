@@ -20,19 +20,19 @@ const restaurante_1 = require("../../entities/restaurante");
 let RestauranteController = class RestauranteController {
     httpPost(props) {
         let restaurante = class_transformer_1.plainToClass(restaurante_1.Restaurante, props);
-        return this.RestauranteService.create(restaurante);
+        return this.restauranteService.create(restaurante);
     }
     httpGetAll() {
-        return this.RestauranteService.readAll();
+        return this.restauranteService.readAll();
     }
     httpGet(id) {
-        return this.RestauranteService.readOne(id);
+        return this.restauranteService.readOne(id);
     }
 };
 __decorate([
     typedi_1.Inject(),
     __metadata("design:type", restaurante_1.RestauranteService)
-], RestauranteController.prototype, "RestauranteService", void 0);
+], RestauranteController.prototype, "restauranteService", void 0);
 __decorate([
     routing_controllers_1.Post(),
     routing_controllers_1.HttpCode(201),
@@ -57,6 +57,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], RestauranteController.prototype, "httpGet", null);
 RestauranteController = __decorate([
-    routing_controllers_1.JsonController("/tipoProduto")
+    routing_controllers_1.JsonController("/restaurante")
 ], RestauranteController);
 exports.RestauranteController = RestauranteController;

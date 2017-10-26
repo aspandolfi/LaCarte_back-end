@@ -56,8 +56,7 @@ export class ProdutoService implements IServiceBase<Produto> {
     }
     return result;
   }
-  readAll(...params: any[]): Promise<Produto[]> {
-    let idCardapio = params[0];
-    return this.repository.find({ cardapio: idCardapio });
+  readAll(): Promise<Produto[]> {
+    return this.repository.find();
   }
 }

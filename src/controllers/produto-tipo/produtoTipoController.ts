@@ -13,9 +13,9 @@ import {ITipoProduto, TipoProduto , TipoProdutoService } from "../../entities/pr
 import Auth from "../../config/passport";
 
 // @UseBefore(() => Auth.authenticate())
-@JsonController("/tipoProduto")
-export class TipoProdutooController {
-  @Inject() private  TipoProdutoService:  TipoProdutoService;
+@JsonController("/produtotipo")
+export class ProdutoTipoController {
+  @Inject() private  tipoProdutoService:  TipoProdutoService;
 
   @Post()
   @HttpCode(201)
@@ -26,16 +26,16 @@ export class TipoProdutooController {
     props: ITipoProduto
   ): Promise<TipoProduto | any> {
     let tipoProduto = plainToClass(TipoProduto, props);
-    return this.TipoProdutoService.create(tipoProduto);
+    return this.tipoProdutoService.create(tipoProduto);
   }
 
   @Get()
   public httpGetAll(): Promise<TipoProduto[]> {
-    return this.TipoProdutoService.readAll();
+    return this.tipoProdutoService.readAll();
   }
 
   @Get("/:id")
   public httpGet(@Param("id") id: number): Promise<any> {
-    return this.TipoProdutoService.readOne(id);
+    return this.tipoProdutoService.readOne(id);
   }
 }

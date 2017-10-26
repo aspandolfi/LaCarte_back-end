@@ -16,7 +16,7 @@ const class_transformer_1 = require("class-transformer");
 const routing_controllers_1 = require("routing-controllers");
 const typedi_1 = require("typedi");
 const mesa_1 = require("../../entities/mesa");
-const passport_1 = require("../../config/passport");
+// @UseBefore(() => Auth.authenticate())
 let MesaController = class MesaController {
     httpPost(props) {
         let mesa = class_transformer_1.plainToClass(mesa_1.Mesa, props);
@@ -57,7 +57,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], MesaController.prototype, "httpGet", null);
 MesaController = __decorate([
-    routing_controllers_1.UseBefore(() => passport_1.default.authenticate()),
     routing_controllers_1.JsonController("/mesa")
 ], MesaController);
 exports.MesaController = MesaController;

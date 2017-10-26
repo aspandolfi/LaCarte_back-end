@@ -12,7 +12,7 @@ import { Inject } from "typedi";
 import { IMesa, Mesa, MesaService } from "../../entities/mesa";
 import Auth from "../../config/passport";
 
-@UseBefore(() => Auth.authenticate())
+// @UseBefore(() => Auth.authenticate())
 @JsonController("/mesa")
 export class MesaController {
   @Inject() private mesaService: MesaService;

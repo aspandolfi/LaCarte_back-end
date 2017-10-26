@@ -12,7 +12,7 @@ import { Inject } from "typedi";
 import { ICliente, Cliente, ClienteService } from "../../entities/cliente";
 import Auth from "../../config/passport";
 
-@UseBefore(() => Auth.authenticate())
+// @UseBefore(() => Auth.authenticate())
 @JsonController("/cliente")
 export class ClienteController {
   @Inject() private clienteService: ClienteService;

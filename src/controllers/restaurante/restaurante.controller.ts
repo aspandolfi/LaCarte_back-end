@@ -13,9 +13,9 @@ import {IRestaurante, Restaurante , RestauranteService } from "../../entities/re
 import Auth from "../../config/passport";
 
 // @UseBefore(() => Auth.authenticate())
-@JsonController("/tipoProduto")
+@JsonController("/restaurante")
 export class RestauranteController {
-  @Inject() private  RestauranteService:  RestauranteService;
+  @Inject() private  restauranteService:  RestauranteService;
 
   @Post()
   @HttpCode(201)
@@ -26,16 +26,16 @@ export class RestauranteController {
     props: IRestaurante
   ): Promise<Restaurante | any> {
     let restaurante = plainToClass(Restaurante, props);
-    return this.RestauranteService.create(restaurante);
+    return this.restauranteService.create(restaurante);
   }
 
   @Get()
   public httpGetAll(): Promise<Restaurante[]> {
-    return this.RestauranteService.readAll();
+    return this.restauranteService.readAll();
   }
 
   @Get("/:id")
   public httpGet(@Param("id") id: number): Promise<any> {
-    return this.RestauranteService.readOne(id);
+    return this.restauranteService.readOne(id);
   }
 }

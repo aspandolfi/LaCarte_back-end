@@ -8,8 +8,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const restaurante_model_1 = require("./../restaurante/restaurante.model");
 const mesa_model_1 = require("./mesa.model");
 const typedi_1 = require("typedi");
 const typeorm_typedi_extensions_1 = require("typeorm-typedi-extensions");
@@ -17,6 +19,9 @@ const typeorm_1 = require("typeorm");
 const class_validator_1 = require("class-validator");
 const response_data_1 = require("../response-data");
 let MesaService = class MesaService {
+    constructor(mesaRepository) {
+        this.mesaRepository = mesaRepository;
+    }
     create(props, ...params) {
         let idRestaurante = params[0];
         let responseData = new response_data_1.ResponseData();
@@ -48,17 +53,7 @@ let MesaService = class MesaService {
         });
     }
     readOne(id) {
-        let result = {};
-        try {
-            result = this.mesaRepository
-                .findOneById(id)
-                .then()
-                .catch(res => (result = res));
-        }
-        catch (_a) {
-            // console.log(Error);
-        }
-        return result;
+        return this.mesaRepository.findOneById(id);
     }
     update(props) {
         return this.mesaRepository.persist(props);
@@ -79,20 +74,13 @@ let MesaService = class MesaService {
         }
         return result;
     }
-    readAll(...params) {
-        let idRestaurante = params[0];
-        return this.mesaRepository.find({ cardapio: idRestaurante });
+    readAll() {
+        return this.mesaRepository.find();
     }
 };
-__decorate([
-    typeorm_typedi_extensions_1.OrmRepository(mesa_model_1.Mesa),
-    __metadata("design:type", typeorm_1.Repository)
-], MesaService.prototype, "mesaRepository", void 0);
-__decorate([
-    typeorm_typedi_extensions_1.OrmRepository(restaurante_model_1.Restaurante),
-    __metadata("design:type", typeorm_1.Repository)
-], MesaService.prototype, "restauranteRepository", void 0);
 MesaService = __decorate([
-    typedi_1.Service()
+    typedi_1.Service(),
+    __param(0, typeorm_typedi_extensions_1.OrmRepository(mesa_model_1.Mesa)),
+    __metadata("design:paramtypes", [typeorm_1.Repository])
 ], MesaService);
 exports.MesaService = MesaService;

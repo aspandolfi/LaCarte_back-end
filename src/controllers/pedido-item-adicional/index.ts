@@ -1,1 +1,1 @@
-export * from './pedido-item-adicional.controller';
+export * from './PedidoItemAdicional.controller';

@@ -13,9 +13,9 @@ import { IitemPedido ,  ItemPedido ,  ItemPedidoService  } from "../../entities/
 import Auth from "../../config/passport";
 
 // @UseBefore(() => Auth.authenticate())
-@JsonController("/itemPedido")
-export class PedidoController {
-  @Inject() private  ItemPedidoService:  ItemPedidoService;
+@JsonController("/pedidoitem")
+export class pedidoItem {
+  @Inject() private  itemPedidoService:  ItemPedidoService;
 
   @Post()
   @HttpCode(201)
@@ -26,16 +26,16 @@ export class PedidoController {
     props: IitemPedido
   ): Promise<IitemPedido | any> {
     let itemPedido = plainToClass(ItemPedido, props);
-    return this.ItemPedidoService.create(itemPedido);
+    return this.itemPedidoService.create(itemPedido);
   }
 
   @Get()
   public httpGetAll(): Promise<ItemPedido[]> {
-    return this.ItemPedidoService.readAll();
+    return this.itemPedidoService.readAll();
   }
 
   @Get("/:id")
   public httpGet(@Param("id") id: number): Promise<any> {
-    return this.ItemPedidoService.readOne(id);
+    return this.itemPedidoService.readOne(id);
   }
 }

@@ -1,1 +1,1 @@
-export * from './pedido-item.controller';
+export * from './pedidoItem.controller';

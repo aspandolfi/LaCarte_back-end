@@ -10,7 +10,7 @@ import { ResponseData } from "../response-data";
 export class ClienteService implements IServiceBase<Cliente> {
     @OrmRepository(Cliente) private repository: Repository<Cliente>;
 
-    create(props: Cliente, ...params: any[]): Promise<ResponseData> {
+    create(props: Cliente, ...params: any[]): Promise<Cliente | ResponseData> {
         let responseData = new ResponseData();
         return validate(props).then(errors => {
             if (errors.length > 0) {
@@ -26,15 +26,10 @@ export class ClienteService implements IServiceBase<Cliente> {
             return responseData;
         });
     }
-    readOne(id: number): Promise<ResponseData> {
+    readOne(id: number): Promise<Cliente> {
         let result = new ResponseData();
         return this.repository
             .findOneById(id)
-            .then(res => {
-                result.objeto = res;
-            })
-            .catch(res => (result.mensagens = res));
-
     }
     update(props: Cliente): Promise<Cliente> {
         return this.repository.persist(props);

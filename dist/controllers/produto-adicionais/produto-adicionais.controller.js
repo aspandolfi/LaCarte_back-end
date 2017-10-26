@@ -20,19 +20,19 @@ const produto_adicionais_1 = require("../../entities/produto-adicionais");
 let ProdutoAdicionaisController = class ProdutoAdicionaisController {
     httpPost(props) {
         let produtoAdicionais = class_transformer_1.plainToClass(produto_adicionais_1.ProdutoAdicionais, props);
-        return this.ProdutoAdicionaisService.create(produtoAdicionais);
+        return this.produtoAdicionaisService.create(produtoAdicionais);
     }
     httpGetAll() {
-        return this.ProdutoAdicionaisService.readAll();
+        return this.produtoAdicionaisService.readAll();
     }
     httpGet(id) {
-        return this.ProdutoAdicionaisService.readOne(id);
+        return this.produtoAdicionaisService.readOne(id);
     }
 };
 __decorate([
     typedi_1.Inject(),
     __metadata("design:type", produto_adicionais_1.ProdutoAdicionaisService)
-], ProdutoAdicionaisController.prototype, "ProdutoAdicionaisService", void 0);
+], ProdutoAdicionaisController.prototype, "produtoAdicionaisService", void 0);
 __decorate([
     routing_controllers_1.Post(),
     routing_controllers_1.HttpCode(201),
@@ -57,6 +57,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProdutoAdicionaisController.prototype, "httpGet", null);
 ProdutoAdicionaisController = __decorate([
-    routing_controllers_1.JsonController("/ProdutoAdicionais")
+    routing_controllers_1.JsonController("/produtoadicionais")
 ], ProdutoAdicionaisController);
 exports.ProdutoAdicionaisController = ProdutoAdicionaisController;

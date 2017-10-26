@@ -15,24 +15,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const class_transformer_1 = require("class-transformer");
 const routing_controllers_1 = require("routing-controllers");
 const typedi_1 = require("typedi");
-const produto_1 = require("../../entities/produto");
+const produto_tipo_1 = require("../../entities/produto-tipo");
 // @UseBefore(() => Auth.authenticate())
-let ProdutoController = class ProdutoController {
+let ProdutoTipoController = class ProdutoTipoController {
     httpPost(props) {
-        let produto = class_transformer_1.plainToClass(produto_1.Produto, props);
-        return this.produtoService.create(produto);
+        let tipoProduto = class_transformer_1.plainToClass(produto_tipo_1.TipoProduto, props);
+        return this.tipoProdutoService.create(tipoProduto);
     }
     httpGetAll() {
-        return this.produtoService.readAll();
+        return this.tipoProdutoService.readAll();
     }
     httpGet(id) {
-        return this.produtoService.readOne(id);
+        return this.tipoProdutoService.readOne(id);
     }
 };
 __decorate([
     typedi_1.Inject(),
-    __metadata("design:type", produto_1.ProdutoService)
-], ProdutoController.prototype, "produtoService", void 0);
+    __metadata("design:type", produto_tipo_1.TipoProdutoService)
+], ProdutoTipoController.prototype, "tipoProdutoService", void 0);
 __decorate([
     routing_controllers_1.Post(),
     routing_controllers_1.HttpCode(201),
@@ -42,21 +42,21 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
-], ProdutoController.prototype, "httpPost", null);
+], ProdutoTipoController.prototype, "httpPost", null);
 __decorate([
     routing_controllers_1.Get(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
-], ProdutoController.prototype, "httpGetAll", null);
+], ProdutoTipoController.prototype, "httpGetAll", null);
 __decorate([
     routing_controllers_1.Get("/:id"),
     __param(0, routing_controllers_1.Param("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
-], ProdutoController.prototype, "httpGet", null);
-ProdutoController = __decorate([
-    routing_controllers_1.JsonController("/produto")
-], ProdutoController);
-exports.ProdutoController = ProdutoController;
+], ProdutoTipoController.prototype, "httpGet", null);
+ProdutoTipoController = __decorate([
+    routing_controllers_1.JsonController("/produtotipo")
+], ProdutoTipoController);
+exports.ProdutoTipoController = ProdutoTipoController;

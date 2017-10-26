@@ -13,9 +13,9 @@ import {IProdutoAdicionais, ProdutoAdicionais , ProdutoAdicionaisService } from 
 import Auth from "../../config/passport";
 
 // @UseBefore(() => Auth.authenticate())
-@JsonController("/ProdutoAdicionais")
+@JsonController("/produtoadicionais")
 export class ProdutoAdicionaisController {
-  @Inject() private  ProdutoAdicionaisService:  ProdutoAdicionaisService;
+  @Inject() private  produtoAdicionaisService:  ProdutoAdicionaisService;
 
   @Post()
   @HttpCode(201)
@@ -26,16 +26,16 @@ export class ProdutoAdicionaisController {
     props: IProdutoAdicionais
   ): Promise<ProdutoAdicionais | any> {
     let produtoAdicionais = plainToClass(ProdutoAdicionais, props);
-    return this.ProdutoAdicionaisService.create(produtoAdicionais);
+    return this.produtoAdicionaisService.create(produtoAdicionais);
   }
 
   @Get()
   public httpGetAll(): Promise<ProdutoAdicionais[]> {
-    return this.ProdutoAdicionaisService.readAll();
+    return this.produtoAdicionaisService.readAll();
   }
 
   @Get("/:id")
   public httpGet(@Param("id") id: number): Promise<any> {
-    return this.ProdutoAdicionaisService.readOne(id);
+    return this.produtoAdicionaisService.readOne(id);
   }
 }
