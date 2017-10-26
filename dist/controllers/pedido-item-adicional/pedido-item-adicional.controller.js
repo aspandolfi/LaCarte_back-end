@@ -15,23 +15,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const class_transformer_1 = require("class-transformer");
 const routing_controllers_1 = require("routing-controllers");
 const typedi_1 = require("typedi");
-const adicional_1 = require("../../entities/adicional");
-let AdicionalController = class AdicionalController {
+const pedido_item_adicional_1 = require("../../entities/pedido-item-adicional");
+// @UseBefore(() => Auth.authenticate())
+let ItemPedidoAdicionalssController = class ItemPedidoAdicionalssController {
     httpPost(props) {
-        let adicional = class_transformer_1.plainToClass(adicional_1.Adicional, props);
-        return this.adicionalService.create(adicional);
+        let itemPedidoAdicional = class_transformer_1.plainToClass(pedido_item_adicional_1.ItemPedidoAdicional, props);
+        return this.ItemPedidoAdicionalService.create(itemPedidoAdicional);
     }
     httpGetAll() {
-        return this.adicionalService.readAll();
+        return this.ItemPedidoAdicionalService.readAll();
     }
     httpGet(id) {
-        return this.adicionalService.readOne(id);
+        return this.ItemPedidoAdicionalService.readOne(id);
     }
 };
 __decorate([
     typedi_1.Inject(),
-    __metadata("design:type", adicional_1.AdicionalService)
-], AdicionalController.prototype, "adicionalService", void 0);
+    __metadata("design:type", pedido_item_adicional_1.ItemPedidoAdicionalService)
+], ItemPedidoAdicionalssController.prototype, "ItemPedidoAdicionalService", void 0);
 __decorate([
     routing_controllers_1.Post(),
     routing_controllers_1.HttpCode(201),
@@ -41,21 +42,21 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
-], AdicionalController.prototype, "httpPost", null);
+], ItemPedidoAdicionalssController.prototype, "httpPost", null);
 __decorate([
     routing_controllers_1.Get(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
-], AdicionalController.prototype, "httpGetAll", null);
+], ItemPedidoAdicionalssController.prototype, "httpGetAll", null);
 __decorate([
     routing_controllers_1.Get("/:id"),
     __param(0, routing_controllers_1.Param("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
-], AdicionalController.prototype, "httpGet", null);
-AdicionalController = __decorate([
-    routing_controllers_1.JsonController("/adicional")
-], AdicionalController);
-exports.AdicionalController = AdicionalController;
+], ItemPedidoAdicionalssController.prototype, "httpGet", null);
+ItemPedidoAdicionalssController = __decorate([
+    routing_controllers_1.JsonController("/ItemPedidoAdicional ")
+], ItemPedidoAdicionalssController);
+exports.ItemPedidoAdicionalssController = ItemPedidoAdicionalssController;

@@ -1,3 +1,3 @@
 export * from './produto.interface';
 export * from './produto.model';
-// export * from './produto.service';
+export * from './produto.service';

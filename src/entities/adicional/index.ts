@@ -1,3 +1,3 @@
-// export * from './adicional.interface';
+export * from './adicional.interface';
 export * from './adicional.model';
-//export * from './adicional.service';
+export * from './adicional.service';

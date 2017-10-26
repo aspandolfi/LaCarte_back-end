@@ -4,4 +4,4 @@ function __export(m) {
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./produto-adicionais.model"));
-// export * from './produto-adicionais.service';
+__export(require("./produto-adicionais.service"));
