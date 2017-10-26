@@ -1,3 +1,4 @@
+import { config } from "./../../config/config";
 import { IServiceBase } from "../base-entity";
 import { Service } from "typedi";
 import { Repository } from "typeorm";
@@ -40,7 +41,7 @@ export class UserService implements IServiceBase<User> {
 
   public readOneByEmail(email: string): Promise<User | ResponseData> {
     let promise = new Promise<User | ResponseData>((resolve, reject) => {
-      resolve(this.repository.findOne({email: email}));
+      resolve(this.repository.findOne({ email: email }));
       let response = new ResponseData();
       response.mensagens.push("email não encontrado.");
       response.status = false;
@@ -61,10 +62,11 @@ export class UserService implements IServiceBase<User> {
   }
 
   public readAll(): Promise<User[]> {
-    return this.repository.find();
+    return this.repository
+      .find();
   }
 
   findOneByToken(token: string): Promise<User> {
     return this.repository.findOne({ token: token });
-}
+  }
 }

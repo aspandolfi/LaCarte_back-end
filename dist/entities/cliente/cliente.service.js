@@ -36,11 +36,7 @@ let ClienteService = class ClienteService {
     readOne(id) {
         let result = new response_data_1.ResponseData();
         return this.repository
-            .findOneById(id)
-            .then(res => {
-            result.objeto = res;
-        })
-            .catch(res => (result.mensagens = res));
+            .findOneById(id);
     }
     update(props) {
         return this.repository.persist(props);

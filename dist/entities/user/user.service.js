@@ -68,7 +68,8 @@ let UserService = class UserService {
         return this.repository.remove(user);
     }
     readAll() {
-        return this.repository.find();
+        return this.repository
+            .find();
     }
     findOneByToken(token) {
         return this.repository.findOne({ token: token });

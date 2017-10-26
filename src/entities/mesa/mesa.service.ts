@@ -9,8 +9,7 @@ import { ResponseData } from "../response-data";
 
 @Service()
 export class MesaService implements IServiceBase<Mesa> {
-  @OrmRepository(Mesa) private mesaRepository: Repository<Mesa>;
-  @OrmRepository(Restaurante)
+  constructor(@OrmRepository(Mesa) private mesaRepository: Repository<Mesa>) {}
   private restauranteRepository: Repository<Restaurante>;
 
   create(props: Mesa, ...params: any[]): Promise<ResponseData> {
@@ -45,16 +44,7 @@ export class MesaService implements IServiceBase<Mesa> {
   }
 
   readOne(id: number): Promise<Mesa> {
-    let result: any = {};
-    try {
-      result = this.mesaRepository
-        .findOneById(id)
-        .then()
-        .catch(res => (result = res));
-    } catch {
-      // console.log(Error);
-    }
-    return result;
+    return this.mesaRepository.findOneById(id);
   }
   update(props: Mesa): Promise<Mesa> {
     return this.mesaRepository.persist(props);
@@ -75,8 +65,7 @@ export class MesaService implements IServiceBase<Mesa> {
     }
     return result;
   }
-  readAll(...params: any[]): Promise<Mesa[]> {
-    let idRestaurante = params[0];
-    return this.mesaRepository.find({ cardapio: idRestaurante });
+  readAll(): Promise<Mesa[]> {
+    return this.mesaRepository.find();
   }
 }

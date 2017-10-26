@@ -64,9 +64,8 @@ let ProdutoService = class ProdutoService {
         }
         return result;
     }
-    readAll(...params) {
-        let idCardapio = params[0];
-        return this.repository.find({ cardapio: idCardapio });
+    readAll() {
+        return this.repository.find();
     }
 };
 __decorate([

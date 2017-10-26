@@ -22,7 +22,7 @@ routing_controllers_1.useContainer(typedi_1.Container);
 class_validator_1.useContainer(typedi_1.Container);
 const config = express();
 config
-    .use(morgan('dev'))
+    .use(morgan("dev"))
     .use(helmet())
     .use(passport_1.default.initialize())
     .use(body_parser_1.urlencoded({
@@ -31,7 +31,17 @@ config
 const app = routing_controllers_1.useExpressServer(config, {
     controllers: [
         controllers_1.UserController,
-        controllers_1.CardapioController
+        controllers_1.CardapioController,
+        controllers_1.PedidoController,
+        controllers_1.pedidoItem,
+        controllers_1.AdicionalController,
+        controllers_1.ClienteController,
+        controllers_1.MesaController,
+        controllers_1.PedidoItemAdicionalController,
+        controllers_1.ProdutoAdicionaisController,
+        controllers_1.ProdutoTipoController,
+        controllers_1.RestauranteController,
+        controllers_1.ProdutoController
     ],
     authorizationChecker: (action, roles) => __awaiter(this, void 0, void 0, function* () {
         const token = action.request.headers["authorization"];
@@ -42,7 +52,7 @@ const app = routing_controllers_1.useExpressServer(config, {
         //   return true;
         return false;
     }),
-    routePrefix: '/api/v1',
+    routePrefix: "/api/v1",
     validation: true
 });
 exports.app = app;

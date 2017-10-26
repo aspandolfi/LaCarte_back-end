@@ -16,7 +16,13 @@ const class_transformer_1 = require("class-transformer");
 const routing_controllers_1 = require("routing-controllers");
 const typedi_1 = require("typedi");
 const cardapio_1 = require("../../entities/cardapio");
-const passport_1 = require("../../config/passport");
+// import Auth from "../../config/passport";
+let bcrypt = require("bcrypt");
+let compression = require("compression");
+const saltRounds = 0;
+const myPlaintextPassword = "123"; //minha senha
+const someOtherPlaintextPassword = '1234'; //senha a ser testada
+// @UseBefore(() => Auth.authenticate())
 let CardapioController = class CardapioController {
     httpPost(props) {
         let cardapio = class_transformer_1.plainToClass(cardapio_1.Cardapio, props);
@@ -26,6 +32,12 @@ let CardapioController = class CardapioController {
         return this.cardapioService.readAll();
     }
     httpGet(id) {
+        //testando criptografia na senha
+        var salt = bcrypt.genSaltSync(saltRounds);
+        var hash = bcrypt.hashSync(myPlaintextPassword, salt);
+        console.log(hash);
+        console.log(bcrypt.compareSync(myPlaintextPassword, hash));
+        console.log(bcrypt.compareSync(someOtherPlaintextPassword, hash));
         return this.cardapioService.readOne(id);
     }
 };
@@ -51,13 +63,13 @@ __decorate([
 ], CardapioController.prototype, "httpGetAll", null);
 __decorate([
     routing_controllers_1.Get("/:id"),
+    routing_controllers_1.UseBefore(compression()),
     __param(0, routing_controllers_1.Param("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], CardapioController.prototype, "httpGet", null);
 CardapioController = __decorate([
-    routing_controllers_1.UseBefore(() => passport_1.default.authenticate()),
     routing_controllers_1.JsonController("/cardapio")
 ], CardapioController);
 exports.CardapioController = CardapioController;
