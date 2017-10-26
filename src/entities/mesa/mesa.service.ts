@@ -35,7 +35,7 @@ export class MesaService implements IServiceBase<Mesa> {
         //verifica se não ocorreu erro ao buscar o restaurante
         if (responseData.mensagens.length == 0) {
           responseData.mensagens.push("OK!");
-          props.restaurante = restaurante;
+          props.restaurante = idRestaurante;
           responseData.objeto = this.mesaRepository.persist(props);
         }
       }
