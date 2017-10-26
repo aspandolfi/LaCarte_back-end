@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const http = require("http");
 require("reflect-metadata");
+require("es6-shim");
 const typedi_1 = require("typedi");
 const typeorm_1 = require("typeorm");
 const config_1 = require("../config");

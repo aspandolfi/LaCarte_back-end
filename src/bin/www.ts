@@ -1,5 +1,6 @@
 import * as http from 'http';
 import 'reflect-metadata';
+import 'es6-shim';
 import { Container } from 'typedi';
 import { createConnection, useContainer } from 'typeorm';
 import { config } from '../config';

@@ -1,20 +1,23 @@
+import * as console from "console";
 import { Restaurante } from "./../restaurante/restaurante.model";
 import { Mesa } from "./mesa.model";
 import { Service } from "typedi";
 import { IServiceBase } from "../base-entity";
 import { OrmRepository } from "typeorm-typedi-extensions";
-import { Repository } from "typeorm";
+import { Repository, getRepository } from "typeorm";
 import { validate } from "class-validator";
 import { ResponseData } from "../response-data";
 
 @Service()
 export class MesaService implements IServiceBase<Mesa> {
-  constructor(@OrmRepository(Mesa) private mesaRepository: Repository<Mesa>) {}
+  constructor(@OrmRepository(Mesa) private mesaRepository: Repository<Mesa>) {
+    this.restauranteRepository = getRepository(Restaurante, "default");
+  }
   private restauranteRepository: Repository<Restaurante>;
 
   create(props: Mesa, ...params: any[]): Promise<ResponseData> {
     let idRestaurante = params[0];
-    let responseData = new ResponseData();
+    const responseData = new ResponseData();
     return validate(props).then(errors => {
       if (errors.length > 0) {
         errors.forEach(function(val) {
@@ -30,12 +33,10 @@ export class MesaService implements IServiceBase<Mesa> {
           .catch(err => {
             responseData.mensagens.push(err);
             responseData.status = false;
-          });
-
-        //verifica se não ocorreu erro ao buscar o restaurante
+          })
         if (responseData.mensagens.length == 0) {
           responseData.mensagens.push("OK!");
-          props.restaurante = restaurante;
+          props.restaurante = idRestaurante;
           responseData.objeto = this.mesaRepository.persist(props);
         }
       }
