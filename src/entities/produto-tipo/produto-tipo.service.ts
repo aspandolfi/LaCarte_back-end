@@ -7,7 +7,9 @@ import { Repository } from 'typeorm';
 @Service()
 export class TipoProdutoService implements IServiceBase<TipoProduto> {
 
-  @OrmRepository(TipoProduto) repository: Repository<TipoProduto>;
+  constructor(@OrmRepository(TipoProduto) private repository: Repository<TipoProduto>){
+
+  }
 
   create(props: TipoProduto): Promise<TipoProduto> {
     return this.repository.persist(props);

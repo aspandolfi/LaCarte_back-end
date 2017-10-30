@@ -3,7 +3,7 @@ import { IBaseEntity } from "../base-entity";
 import { Adicional } from '../index';
 
 export interface IitemPedidoAdicional extends IBaseEntity {
-    uantidade: number;
+    quantidade: number;
     itemPedido: ItemPedido;
     adicional: Adicional;
   }

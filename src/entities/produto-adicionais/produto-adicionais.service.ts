@@ -2,12 +2,18 @@ import { ProdutoAdicionais } from './produto-adicionais.model';
 import { Service } from 'typedi';
 import { IServiceBase } from "../base-entity/base-entity.service";
 import { OrmRepository } from 'typeorm-typedi-extensions';
-import { Repository } from 'typeorm';
+import { Repository, getRepository } from 'typeorm';
+import { Produto, Adicional } from '../index';
 
 @Service()
 export class ProdutoAdicionaisService implements IServiceBase<ProdutoAdicionais> {
 
-  @OrmRepository(ProdutoAdicionais) repository: Repository<ProdutoAdicionais>;
+  constructor(@OrmRepository(ProdutoAdicionais) private repository: Repository<ProdutoAdicionais>){
+    this.produtoRepository = getRepository(Produto, "default");
+    this.adicionaisRepository = getRepository(Adicional, "default");
+  }
+  private produtoRepository: Repository<Produto>;
+  private adicionaisRepository: Repository<Adicional>;
 
   create(props: ProdutoAdicionais): Promise<ProdutoAdicionais> {
     return this.repository.persist(props);

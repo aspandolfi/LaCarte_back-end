@@ -2,14 +2,19 @@ import { ItemPedidoAdicional } from './pedido-item-adicional.model';
 import { Service } from 'typedi';
 import { IServiceBase } from "../base-entity/base-entity.service";
 import { OrmRepository } from 'typeorm-typedi-extensions';
-import { Repository } from 'typeorm';
+import { Repository, getRepository } from 'typeorm';
 import { ResponseData } from "../response-data";
 import { validate } from "class-validator";
+import { ItemPedido, Adicional } from '../index';
 
 @Service()
 export class ItemPedidoAdicionalService implements IServiceBase<ItemPedidoAdicional> {
-
-  @OrmRepository(ItemPedidoAdicional) repository: Repository<ItemPedidoAdicional>;
+  constructor(@OrmRepository(ItemPedidoAdicional) private repository: Repository<ItemPedidoAdicional>){
+    this.itemPedidoRepository = getRepository(ItemPedido, "default");
+    this.adicionalRepository = getRepository(Adicional, "default");
+  }
+  private itemPedidoRepository: Repository<ItemPedido>;
+  private adicionalRepository: Repository<Adicional>;
 
   public create(props: ItemPedidoAdicional, ...params:any[]): Promise<ItemPedidoAdicional | ResponseData> {
     let idItemPedido = params[0];

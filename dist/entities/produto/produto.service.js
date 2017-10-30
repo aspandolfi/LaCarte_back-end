@@ -8,6 +8,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const produto_1 = require("../produto");
 const response_data_1 = require("../response-data");
@@ -15,7 +18,12 @@ const typeorm_1 = require("typeorm");
 const typeorm_typedi_extensions_1 = require("typeorm-typedi-extensions");
 const typedi_1 = require("typedi");
 const class_validator_1 = require("class-validator");
+const index_1 = require("../index");
 let ProdutoService = class ProdutoService {
+    constructor(repository) {
+        this.repository = repository;
+        this.tipoProdutoRepository = typeorm_1.getRepository(index_1.TipoProduto, "default");
+    }
     create(props, ...params) {
         let responseData = new response_data_1.ResponseData();
         return class_validator_1.validate(props).then(errors => {
@@ -68,11 +76,9 @@ let ProdutoService = class ProdutoService {
         return this.repository.find();
     }
 };
-__decorate([
-    typeorm_typedi_extensions_1.OrmRepository(produto_1.Produto),
-    __metadata("design:type", typeorm_1.Repository)
-], ProdutoService.prototype, "repository", void 0);
 ProdutoService = __decorate([
-    typedi_1.Service()
+    typedi_1.Service(),
+    __param(0, typeorm_typedi_extensions_1.OrmRepository(produto_1.Produto)),
+    __metadata("design:paramtypes", [typeorm_1.Repository])
 ], ProdutoService);
 exports.ProdutoService = ProdutoService;

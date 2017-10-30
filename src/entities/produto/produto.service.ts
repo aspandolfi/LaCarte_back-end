@@ -1,14 +1,18 @@
 import { Produto } from "../produto";
 import { IServiceBase } from "../base-entity";
 import { ResponseData } from "../response-data";
-import { Repository } from "typeorm";
+import { Repository, getRepository } from "typeorm";
 import { OrmRepository } from "typeorm-typedi-extensions";
 import { Service } from "typedi";
 import { validate } from "class-validator";
+import { TipoProduto } from "../index";
 
 @Service()
 export class ProdutoService implements IServiceBase<Produto> {
-  @OrmRepository(Produto) private repository: Repository<Produto>;
+  constructor(@OrmRepository(Produto) private repository: Repository<Produto>){
+    this.tipoProdutoRepository = getRepository(TipoProduto, "default");
+  }
+  private tipoProdutoRepository: Repository<TipoProduto>;
 
   create(props: Produto, ...params: any[]): Promise<ResponseData> {
     let responseData = new ResponseData();

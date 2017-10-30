@@ -8,12 +8,21 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const produto_adicionais_model_1 = require("./produto-adicionais.model");
 const typedi_1 = require("typedi");
 const typeorm_typedi_extensions_1 = require("typeorm-typedi-extensions");
 const typeorm_1 = require("typeorm");
+const index_1 = require("../index");
 let ProdutoAdicionaisService = class ProdutoAdicionaisService {
+    constructor(repository) {
+        this.repository = repository;
+        this.produtoRepository = typeorm_1.getRepository(index_1.Produto, "default");
+        this.adicionaisRepository = typeorm_1.getRepository(index_1.Adicional, "default");
+    }
     create(props) {
         return this.repository.persist(props);
     }
@@ -52,11 +61,9 @@ let ProdutoAdicionaisService = class ProdutoAdicionaisService {
         return this.repository.find();
     }
 };
-__decorate([
-    typeorm_typedi_extensions_1.OrmRepository(produto_adicionais_model_1.ProdutoAdicionais),
-    __metadata("design:type", typeorm_1.Repository)
-], ProdutoAdicionaisService.prototype, "repository", void 0);
 ProdutoAdicionaisService = __decorate([
-    typedi_1.Service()
+    typedi_1.Service(),
+    __param(0, typeorm_typedi_extensions_1.OrmRepository(produto_adicionais_model_1.ProdutoAdicionais)),
+    __metadata("design:paramtypes", [typeorm_1.Repository])
 ], ProdutoAdicionaisService);
 exports.ProdutoAdicionaisService = ProdutoAdicionaisService;
