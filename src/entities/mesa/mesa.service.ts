@@ -3,19 +3,22 @@ import { Mesa } from "./mesa.model";
 import { Service } from "typedi";
 import { IServiceBase } from "../base-entity";
 import { OrmRepository } from "typeorm-typedi-extensions";
-import { Repository } from "typeorm";
+import { getRepository, Repository } from 'typeorm';
 import { validate } from "class-validator";
 import { ResponseData } from "../response-data";
 
 @Service()
 export class MesaService implements IServiceBase<Mesa> {
-  constructor(@OrmRepository(Mesa) private mesaRepository: Repository<Mesa>) {}
+  constructor(@OrmRepository(Mesa) private mesaRepository: Repository<Mesa>) {
+    this.restauranteRepository = getRepository(Restaurante,"default");
+  }
+  
   private restauranteRepository: Repository<Restaurante>;
 
   create(props: Mesa, ...params: any[]): Promise<ResponseData> {
     let idRestaurante = params[0];
     let responseData = new ResponseData();
-    return validate(props).then(errors => {
+    return validate(props).then(errors => {   
       if (errors.length > 0) {
         errors.forEach(function(val) {
           responseData.mensagens.push(val.value);
