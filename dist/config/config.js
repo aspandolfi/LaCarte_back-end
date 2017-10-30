@@ -22,7 +22,7 @@ exports.config = {
             port: 5432,
             username: "gxiubqwv",
             password: "Eor0v0XVSaO5EkcKrqGwSL2tlWo_huxc",
-            database: "gxiubqwv",
+            database: "gxiubqwv"
         },
         dropSchemaOnConnection: false
     },

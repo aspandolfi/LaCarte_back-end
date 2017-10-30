@@ -10,8 +10,10 @@ import { ResponseData } from "../response-data";
 @Service()
 export class AdicionalService implements IServiceBase<Adicional> {
 
-  @OrmRepository(Adicional) repository: Repository<Adicional>;
+  constructor(@OrmRepository(Adicional) private repository: Repository<Adicional>){
 
+  }
+  
   public create(props: Adicional): Promise<Adicional | ResponseData> {
     let response = new ResponseData();
     return validate(props).then(errors => {

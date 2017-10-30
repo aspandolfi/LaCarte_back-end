@@ -3,7 +3,7 @@ import { Type } from "class-transformer";
 import { ProdutoAdicionais } from "../produto-adicionais/produto-adicionais.model";
 import { Column, Entity, OneToMany } from "typeorm";
 import { BaseEntity } from "../base-entity";
-import { IsString, IsNotEmpty } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 @Entity()
 export class Adicional extends BaseEntity {
@@ -13,7 +13,7 @@ export class Adicional extends BaseEntity {
   @IsNotEmpty()
   @IsString()
   public nome: string;
-
+  
   @OneToMany(
     type => type = ProdutoAdicionais,
     produtoAdicionais => produtoAdicionais.adicionais

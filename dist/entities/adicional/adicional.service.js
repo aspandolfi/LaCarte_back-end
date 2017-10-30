@@ -8,6 +8,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const adicional_model_1 = require("./adicional.model");
 const typedi_1 = require("typedi");
@@ -16,6 +19,9 @@ const typeorm_1 = require("typeorm");
 const class_validator_1 = require("class-validator");
 const response_data_1 = require("../response-data");
 let AdicionalService = class AdicionalService {
+    constructor(repository) {
+        this.repository = repository;
+    }
     create(props) {
         let response = new response_data_1.ResponseData();
         return class_validator_1.validate(props).then(errors => {
@@ -68,11 +74,9 @@ let AdicionalService = class AdicionalService {
         return this.repository.find();
     }
 };
-__decorate([
-    typeorm_typedi_extensions_1.OrmRepository(adicional_model_1.Adicional),
-    __metadata("design:type", typeorm_1.Repository)
-], AdicionalService.prototype, "repository", void 0);
 AdicionalService = __decorate([
-    typedi_1.Service()
+    typedi_1.Service(),
+    __param(0, typeorm_typedi_extensions_1.OrmRepository(adicional_model_1.Adicional)),
+    __metadata("design:paramtypes", [typeorm_1.Repository])
 ], AdicionalService);
 exports.AdicionalService = AdicionalService;

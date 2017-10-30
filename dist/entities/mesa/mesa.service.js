@@ -12,6 +12,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const restaurante_model_1 = require("./../restaurante/restaurante.model");
 const mesa_model_1 = require("./mesa.model");
 const typedi_1 = require("typedi");
 const typeorm_typedi_extensions_1 = require("typeorm-typedi-extensions");
@@ -21,10 +22,11 @@ const response_data_1 = require("../response-data");
 let MesaService = class MesaService {
     constructor(mesaRepository) {
         this.mesaRepository = mesaRepository;
+        this.restauranteRepository = typeorm_1.getRepository(restaurante_model_1.Restaurante, "default");
     }
     create(props, ...params) {
         let idRestaurante = params[0];
-        let responseData = new response_data_1.ResponseData();
+        const responseData = new response_data_1.ResponseData();
         return class_validator_1.validate(props).then(errors => {
             if (errors.length > 0) {
                 errors.forEach(function (val) {
@@ -42,10 +44,9 @@ let MesaService = class MesaService {
                     responseData.mensagens.push(err);
                     responseData.status = false;
                 });
-                //verifica se não ocorreu erro ao buscar o restaurante
                 if (responseData.mensagens.length == 0) {
                     responseData.mensagens.push("OK!");
-                    props.restaurante = restaurante;
+                    props.restaurante = idRestaurante;
                     responseData.objeto = this.mesaRepository.persist(props);
                 }
             }

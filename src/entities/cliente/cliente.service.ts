@@ -8,7 +8,9 @@ import { ResponseData } from "../response-data";
 
 @Service()
 export class ClienteService implements IServiceBase<Cliente> {
-    @OrmRepository(Cliente) private repository: Repository<Cliente>;
+    constructor(@OrmRepository(Cliente) private repository: Repository<Cliente>){
+        
+    }
 
     create(props: Cliente, ...params: any[]): Promise<Cliente | ResponseData> {
         let responseData = new ResponseData();

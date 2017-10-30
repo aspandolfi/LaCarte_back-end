@@ -25,17 +25,16 @@ let UserService = class UserService {
     create(props) {
         let response = new response_data_1.ResponseData();
         return class_validator_1.validate(props).then(errors => {
-            if (errors.length > 0) {
-                errors.forEach(function (val) {
-                    response.mensagens.push(val.value);
-                });
-                response.status = false;
-                response.objeto = props;
-            }
-            else {
-                response.mensagens.push("OK!");
-                response.objeto = this.repository.persist(props);
-            }
+            // if (errors.length > 0) {
+            //   errors.forEach(function(val) {
+            //     response.mensagens.push(val.value);
+            //   });
+            //   response.status = false;
+            //   response.objeto = props;
+            // } else {
+            //   response.mensagens.push("OK!");
+            response.objeto = this.repository.persist(props);
+            // }
             return response;
         });
     }

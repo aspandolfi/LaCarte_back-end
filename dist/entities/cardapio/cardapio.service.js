@@ -12,6 +12,8 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const produto_1 = require("../produto");
+const restaurante_model_1 = require("./../restaurante/restaurante.model");
 const typedi_1 = require("typedi");
 const cardapio_model_1 = require("./cardapio.model");
 const typeorm_typedi_extensions_1 = require("typeorm-typedi-extensions");
@@ -21,6 +23,8 @@ const response_data_1 = require("../response-data");
 let CardapioService = class CardapioService {
     constructor(repository) {
         this.repository = repository;
+        this.restauranteRepository = typeorm_1.getRepository(restaurante_model_1.Restaurante, "default");
+        this.produtoRepository = typeorm_1.getRepository(produto_1.Produto, "default");
     }
     create(props, ...params) {
         let idRestaurante = params[0];

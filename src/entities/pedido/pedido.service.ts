@@ -2,14 +2,16 @@ import { Pedido } from './pedido.model';
 import { Service } from 'typedi';
 import { IServiceBase } from "../base-entity/base-entity.service";
 import { OrmRepository } from 'typeorm-typedi-extensions';
-import { Repository } from 'typeorm';
+import { Repository, getRepository } from 'typeorm';
 import { ResponseData } from "../response-data";
 import { validate } from "class-validator";
+import { User, Mesa } from '../index';
 
 @Service()
 export class PedidoService implements IServiceBase<Pedido> {
-
-  @OrmRepository(Pedido) repository: Repository<Pedido>;
+  constructor(@OrmRepository(Pedido) private repository: Repository<Pedido>){
+    
+  }
 
   public create(props: Pedido, ...params: any[]): Promise<Pedido | ResponseData> {
     let idUser = params[0];
@@ -23,7 +25,6 @@ export class PedidoService implements IServiceBase<Pedido> {
         response.objeto = props;
       } else {
         response.mensagens.push("OK!");
-        props = idUser;
         response.objeto = this.repository.persist(props);
       }
       return response;

@@ -8,6 +8,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const pedido_item_model_1 = require("./pedido-item.model");
 const typedi_1 = require("typedi");
@@ -15,7 +18,13 @@ const typeorm_typedi_extensions_1 = require("typeorm-typedi-extensions");
 const typeorm_1 = require("typeorm");
 const response_data_1 = require("../response-data");
 const class_validator_1 = require("class-validator");
+const index_1 = require("../index");
 let ItemPedidoService = class ItemPedidoService {
+    constructor(repository) {
+        this.repository = repository;
+        this.PedidoRepository = typeorm_1.getRepository(index_1.Pedido, "Default");
+        this.ProdutoRepository = typeorm_1.getRepository(index_1.Produto, "Default");
+    }
     create(props, ...params) {
         let idPedido = params[0];
         let idProduto = params[1];
@@ -30,8 +39,6 @@ let ItemPedidoService = class ItemPedidoService {
             }
             else {
                 responseData.mensagens.push("OK!");
-                props.pedido = idPedido;
-                props.produto = idProduto;
                 responseData.objeto = this.repository.persist(props);
             }
             return responseData;
@@ -73,11 +80,9 @@ let ItemPedidoService = class ItemPedidoService {
         return this.repository.find();
     }
 };
-__decorate([
-    typeorm_typedi_extensions_1.OrmRepository(pedido_item_model_1.ItemPedido),
-    __metadata("design:type", typeorm_1.Repository)
-], ItemPedidoService.prototype, "repository", void 0);
 ItemPedidoService = __decorate([
-    typedi_1.Service()
+    typedi_1.Service(),
+    __param(0, typeorm_typedi_extensions_1.OrmRepository(pedido_item_model_1.ItemPedido)),
+    __metadata("design:paramtypes", [typeorm_1.Repository])
 ], ItemPedidoService);
 exports.ItemPedidoService = ItemPedidoService;

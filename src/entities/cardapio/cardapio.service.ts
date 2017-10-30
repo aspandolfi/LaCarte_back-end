@@ -1,20 +1,22 @@
+import { Produto } from '../produto';
 import { RestauranteRepository } from '../restaurante/restaurante.repository';
 import { Restaurante } from "./../restaurante/restaurante.model";
 import { Service, Inject } from "typedi";
 import { Cardapio } from "./cardapio.model";
 import { IServiceBase } from "../base-entity/base-entity.service";
 import { OrmRepository } from "typeorm-typedi-extensions";
-import { Repository } from "typeorm";
+import { Repository, getRepository } from "typeorm";
 import { validate } from "class-validator";
 import { ResponseData } from "../response-data";
 
 @Service()
 export class CardapioService implements IServiceBase<Cardapio> {
-  constructor(
-    @OrmRepository(Cardapio) private repository: Repository<Cardapio>,
-    // @Inject()
-    // private restauranteRepository: RestauranteRepository
-  ) {}
+  constructor( @OrmRepository(Cardapio) private repository: Repository<Cardapio>){
+    this.restauranteRepository = getRepository(Restaurante, "default");
+    this.produtoRepository = getRepository(Produto, "default");
+  }
+  private restauranteRepository: Repository<Restaurante>;
+  private produtoRepository: Repository<Produto>; 
 
   public create(props: Cardapio, ...params: any[]): Promise<ResponseData> {
     let idRestaurante = params[0];
