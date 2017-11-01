@@ -1,3 +1,4 @@
+import { TipoProduto } from '../produto-tipo';
 import { Produto } from "../produto";
 import { IServiceBase } from "../base-entity";
 import { ResponseData } from "../response-data";
@@ -26,36 +27,32 @@ export class ProdutoService implements IServiceBase<Produto> {
     });
   }
   readOne(id: number): Promise<Produto> {
-    let result: any = {};
-    try {
-      result = this.repository
-        .findOneById(id)
-        .then()
-        .catch(res => (result = res));
-    } catch {
-      // console.log(Error);
-    }
-    return result;
+    return this.repository.findOneById(id);
+  }
+  readOneByTipo(tipoProduto: number ): Promise<Produto[] | ResponseData> {
+    let promise = new Promise<Produto[] | ResponseData>((resolve, reject) => {
+      resolve(this.repository.find({ tipoProduto: tipoProduto }));
+      var response = new ResponseData();
+      response.mensagen.push("Tipo não encontrado.");
+      response.status = false;
+      reject(response);
+    });
+
+    return promise;
   }
   update(props: Produto): Promise<Produto> {
     return this.repository.persist(props);
   }
-  drop(id: number): Promise<Produto> {
-    let result: any = {};
-    try {
-      result = this.readOne(id)
-        .then(res => (result = res))
-        .catch(res => (result = res));
-
-      result = this.repository
-        .remove(result)
-        .then()
-        .catch(res => (result = res));
-    } catch {
-      // console.log(Error);
+  drop(id: number): Promise<Boolean> {
+    return new Promise((resolve,reject)=>{
+      this.readOne(id)
+          .then(res => {return resolve(true);})
+          .catch(error => {
+            return reject(false);
+          });
+       });
     }
-    return result;
-  }
+
   readAll(): Promise<Produto[]> {
     return this.repository.find();
   }

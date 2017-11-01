@@ -33,36 +33,29 @@ let ProdutoService = class ProdutoService {
         });
     }
     readOne(id) {
-        let result = {};
-        try {
-            result = this.repository
-                .findOneById(id)
-                .then()
-                .catch(res => (result = res));
-        }
-        catch (_a) {
-            // console.log(Error);
-        }
-        return result;
+        return this.repository.findOneById(id);
+    }
+    readOneByTipo(tipoProduto) {
+        let promise = new Promise((resolve, reject) => {
+            resolve(this.repository.find({ tipoProduto: tipoProduto }));
+            var response = new response_data_1.ResponseData();
+            response.mensagen.push("Tipo não encontrado.");
+            response.status = false;
+            reject(response);
+        });
+        return promise;
     }
     update(props) {
         return this.repository.persist(props);
     }
     drop(id) {
-        let result = {};
-        try {
-            result = this.readOne(id)
-                .then(res => (result = res))
-                .catch(res => (result = res));
-            result = this.repository
-                .remove(result)
-                .then()
-                .catch(res => (result = res));
-        }
-        catch (_a) {
-            // console.log(Error);
-        }
-        return result;
+        return new Promise((resolve, reject) => {
+            this.readOne(id)
+                .then(res => { return resolve(true); })
+                .catch(error => {
+                return reject(false);
+            });
+        });
     }
     readAll() {
         return this.repository.find();

@@ -28,6 +28,9 @@ let ProdutoController = class ProdutoController {
     httpGet(id) {
         return this.produtoService.readOne(id);
     }
+    httpGetTipo(id) {
+        return this.produtoService.readOneByTipo(id);
+    }
 };
 __decorate([
     typedi_1.Inject(),
@@ -56,6 +59,13 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], ProdutoController.prototype, "httpGet", null);
+__decorate([
+    routing_controllers_1.Get("/tipo/:id"),
+    __param(0, routing_controllers_1.Param("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], ProdutoController.prototype, "httpGetTipo", null);
 ProdutoController = __decorate([
     routing_controllers_1.JsonController("/produto")
 ], ProdutoController);

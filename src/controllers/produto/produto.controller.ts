@@ -38,4 +38,8 @@ export class ProdutoController {
   public httpGet(@Param("id") id: number): Promise<any> {
     return this.produtoService.readOne(id);
   }
+  @Get("/tipo/:id")
+  public httpGetTipo(@Param("id") id: number): Promise<any> {
+    return this.produtoService.readOneByTipo(id)
+  }
 }

@@ -57,7 +57,7 @@ export class Produto extends BaseEntity {
 
   @OneToMany(
     type => (type = ProdutoAdicionais),
-    produtoAdicionais => produtoAdicionais.produto
+    produtoAdicionais => produtoAdicionais.produto,{lazy:true}
   )
   @Type(() => ProdutoAdicionais)
   public produtosAdicionais: ProdutoAdicionais[];

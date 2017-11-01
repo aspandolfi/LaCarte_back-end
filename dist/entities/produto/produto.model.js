@@ -66,7 +66,7 @@ __decorate([
     __metadata("design:type", produto_tipo_1.TipoProduto)
 ], Produto.prototype, "tipoProduto", void 0);
 __decorate([
-    typeorm_1.OneToMany(type => (type = produto_adicionais_model_1.ProdutoAdicionais), produtoAdicionais => produtoAdicionais.produto),
+    typeorm_1.OneToMany(type => (type = produto_adicionais_model_1.ProdutoAdicionais), produtoAdicionais => produtoAdicionais.produto, { lazy: true }),
     class_transformer_1.Type(() => produto_adicionais_model_1.ProdutoAdicionais),
     __metadata("design:type", Array)
 ], Produto.prototype, "produtosAdicionais", void 0);
