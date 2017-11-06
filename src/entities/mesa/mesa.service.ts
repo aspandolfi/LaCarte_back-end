@@ -10,17 +10,18 @@ import { ResponseData } from "../response-data";
 
 @Service()
 export class MesaService implements IServiceBase<Mesa> {
-  constructor(@OrmRepository(Mesa) private mesaRepository: Repository<Mesa>) {
+  constructor( @OrmRepository(Mesa) private mesaRepository: Repository<Mesa>) {
     this.restauranteRepository = getRepository(Restaurante, "default");
   }
   private restauranteRepository: Repository<Restaurante>;
 
   create(props: Mesa, ...params: any[]): Promise<ResponseData> {
+    console.log(params[0]);
     let idRestaurante = params[0];
     const responseData = new ResponseData();
     return validate(props).then(errors => {
       if (errors.length > 0) {
-        errors.forEach(function(val) {
+        errors.forEach(function (val) {
           responseData.mensagens.push(val.value);
         });
         responseData.status = false;
@@ -29,16 +30,21 @@ export class MesaService implements IServiceBase<Mesa> {
         let restaurante: Restaurante;
         this.restauranteRepository
           .findOneById(idRestaurante)
-          .then(res => (restaurante = res))
+          .then(res => {
+            restaurante = res;
+            props.restaurante = restaurante;
+            this.mesaRepository.persist(props).then(res2 => (responseData.objeto = res2))
+          })
           .catch(err => {
             responseData.mensagens.push(err);
             responseData.status = false;
           })
-        if (responseData.mensagens.length == 0) {
-          responseData.mensagens.push("OK!");
-          props.restaurante = idRestaurante;
-          responseData.objeto = this.mesaRepository.persist(props);
-        }
+        // if (responseData.mensagens.length == 0) {
+        //   responseData.mensagens.push("OK!");
+        //   props.restaurante = restaurante;
+        //   console.log(restaurante.id);
+        //   responseData.objeto = this.mesaRepository.persist(props);
+        // }
       }
       return responseData;
     });

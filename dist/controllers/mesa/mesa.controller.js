@@ -20,7 +20,7 @@ const mesa_1 = require("../../entities/mesa");
 let MesaController = class MesaController {
     httpPost(props) {
         let mesa = class_transformer_1.plainToClass(mesa_1.Mesa, props);
-        return this.mesaService.create(mesa);
+        return this.mesaService.create(mesa, mesa.restaurante);
     }
     httpGetAll() {
         return this.mesaService.readAll();

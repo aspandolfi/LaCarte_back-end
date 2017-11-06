@@ -12,6 +12,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const console = require("console");
 const restaurante_model_1 = require("./../restaurante/restaurante.model");
 const mesa_model_1 = require("./mesa.model");
 const typedi_1 = require("typedi");
@@ -25,6 +26,7 @@ let MesaService = class MesaService {
         this.restauranteRepository = typeorm_1.getRepository(restaurante_model_1.Restaurante, "default");
     }
     create(props, ...params) {
+        console.log(params[0]);
         let idRestaurante = params[0];
         const responseData = new response_data_1.ResponseData();
         return class_validator_1.validate(props).then(errors => {
@@ -39,16 +41,21 @@ let MesaService = class MesaService {
                 let restaurante;
                 this.restauranteRepository
                     .findOneById(idRestaurante)
-                    .then(res => (restaurante = res))
+                    .then(res => {
+                    restaurante = res;
+                    props.restaurante = restaurante;
+                    this.mesaRepository.persist(props).then(res2 => (responseData.objeto = res2));
+                })
                     .catch(err => {
                     responseData.mensagens.push(err);
                     responseData.status = false;
                 });
-                if (responseData.mensagens.length == 0) {
-                    responseData.mensagens.push("OK!");
-                    props.restaurante = idRestaurante;
-                    responseData.objeto = this.mesaRepository.persist(props);
-                }
+                // if (responseData.mensagens.length == 0) {
+                //   responseData.mensagens.push("OK!");
+                //   props.restaurante = restaurante;
+                //   console.log(restaurante.id);
+                //   responseData.objeto = this.mesaRepository.persist(props);
+                // }
             }
             return responseData;
         });

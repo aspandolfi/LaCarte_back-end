@@ -26,7 +26,7 @@ export class MesaController {
     props: IMesa
   ): Promise<Mesa | any> {
     let mesa = plainToClass(Mesa, props);
-    return this.mesaService.create(mesa);
+    return this.mesaService.create(mesa,mesa.restaurante);
   }
 
   @Get()
