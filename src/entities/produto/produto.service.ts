@@ -33,7 +33,7 @@ export class ProdutoService implements IServiceBase<Produto> {
     let promise = new Promise<Produto[] | ResponseData>((resolve, reject) => {
       resolve(this.repository.find({ tipoProduto: tipoProduto }));
       var response = new ResponseData();
-      response.mensagen.push("Tipo não encontrado.");
+      response.mensagens.push("Tipo não encontrado.");
       response.status = false;
       reject(response);
     });

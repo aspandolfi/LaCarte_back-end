@@ -39,7 +39,7 @@ let ProdutoService = class ProdutoService {
         let promise = new Promise((resolve, reject) => {
             resolve(this.repository.find({ tipoProduto: tipoProduto }));
             var response = new response_data_1.ResponseData();
-            response.mensagen.push("Tipo não encontrado.");
+            response.mensagens.push("Tipo não encontrado.");
             response.status = false;
             reject(response);
         });

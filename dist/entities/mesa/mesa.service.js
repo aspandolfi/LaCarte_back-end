@@ -11,6 +11,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const console = require("console");
 const restaurante_model_1 = require("./../restaurante/restaurante.model");
@@ -20,44 +28,43 @@ const typeorm_typedi_extensions_1 = require("typeorm-typedi-extensions");
 const typeorm_1 = require("typeorm");
 const class_validator_1 = require("class-validator");
 const response_data_1 = require("../response-data");
+const user_1 = require("../user");
 let MesaService = class MesaService {
     constructor(mesaRepository) {
         this.mesaRepository = mesaRepository;
         this.restauranteRepository = typeorm_1.getRepository(restaurante_model_1.Restaurante, "default");
+        this.userRepository = typeorm_1.getRepository(user_1.User, "default");
     }
     create(props, ...params) {
-        console.log(params[0]);
-        let idRestaurante = params[0];
-        const responseData = new response_data_1.ResponseData();
-        return class_validator_1.validate(props).then(errors => {
-            if (errors.length > 0) {
-                errors.forEach(function (val) {
-                    responseData.mensagens.push(val.value);
-                });
-                responseData.status = false;
-                responseData.objeto = props;
-            }
-            else {
-                let restaurante;
-                this.restauranteRepository
-                    .findOneById(idRestaurante)
-                    .then(res => {
-                    restaurante = res;
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log(params[0]);
+            let idRestaurante = params[0];
+            const responseData = new response_data_1.ResponseData();
+            let errors = yield class_validator_1.validate(props);
+            if (errors.length == 0) {
+                let restaurante = yield this.restauranteRepository.findOneById(idRestaurante);
+                if (restaurante) {
                     props.restaurante = restaurante;
-                    this.mesaRepository.persist(props).then(res2 => (responseData.objeto = res2));
-                })
-                    .catch(err => {
-                    responseData.mensagens.push(err);
+                    let result = yield this.mesaRepository.persist(props)
+                        .then(res => {
+                        return res;
+                    })
+                        .catch(err => {
+                        return err;
+                    });
+                    if (result.message) {
+                        responseData.mensagens.push(result.message);
+                    }
+                    else {
+                        responseData.mensagens.push("OK");
+                    }
+                }
+                else {
+                    errors.forEach(val => responseData.mensagens.push(val.value));
                     responseData.status = false;
-                });
-                // if (responseData.mensagens.length == 0) {
-                //   responseData.mensagens.push("OK!");
-                //   props.restaurante = restaurante;
-                //   console.log(restaurante.id);
-                //   responseData.objeto = this.mesaRepository.persist(props);
-                // }
+                }
+                return responseData;
             }
-            return responseData;
         });
     }
     readOne(id) {

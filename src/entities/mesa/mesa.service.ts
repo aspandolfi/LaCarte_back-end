@@ -7,47 +7,51 @@ import { OrmRepository } from "typeorm-typedi-extensions";
 import { Repository, getRepository } from "typeorm";
 import { validate } from "class-validator";
 import { ResponseData } from "../response-data";
+import { User } from "../user";
 
 @Service()
 export class MesaService implements IServiceBase<Mesa> {
+  private restauranteRepository: Repository<Restaurante>;
+  private userRepository: Repository<User>;
+
   constructor( @OrmRepository(Mesa) private mesaRepository: Repository<Mesa>) {
     this.restauranteRepository = getRepository(Restaurante, "default");
+    this.userRepository = getRepository(User, "default");
   }
-  private restauranteRepository: Repository<Restaurante>;
 
-  create(props: Mesa, ...params: any[]): Promise<ResponseData> {
+  async create(props: Mesa, ...params: any[]): Promise<ResponseData> {
     console.log(params[0]);
     let idRestaurante = params[0];
     const responseData = new ResponseData();
-    return validate(props).then(errors => {
-      if (errors.length > 0) {
-        errors.forEach(function (val) {
-          responseData.mensagens.push(val.value);
-        });
-        responseData.status = false;
-        responseData.objeto = props;
-      } else {
-        let restaurante: Restaurante;
-        this.restauranteRepository
-          .findOneById(idRestaurante)
+
+    let errors = await validate(props);
+
+    if (errors.length == 0) {
+      let restaurante = await this.restauranteRepository.findOneById(idRestaurante);
+      if (restaurante) {
+        props.restaurante = restaurante;
+        let result = await this.mesaRepository.persist(props)
           .then(res => {
-            restaurante = res;
-            props.restaurante = restaurante;
-            this.mesaRepository.persist(props).then(res2 => (responseData.objeto = res2))
+            return res;
           })
           .catch(err => {
-            responseData.mensagens.push(err);
-            responseData.status = false;
-          })
-        // if (responseData.mensagens.length == 0) {
-        //   responseData.mensagens.push("OK!");
-        //   props.restaurante = restaurante;
-        //   console.log(restaurante.id);
-        //   responseData.objeto = this.mesaRepository.persist(props);
-        // }
+            return err
+          });
+
+        if (result.message) {
+          responseData.mensagens.push(result.message);
+        }
+        else {
+          responseData.mensagens.push("OK");
+        }
+
+      }
+      else {
+        errors.forEach(val => responseData.mensagens.push(val.value));
+        responseData.status = false;
       }
       return responseData;
-    });
+    }
   }
 
   readOne(id: number): Promise<Mesa> {
