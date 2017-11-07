@@ -1,5 +1,4 @@
 import { Produto } from '../produto';
-import { RestauranteRepository } from '../restaurante/restaurante.repository';
 import { Restaurante } from "./../restaurante/restaurante.model";
 import { Service, Inject } from "typedi";
 import { Cardapio } from "./cardapio.model";

@@ -7,16 +7,13 @@ import { OrmRepository } from "typeorm-typedi-extensions";
 import { Repository, getRepository } from "typeorm";
 import { validate } from "class-validator";
 import { ResponseData } from "../response-data";
-import { User } from "../user";
 
 @Service()
 export class MesaService implements IServiceBase<Mesa> {
   private restauranteRepository: Repository<Restaurante>;
-  private userRepository: Repository<User>;
 
   constructor( @OrmRepository(Mesa) private mesaRepository: Repository<Mesa>) {
     this.restauranteRepository = getRepository(Restaurante, "default");
-    this.userRepository = getRepository(User, "default");
   }
 
   async create(props: Mesa, ...params: any[]): Promise<ResponseData> {
@@ -44,7 +41,6 @@ export class MesaService implements IServiceBase<Mesa> {
         else {
           responseData.mensagens.push("OK");
         }
-
       }
       else {
         errors.forEach(val => responseData.mensagens.push(val.value));

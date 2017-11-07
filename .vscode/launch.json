@@ -10,7 +10,7 @@
             "name": "Launch Chrome against localhost",
             "program": "${workspaceRoot}/dist/bin/www.js",
             "port": 9229,
-            "stopOnEntry": true
+            "stopOnEntry": false
         }
     ]
 }

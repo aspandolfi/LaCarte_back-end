@@ -28,12 +28,10 @@ const typeorm_typedi_extensions_1 = require("typeorm-typedi-extensions");
 const typeorm_1 = require("typeorm");
 const class_validator_1 = require("class-validator");
 const response_data_1 = require("../response-data");
-const user_1 = require("../user");
 let MesaService = class MesaService {
     constructor(mesaRepository) {
         this.mesaRepository = mesaRepository;
         this.restauranteRepository = typeorm_1.getRepository(restaurante_model_1.Restaurante, "default");
-        this.userRepository = typeorm_1.getRepository(user_1.User, "default");
     }
     create(props, ...params) {
         return __awaiter(this, void 0, void 0, function* () {
