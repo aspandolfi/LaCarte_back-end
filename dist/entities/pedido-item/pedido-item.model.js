@@ -16,6 +16,12 @@ const typeorm_1 = require("typeorm");
 const base_entity_1 = require("../base-entity");
 const class_validator_1 = require("class-validator");
 const class_transformer_1 = require("class-transformer");
+var Status;
+(function (Status) {
+    Status[Status["Pendente"] = 0] = "Pendente";
+    Status[Status["Confirmado"] = 1] = "Confirmado";
+    Status[Status["Recusado"] = 2] = "Recusado";
+})(Status || (Status = {}));
 let ItemPedido = class ItemPedido extends base_entity_1.BaseEntity {
 };
 __decorate([
@@ -32,6 +38,23 @@ __decorate([
     class_validator_1.IsNumber(),
     __metadata("design:type", Number)
 ], ItemPedido.prototype, "valorDesconto", void 0);
+__decorate([
+    typeorm_1.Column({
+        type: 'string',
+        length: 500,
+        nullable: true
+    }),
+    class_validator_1.IsString(),
+    __metadata("design:type", String)
+], ItemPedido.prototype, "observacao", void 0);
+__decorate([
+    typeorm_1.Column({
+        type: 'int',
+        default: 1
+    }),
+    class_validator_1.IsEnum(Status),
+    __metadata("design:type", Number)
+], ItemPedido.prototype, "status", void 0);
 __decorate([
     typeorm_1.ManyToOne(type => type = pedido_model_1.Pedido, p => p.itens),
     class_transformer_1.Type(() => pedido_model_1.Pedido),

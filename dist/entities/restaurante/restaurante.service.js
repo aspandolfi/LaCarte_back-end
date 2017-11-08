@@ -31,7 +31,6 @@ let RestauranteService = class RestauranteService {
     constructor(restauranteRepository) {
         this.restauranteRepository = restauranteRepository;
         this.clienteRepository = typeorm_1.getRepository(cliente_1.Cliente, "default");
-        this.response = new response_data_1.ResponseData();
     }
     create(props, ...params) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -64,7 +63,7 @@ let RestauranteService = class RestauranteService {
         return __awaiter(this, void 0, void 0, function* () {
             let result = yield this.restauranteRepository.findOneById(id);
             if (result === undefined) {
-                this.response.mensagens.push("Objeto não encontrado");
+                this.response.mensagens.push("Restaurante não encontrado");
                 this.response.status = false;
                 return this.response;
             }
@@ -73,38 +72,54 @@ let RestauranteService = class RestauranteService {
     }
     update(props) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                return yield this.restauranteRepository.persist(props);
-            }
-            catch (e) {
+            let errors = yield class_validator_1.validate(props);
+            if (errors.length > 0) {
+                errors.forEach(val => this.response.mensagens.push(val.value));
                 this.response.status = false;
-                this.response.mensagens.push(e);
+                return this.response;
             }
-            return this.response;
+            let result = yield this.restauranteRepository.persist(props);
+            if (result === undefined) {
+                this.response.mensagens.push("Falha ao atualizar Restaurante.");
+                this.response.status = false;
+                return this.response;
+            }
+            return result;
         });
     }
     drop(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            let result = {};
-            try {
-                result = this.readOne(id)
-                    .then(res => (result = res))
-                    .catch(res => (result = res));
-                result = this.restauranteRepository
-                    .remove(result)
-                    .then()
-                    .catch(res => (result = res));
+            let restauramte = yield this.restauranteRepository.findOneById(id);
+            if (restauramte === undefined) {
+                this.response.mensagens.push("Falha ao excluir: Id não encontrado.");
+                this.response.status = false;
+                return this.response;
             }
-            catch (_a) {
-                // console.log(Error);
+            let result = yield this.restauranteRepository.remove(restauramte);
+            if (result === undefined) {
+                this.response.mensagens.push("Falha ao excluir.");
+                this.response.status = false;
+                return this.response;
             }
             return result;
         });
     }
     readAll(...params) {
-        return this.restauranteRepository.find();
+        return __awaiter(this, void 0, void 0, function* () {
+            let query = yield this.restauranteRepository.find();
+            if (query === undefined) {
+                this.response.mensagens.push("Falha ao buscar restaurantes.");
+                this.response.status = false;
+                return this.response;
+            }
+            return query;
+        });
     }
 };
+__decorate([
+    typedi_1.Inject(),
+    __metadata("design:type", response_data_1.ResponseData)
+], RestauranteService.prototype, "response", void 0);
 RestauranteService = __decorate([
     typedi_1.Service(),
     __param(0, typeorm_typedi_extensions_1.OrmRepository(restaurante_model_1.Restaurante)),

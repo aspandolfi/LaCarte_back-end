@@ -22,8 +22,8 @@ const index_1 = require("../index");
 let ItemPedidoService = class ItemPedidoService {
     constructor(repository) {
         this.repository = repository;
-        this.PedidoRepository = typeorm_1.getRepository(index_1.Pedido, "Default");
-        this.ProdutoRepository = typeorm_1.getRepository(index_1.Produto, "Default");
+        this.PedidoRepository = typeorm_1.getRepository(index_1.Pedido, "default");
+        this.ProdutoRepository = typeorm_1.getRepository(index_1.Produto, "default");
     }
     create(props, ...params) {
         let idPedido = params[0];

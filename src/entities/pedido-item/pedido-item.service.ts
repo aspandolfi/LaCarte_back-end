@@ -10,8 +10,8 @@ import { Pedido, Produto } from "../index";
 @Service()
 export class ItemPedidoService implements IServiceBase<ItemPedido> {
   constructor(@OrmRepository(ItemPedido) private repository: Repository<ItemPedido>){
-    this.PedidoRepository = getRepository(Pedido,"Default");
-    this.ProdutoRepository = getRepository(Produto,"Default");
+    this.PedidoRepository = getRepository(Pedido,"default");
+    this.ProdutoRepository = getRepository(Produto,"default");
   }
   private PedidoRepository: Repository <Pedido>;
   private ProdutoRepository: Repository <Produto>;

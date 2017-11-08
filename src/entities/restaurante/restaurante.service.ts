@@ -2,19 +2,18 @@ import { Restaurante } from "./restaurante.model";
 import { Cliente } from "../cliente";
 import { ResponseData } from "../response-data";
 import { IServiceBase } from "../base-entity";
-import { Service } from "typedi";
+import { Service, Inject } from "typedi";
 import { OrmRepository } from "typeorm-typedi-extensions";
 import { Repository, getRepository } from "typeorm";
 import { validate } from "class-validator";
 
 @Service()
 export class RestauranteService implements IServiceBase<Restaurante> {
-  private response: ResponseData;
+  @Inject() private response: ResponseData;
   private clienteRepository: Repository<Cliente>;
 
   constructor( @OrmRepository(Restaurante) private restauranteRepository: Repository<Restaurante>) {
     this.clienteRepository = getRepository(Cliente, "default");
-    this.response = new ResponseData();
   }
 
   async create(props: Restaurante, ...params: any[]): Promise<ResponseData> {
@@ -35,7 +34,7 @@ export class RestauranteService implements IServiceBase<Restaurante> {
       let result = await this.restauranteRepository.persist(props);
 
       if (result === undefined) {
-        this.response.mensagens.push("Erro ao salvar restaurante no banco de dados.");   
+        this.response.mensagens.push("Erro ao salvar restaurante no banco de dados.");
         return this.response;
       }
 
@@ -53,42 +52,59 @@ export class RestauranteService implements IServiceBase<Restaurante> {
     let result = await this.restauranteRepository.findOneById(id);
 
     if (result === undefined) {
-      this.response.mensagens.push("Objeto não encontrado");
+      this.response.mensagens.push("Restaurante não encontrado");
       this.response.status = false
       return this.response;
     }
-
     return result;
   }
 
   async update(props: Restaurante): Promise<Restaurante | ResponseData> {
-    try {
-      return await this.restauranteRepository.persist(props);
+    let errors = await validate(props);
+
+    if (errors.length > 0) {
+      errors.forEach(val => this.response.mensagens.push(val.value));
+      this.response.status = false;
+      return this.response;
     }
-    catch (e) {
+
+    let result = await this.restauranteRepository.persist(props);
+
+    if (result === undefined) {
+      this.response.mensagens.push("Falha ao atualizar Restaurante.");
       this.response.status = false
-      this.response.mensagens.push(e);
-    }
-    return this.response;
-  }
-
-  async drop(id: number): Promise<Restaurante> {
-    let result: any = {};
-    try {
-      result = this.readOne(id)
-        .then(res => (result = res))
-        .catch(res => (result = res));
-
-      result = this.restauranteRepository
-        .remove(result)
-        .then()
-        .catch(res => (result = res));
-    } catch {
-      // console.log(Error);
+      return this.response;
     }
     return result;
   }
-  readAll(...params: any[]): Promise<Restaurante[]> {
-    return this.restauranteRepository.find();
+
+  async drop(id: number): Promise<Restaurante | ResponseData> {
+    let restauramte = await this.restauranteRepository.findOneById(id);
+
+    if (restauramte === undefined) {
+      this.response.mensagens.push("Falha ao excluir: Id não encontrado.");
+      this.response.status = false;
+      return this.response;
+    }
+
+    let result = await this.restauranteRepository.remove(restauramte);
+
+    if (result === undefined) {
+      this.response.mensagens.push("Falha ao excluir.");
+      this.response.status = false;
+      return this.response;
+    }
+    return result;
+  }
+
+  async readAll(...params: any[]): Promise<Restaurante[] | ResponseData> {
+    let query = await this.restauranteRepository.find();
+
+    if (query === undefined) {
+      this.response.mensagens.push("Falha ao buscar restaurantes.");
+      this.response.status = false;
+      return this.response;
+    }
+    return query;
   }
 }

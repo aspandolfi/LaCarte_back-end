@@ -3,8 +3,14 @@ import { Produto } from "../produto/produto.model";
 import { Pedido } from "../pedido/pedido.model";
 import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
 import { BaseEntity } from "../base-entity";
-import { IsNumber, IsInt } from "class-validator";
+import { IsNumber, IsInt, IsString, IsEnum } from "class-validator";
 import { Type } from "class-transformer";
+
+enum Status {
+  Pendente,
+  Confirmado,
+  Recusado
+}
 
 @Entity()
 export class ItemPedido extends BaseEntity {
@@ -20,6 +26,21 @@ export class ItemPedido extends BaseEntity {
   @IsNumber()
   public valorDesconto: number;
 
+  @Column({
+    type: 'string',
+    length: 500,
+    nullable: true
+  })
+  @IsString()
+  public observacao: string;
+
+  @Column({
+    type: 'int',
+    default: 1
+  })
+  @IsEnum(Status)
+  public status: Status;
+
   @ManyToOne(type => type = Pedido, p => p.itens)
   @Type(() => Pedido)
   public pedido: Pedido;
@@ -32,3 +53,4 @@ export class ItemPedido extends BaseEntity {
   @Type(() => ItemPedidoAdicional)
   public adicionais: ItemPedidoAdicional[];
 }
+

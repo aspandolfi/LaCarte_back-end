@@ -7,5 +7,5 @@ export interface IServiceBase<T> {
 
   drop(id: number): Promise<any>;
 
-  readAll(...params: any[]): Promise<any[]>;
+  readAll(...params: any[]): Promise<any>;
 }

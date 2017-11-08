@@ -6,13 +6,14 @@ import {
   JsonController,
   Post,
   Get,
-  UseBefore
+  UseBefore,
+  Authorized
 } from "routing-controllers";
 import { Inject } from "typedi";
 import {IRestaurante, Restaurante , RestauranteService } from "../../entities/restaurante";
 import Auth from "../../config/passport";
 
-// @UseBefore(() => Auth.authenticate())
+// @Authorized()
 @JsonController("/restaurante")
 export class RestauranteController {
   @Inject() private  restauranteService:  RestauranteService;
@@ -30,7 +31,7 @@ export class RestauranteController {
   }
 
   @Get()
-  public httpGetAll(): Promise<Restaurante[]> {
+  public httpGetAll(): Promise<Restaurante[] | any> {
     return this.restauranteService.readAll();
   }
 

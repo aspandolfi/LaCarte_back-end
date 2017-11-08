@@ -16,7 +16,7 @@ const class_transformer_1 = require("class-transformer");
 const routing_controllers_1 = require("routing-controllers");
 const typedi_1 = require("typedi");
 const restaurante_1 = require("../../entities/restaurante");
-// @UseBefore(() => Auth.authenticate())
+// @Authorized()
 let RestauranteController = class RestauranteController {
     httpPost(props) {
         let restaurante = class_transformer_1.plainToClass(restaurante_1.Restaurante, props);

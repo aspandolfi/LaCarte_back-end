@@ -1,8 +1,11 @@
+import { Service } from "typedi";
+
+@Service()
 export class ResponseData {
-  constructor(){
-    this.mensagens = [];
+  constructor() {
+    this.mensagens = new Array();
   }
-    status: boolean = true;
-    objeto: any;
-    mensagens: string[];
+  status: boolean = true;
+  objeto: any;
+  mensagens: string[];
 }
