@@ -1,0 +1,15 @@
+{
+    "database": "dblacarte",
+    "host": "us-cdbr-azure-southcentral-f.cloudapp.net",
+    "password": "dceb4557",
+    "port": 3306,
+    "type": "mysql",
+    "username": "bd957709ee8ba0",
+    "cli": {
+        "entitiesDir": "dist/entities/**/*.js"
+    },
+    "entities": [
+        "dist/entities/**/*.model.js"
+    ],
+    "logging": "all"
+}

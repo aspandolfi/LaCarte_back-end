@@ -5,7 +5,7 @@ import { Column, Entity, OneToMany } from "typeorm";
 import { BaseEntity } from "../base-entity";
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
-@Entity()
+@Entity("adicionais")
 export class Adicional extends BaseEntity {
   @Column({
     length: 20
@@ -13,15 +13,15 @@ export class Adicional extends BaseEntity {
   @IsNotEmpty()
   @IsString()
   public nome: string;
-  
+
   @OneToMany(
-    type => type = ProdutoAdicionais,
+    type => ProdutoAdicionais,
     produtoAdicionais => produtoAdicionais.adicionais
   )
   @Type(() => ProdutoAdicionais)
   public produtosAdicionais: ProdutoAdicionais[];
 
-  @OneToMany(type => type = ItemPedidoAdicional, i => i.adicional)
+  @OneToMany(type => ItemPedidoAdicional, i => i.adicional)
   @Type(() => ProdutoAdicionais)
   public itemPedidoAdicionais: ItemPedidoAdicional[];
 }

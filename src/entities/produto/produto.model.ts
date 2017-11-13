@@ -14,7 +14,7 @@ import {
 import { IsNotEmpty, IsNumber, IsOptional, IsString, IsUrl } from 'class-validator';
 import { Exclude, Type } from "class-transformer";
 
-@Entity()
+@Entity("produtos")
 export class Produto extends BaseEntity {
   @Column({
     length: 50
@@ -47,22 +47,19 @@ export class Produto extends BaseEntity {
   @Exclude()
   public ativo: boolean;
 
-  @ManyToMany(type => Cardapio)
+  @ManyToMany(type => Cardapio, cardapios => cardapios.produtos)
   @JoinTable()
   public cardapios: Cardapio[];
 
-  @ManyToOne(type => (type = TipoProduto), tipoProduto => tipoProduto.produtos)
+  @ManyToOne(type => TipoProduto, tipoProduto => tipoProduto.produtos)
   @Type(() => TipoProduto)
   public tipoProduto: TipoProduto;
 
-  @OneToMany(
-    type => (type = ProdutoAdicionais),
-    produtoAdicionais => produtoAdicionais.produto,{lazy:true}
-  )
+  @OneToMany(type => ProdutoAdicionais, produtoAdicionais => produtoAdicionais.produto)
   @Type(() => ProdutoAdicionais)
   public produtosAdicionais: ProdutoAdicionais[];
 
-  @OneToMany(type => (type = ItemPedido), itemPedido => itemPedido.produto)
+  @OneToMany(type => ItemPedido, itemPedido => itemPedido.produto)
   @Type(() => ItemPedido)
   public itensPedido: ItemPedido[];
 }

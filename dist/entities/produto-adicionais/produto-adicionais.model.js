@@ -27,16 +27,16 @@ __decorate([
     __metadata("design:type", Number)
 ], ProdutoAdicionais.prototype, "valor", void 0);
 __decorate([
-    typeorm_1.ManyToOne(type => type = produto_model_1.Produto, produto => produto.produtosAdicionais),
+    typeorm_1.ManyToOne(type => produto_model_1.Produto, produto => produto.produtosAdicionais),
     class_transformer_1.Type(() => produto_model_1.Produto),
     __metadata("design:type", produto_model_1.Produto)
 ], ProdutoAdicionais.prototype, "produto", void 0);
 __decorate([
-    typeorm_1.ManyToOne(type => type = adicional_model_1.Adicional, adicionais => adicionais.produtosAdicionais),
+    typeorm_1.ManyToOne(type => adicional_model_1.Adicional, adicionais => adicionais.produtosAdicionais),
     class_transformer_1.Type(() => produto_tipo_1.TipoProduto),
     __metadata("design:type", adicional_model_1.Adicional)
 ], ProdutoAdicionais.prototype, "adicionais", void 0);
 ProdutoAdicionais = __decorate([
-    typeorm_1.Entity()
+    typeorm_1.Entity("adicionais_produto")
 ], ProdutoAdicionais);
 exports.ProdutoAdicionais = ProdutoAdicionais;

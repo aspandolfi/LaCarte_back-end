@@ -26,16 +26,16 @@ __decorate([
     __metadata("design:type", Number)
 ], ItemPedidoAdicional.prototype, "quantidade", void 0);
 __decorate([
-    typeorm_1.ManyToOne(type => type = pedido_item_model_1.ItemPedido, itemPedido => itemPedido.adicionais),
+    typeorm_1.ManyToOne(type => pedido_item_model_1.ItemPedido, itemPedido => itemPedido.adicionais),
     class_transformer_1.Type(() => pedido_model_1.Pedido),
     __metadata("design:type", pedido_item_model_1.ItemPedido)
 ], ItemPedidoAdicional.prototype, "itemPedido", void 0);
 __decorate([
-    typeorm_1.ManyToOne(type => type = adicional_model_1.Adicional, a => a.itemPedidoAdicionais),
+    typeorm_1.ManyToOne(type => adicional_model_1.Adicional, a => a.itemPedidoAdicionais),
     class_transformer_1.Type(() => adicional_model_1.Adicional),
     __metadata("design:type", adicional_model_1.Adicional)
 ], ItemPedidoAdicional.prototype, "adicional", void 0);
 ItemPedidoAdicional = __decorate([
-    typeorm_1.Entity()
+    typeorm_1.Entity("adicionais_item_pedido")
 ], ItemPedidoAdicional);
 exports.ItemPedidoAdicional = ItemPedidoAdicional;

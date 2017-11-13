@@ -8,9 +8,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -24,13 +21,12 @@ const restaurante_model_1 = require("./restaurante.model");
 const cliente_1 = require("../cliente");
 const response_data_1 = require("../response-data");
 const typedi_1 = require("typedi");
-const typeorm_typedi_extensions_1 = require("typeorm-typedi-extensions");
 const typeorm_1 = require("typeorm");
 const class_validator_1 = require("class-validator");
 let RestauranteService = class RestauranteService {
-    constructor(restauranteRepository) {
-        this.restauranteRepository = restauranteRepository;
-        this.clienteRepository = typeorm_1.getRepository(cliente_1.Cliente, "default");
+    constructor() {
+        this.restauranteRepository = typeorm_1.getRepository(restaurante_model_1.Restaurante);
+        this.clienteRepository = typeorm_1.getRepository(cliente_1.Cliente);
     }
     create(props, ...params) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -44,7 +40,7 @@ let RestauranteService = class RestauranteService {
                     return this.response;
                 }
                 props.cliente = dbCliente;
-                let result = yield this.restauranteRepository.persist(props);
+                let result = yield this.restauranteRepository.create(props);
                 if (result === undefined) {
                     this.response.mensagens.push("Erro ao salvar restaurante no banco de dados.");
                     return this.response;
@@ -78,7 +74,7 @@ let RestauranteService = class RestauranteService {
                 this.response.status = false;
                 return this.response;
             }
-            let result = yield this.restauranteRepository.persist(props);
+            let result = yield this.restauranteRepository.preload(props);
             if (result === undefined) {
                 this.response.mensagens.push("Falha ao atualizar Restaurante.");
                 this.response.status = false;
@@ -106,7 +102,7 @@ let RestauranteService = class RestauranteService {
     }
     readAll(...params) {
         return __awaiter(this, void 0, void 0, function* () {
-            let query = yield this.restauranteRepository.find();
+            let query = yield this.restauranteRepository.find({ relations: ['cliente'] });
             if (query === undefined) {
                 this.response.mensagens.push("Falha ao buscar restaurantes.");
                 this.response.status = false;
@@ -122,7 +118,6 @@ __decorate([
 ], RestauranteService.prototype, "response", void 0);
 RestauranteService = __decorate([
     typedi_1.Service(),
-    __param(0, typeorm_typedi_extensions_1.OrmRepository(restaurante_model_1.Restaurante)),
-    __metadata("design:paramtypes", [typeorm_1.Repository])
+    __metadata("design:paramtypes", [])
 ], RestauranteService);
 exports.RestauranteService = RestauranteService;

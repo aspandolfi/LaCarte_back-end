@@ -62,25 +62,21 @@ __decorate([
     __metadata("design:type", Boolean)
 ], Restaurante.prototype, "ativo", void 0);
 __decorate([
-    typeorm_1.ManyToOne(type => type = cliente_model_1.Cliente, c => c.restaurantes),
+    typeorm_1.ManyToOne(type => cliente_model_1.Cliente, c => c.restaurantes, { lazy: true, eager: true }),
     class_transformer_1.Type(() => cliente_model_1.Cliente),
     __metadata("design:type", cliente_model_1.Cliente)
 ], Restaurante.prototype, "cliente", void 0);
 __decorate([
-    typeorm_2.OneToMany(type => type = cardapio_1.Cardapio, cardapio => cardapio.restaurante, {
-        lazy: true
-    }),
+    typeorm_2.OneToMany(type => cardapio_1.Cardapio, cardapio => cardapio.restaurante),
     class_transformer_1.Type(() => cardapio_1.Cardapio),
     __metadata("design:type", Array)
 ], Restaurante.prototype, "cardapios", void 0);
 __decorate([
-    typeorm_2.OneToMany(type => type = mesa_model_1.Mesa, mesa => mesa.restaurante, {
-        lazy: true
-    }),
+    typeorm_2.OneToMany(type => mesa_model_1.Mesa, mesa => mesa.restaurante),
     class_transformer_1.Type(() => mesa_model_1.Mesa),
     __metadata("design:type", Array)
 ], Restaurante.prototype, "mesas", void 0);
 Restaurante = __decorate([
-    typeorm_2.Entity()
+    typeorm_2.Entity("restaurantes")
 ], Restaurante);
 exports.Restaurante = Restaurante;

@@ -5,7 +5,7 @@ import { BaseEntity } from "../base-entity";
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { Type } from "class-transformer";
 
-@Entity()
+@Entity("mesas")
 export class Mesa extends BaseEntity {
   @Column({
     unique: true

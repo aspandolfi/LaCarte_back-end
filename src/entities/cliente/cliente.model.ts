@@ -11,7 +11,7 @@ import {
   IsOptional
 } from "class-validator";
 
-@Entity()
+@Entity("clientes")
 export class Cliente extends BaseEntity {
   @Column({ unique: true })
   @IsNotEmpty()
@@ -54,9 +54,8 @@ export class Cliente extends BaseEntity {
   @IsString()
   public token: string;
 
-  @OneToMany((type) => Restaurante, r => r.cliente, {
-    lazy: true
-  })
+  @OneToMany(type => Restaurante, r => r.cliente)
   @Type(() => Restaurante)
   public restaurantes: Restaurante[];
+
 }

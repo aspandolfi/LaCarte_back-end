@@ -11,6 +11,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const class_transformer_1 = require("class-transformer");
 const routing_controllers_1 = require("routing-controllers");
@@ -27,6 +35,12 @@ let ClienteController = class ClienteController {
     }
     httpGet(id) {
         return this.clienteService.readOne(id);
+    }
+    httpPut(props) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const cliente = class_transformer_1.plainToClass(cliente_1.Cliente, props);
+            return yield this.clienteService.update(props);
+        });
     }
 };
 __decorate([
@@ -56,6 +70,13 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], ClienteController.prototype, "httpGet", null);
+__decorate([
+    routing_controllers_1.Put(),
+    __param(0, routing_controllers_1.Body({ required: true })),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], ClienteController.prototype, "httpPut", null);
 ClienteController = __decorate([
     routing_controllers_1.JsonController("/cliente")
 ], ClienteController);

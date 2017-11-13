@@ -3,26 +3,29 @@ import { Restaurante } from "./../restaurante/restaurante.model";
 import { Service, Inject } from "typedi";
 import { Cardapio } from "./cardapio.model";
 import { IServiceBase } from "../base-entity/base-entity.service";
-import { OrmRepository } from "typeorm-typedi-extensions";
 import { Repository, getRepository } from "typeorm";
 import { validate } from "class-validator";
 import { ResponseData } from "../response-data";
+import { List } from "linqts";
 
 @Service()
 export class CardapioService implements IServiceBase<Cardapio> {
-  constructor( @OrmRepository(Cardapio) private repository: Repository<Cardapio>){
-    this.restauranteRepository = getRepository(Restaurante, "default");
-    this.produtoRepository = getRepository(Produto, "default");
-  }
   private restauranteRepository: Repository<Restaurante>;
-  private produtoRepository: Repository<Produto>; 
+  private produtoRepository: Repository<Produto>;
+  private repository: Repository<Cardapio>;
 
-  public create(props: Cardapio, ...params: any[]): Promise<ResponseData> {
+  constructor() {
+    this.repository = getRepository(Cardapio);
+    this.restauranteRepository = getRepository(Restaurante);
+    this.produtoRepository = getRepository(Produto);
+  }
+
+  async create(props: Cardapio, ...params: any[]): Promise<ResponseData> {
     let idRestaurante = params[0];
     let responseData = new ResponseData();
     return validate(props).then(errors => {
       if (errors.length > 0) {
-        errors.forEach(function(val) {
+        errors.forEach(function (val) {
           responseData.mensagens.push(val.value);
         });
         responseData.status = false;
@@ -41,14 +44,14 @@ export class CardapioService implements IServiceBase<Cardapio> {
         if (responseData.mensagens.length == 0) {
           responseData.mensagens.push("OK!");
           // props.restaurante = restaurante;
-          responseData.objeto = this.repository.persist(props);
+          responseData.objeto = this.repository.create(props);
         }
       }
       return responseData;
     });
   }
 
-  public readOne(id: number): Promise<Cardapio | ResponseData> {
+  async readOne(id: number): Promise<Cardapio | ResponseData> {
     let promise = new Promise<Cardapio | ResponseData>((resolve, reject) => {
       resolve(this.repository.findOneById(id));
       let response = new ResponseData();
@@ -60,17 +63,23 @@ export class CardapioService implements IServiceBase<Cardapio> {
     return promise;
   }
 
-  public update(props: Cardapio): Promise<Cardapio> {
-    return this.repository.persist(props);
+  async update(props: Cardapio): Promise<Cardapio> {
+    return this.repository.preload(props);
   }
 
   //funcao modificada
-  public drop(id: number): Promise<Cardapio> {
+  async drop(id: number): Promise<Cardapio> {
     let cardapio: Cardapio;
     this.readOne(id).then((res: Cardapio) => (cardapio = res));
     return this.repository.remove(cardapio);
   }
-  public readAll(): Promise<Cardapio[]> {
-    return this.repository.find();
+
+  async readAll(): Promise<Cardapio[] | any> {
+
+    let query = await this.repository.find();
+
+    let produtos = [];
+
+    return produtos;
   }
 }

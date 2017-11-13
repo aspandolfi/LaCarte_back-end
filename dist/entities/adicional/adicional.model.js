@@ -26,16 +26,16 @@ __decorate([
     __metadata("design:type", String)
 ], Adicional.prototype, "nome", void 0);
 __decorate([
-    typeorm_1.OneToMany(type => type = produto_adicionais_model_1.ProdutoAdicionais, produtoAdicionais => produtoAdicionais.adicionais),
+    typeorm_1.OneToMany(type => produto_adicionais_model_1.ProdutoAdicionais, produtoAdicionais => produtoAdicionais.adicionais),
     class_transformer_1.Type(() => produto_adicionais_model_1.ProdutoAdicionais),
     __metadata("design:type", Array)
 ], Adicional.prototype, "produtosAdicionais", void 0);
 __decorate([
-    typeorm_1.OneToMany(type => type = pedido_item_adicional_model_1.ItemPedidoAdicional, i => i.adicional),
+    typeorm_1.OneToMany(type => pedido_item_adicional_model_1.ItemPedidoAdicional, i => i.adicional),
     class_transformer_1.Type(() => produto_adicionais_model_1.ProdutoAdicionais),
     __metadata("design:type", Array)
 ], Adicional.prototype, "itemPedidoAdicionais", void 0);
 Adicional = __decorate([
-    typeorm_1.Entity()
+    typeorm_1.Entity("adicionais")
 ], Adicional);
 exports.Adicional = Adicional;

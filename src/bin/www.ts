@@ -25,27 +25,10 @@ useContainer(Container);
 
 const port = process.env.port || 8082;
 
-createConnection({
-  ...config.sql,
-  entities: [
-    BaseEntity,
-    User,
-    Adicional,
-    ItemPedidoAdicional,
-    Pedido,
-    ItemPedido,
-    Produto,
-    ProdutoAdicionais,
-    TipoProduto,
-    Mesa,
-    Cliente,
-    Cardapio,
-    Restaurante
-  ]
-}).then(
+createConnection().then(
   () => http
     .createServer(app)
     .listen(port, () => console.log('Server started on port ' + port))
-  ).catch(
+).catch(
   (err: Error) => console.error(err.message)
   );

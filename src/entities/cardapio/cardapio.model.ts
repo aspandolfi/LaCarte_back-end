@@ -1,10 +1,10 @@
 import { Produto } from './../produto/produto.model';
-import { Column, Entity, ManyToOne, ManyToMany } from "typeorm";
+import { Column, Entity, ManyToOne, ManyToMany, RelationId } from "typeorm";
 import { BaseEntity } from "../base-entity";
 import { Restaurante } from "../restaurante";
 import { IsString, IsNotEmpty } from "class-validator";
 
-@Entity()
+@Entity("cardapios")
 export class Cardapio extends BaseEntity {
   @Column({
     length: 50
@@ -25,11 +25,9 @@ export class Cardapio extends BaseEntity {
     default: true
   }) public ativo: boolean;
 
-  @ManyToOne(type => (type = Restaurante), restaurante => restaurante.cardapios)
+  @ManyToOne(type => Restaurante, restaurante => restaurante.cardapios)
   public restaurante: Restaurante;
 
-  @ManyToMany(type => (type = Produto), produtos => produtos.cardapios, {
-    lazy: true
-  })
+  @ManyToMany(type => Produto, produtos => produtos.cardapios)
   public produtos: Produto[];
 }

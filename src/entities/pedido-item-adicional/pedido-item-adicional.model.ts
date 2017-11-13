@@ -6,7 +6,7 @@ import { BaseEntity } from "../base-entity";
 import { IsInt } from "class-validator";
 import { Type } from "class-transformer";
 
-@Entity()
+@Entity("adicionais_item_pedido")
 export class ItemPedidoAdicional extends BaseEntity {
   @Column({
     type: 'int'
@@ -14,11 +14,11 @@ export class ItemPedidoAdicional extends BaseEntity {
   @IsInt()
   public quantidade: number;
 
-  @ManyToOne(type => type = ItemPedido, itemPedido => itemPedido.adicionais)
+  @ManyToOne(type => ItemPedido, itemPedido => itemPedido.adicionais)
   @Type(() => Pedido)
   public itemPedido: ItemPedido;
 
-  @ManyToOne(type => type = Adicional, a => a.itemPedidoAdicionais)
+  @ManyToOne(type => Adicional, a => a.itemPedidoAdicionais)
   @Type(() => Adicional)
   public adicional: Adicional;
 }

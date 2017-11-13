@@ -1,7 +1,6 @@
 import { ItemPedido } from "./pedido-item.model";
 import { Service } from "typedi";
 import { IServiceBase } from "../base-entity/base-entity.service";
-import { OrmRepository } from "typeorm-typedi-extensions";
 import { getRepository, Repository } from 'typeorm';
 import { ResponseData } from "../response-data";
 import { validate } from "class-validator";
@@ -9,12 +8,16 @@ import { Pedido, Produto } from "../index";
 
 @Service()
 export class ItemPedidoService implements IServiceBase<ItemPedido> {
-  constructor(@OrmRepository(ItemPedido) private repository: Repository<ItemPedido>){
-    this.PedidoRepository = getRepository(Pedido,"default");
-    this.ProdutoRepository = getRepository(Produto,"default");
+  private PedidoRepository: Repository<Pedido>;
+  private ProdutoRepository: Repository<Produto>;
+  private repository: Repository<ItemPedido>;
+
+  constructor() {
+    this.PedidoRepository = getRepository(Pedido);
+    this.ProdutoRepository = getRepository(Produto);
+    this.repository = getRepository(ItemPedido);
   }
-  private PedidoRepository: Repository <Pedido>;
-  private ProdutoRepository: Repository <Produto>;
+
 
   create(props: ItemPedido, ...params: any[]): Promise<ItemPedido | ResponseData> {
     let idPedido = params[0];
@@ -22,14 +25,14 @@ export class ItemPedidoService implements IServiceBase<ItemPedido> {
     let responseData = new ResponseData();
     return validate(props).then(errors => {
       if (errors.length > 0) {
-        errors.forEach(function(val) {
+        errors.forEach(function (val) {
           responseData.mensagens.push(val.value);
         });
         responseData.status = false;
         responseData.objeto = props;
       } else {
         responseData.mensagens.push("OK!");
-        responseData.objeto = this.repository.persist(props);
+        responseData.objeto = this.repository.create(props);
       }
       return responseData;
     });
@@ -48,7 +51,7 @@ export class ItemPedidoService implements IServiceBase<ItemPedido> {
     return result;
   }
   update(props: ItemPedido): Promise<ItemPedido> {
-    return this.repository.persist(props);
+    return this.repository.preload(props);
   }
   drop(id: number): Promise<ItemPedido> {
     let result: any = {};

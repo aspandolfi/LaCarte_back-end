@@ -8,14 +8,26 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const produto_adicionais_model_1 = require("./produto-adicionais.model");
 const typedi_1 = require("typedi");
-const typeorm_typedi_extensions_1 = require("typeorm-typedi-extensions");
 const typeorm_1 = require("typeorm");
 let ProdutoAdicionaisService = class ProdutoAdicionaisService {
+    constructor() {
+        this.repository = typeorm_1.getRepository(produto_adicionais_model_1.ProdutoAdicionais);
+    }
     create(props) {
-        return this.repository.persist(props);
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.repository.create(props);
+        });
     }
     readOne(id) {
         let result = {};
@@ -31,7 +43,7 @@ let ProdutoAdicionaisService = class ProdutoAdicionaisService {
         return result;
     }
     update(props) {
-        return this.repository.persist(props);
+        return this.repository.preload(props);
     }
     drop(id) {
         let result = {};
@@ -52,11 +64,8 @@ let ProdutoAdicionaisService = class ProdutoAdicionaisService {
         return this.repository.find();
     }
 };
-__decorate([
-    typeorm_typedi_extensions_1.OrmRepository(produto_adicionais_model_1.ProdutoAdicionais),
-    __metadata("design:type", typeorm_1.Repository)
-], ProdutoAdicionaisService.prototype, "repository", void 0);
 ProdutoAdicionaisService = __decorate([
-    typedi_1.Service()
+    typedi_1.Service(),
+    __metadata("design:paramtypes", [])
 ], ProdutoAdicionaisService);
 exports.ProdutoAdicionaisService = ProdutoAdicionaisService;

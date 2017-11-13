@@ -77,11 +77,11 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "tokenFacebook", void 0);
 __decorate([
-    typeorm_1.OneToMany(() => pedido_model_1.Pedido, pedido => pedido.user),
+    typeorm_1.OneToMany(type => pedido_model_1.Pedido, pedido => pedido.user),
     class_transformer_1.Type(() => pedido_model_1.Pedido),
     __metadata("design:type", Array)
 ], User.prototype, "pedidos", void 0);
 User = __decorate([
-    typeorm_1.Entity()
+    typeorm_1.Entity("usuarios")
 ], User);
 exports.User = User;

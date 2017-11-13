@@ -12,7 +12,7 @@ import {
   IsOptional
 } from "class-validator";
 
-@Entity()
+@Entity("usuarios")
 export class User extends BaseEntity {
   @Column({
     nullable: true
@@ -64,7 +64,7 @@ export class User extends BaseEntity {
   @IsString()
   tokenFacebook: string;
 
-  @OneToMany(() => Pedido, pedido => pedido.user)
+  @OneToMany(type => Pedido, pedido => pedido.user)
   @Type(() => Pedido)
   public pedidos: Pedido[];
 }

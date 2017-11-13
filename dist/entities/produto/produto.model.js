@@ -56,26 +56,26 @@ __decorate([
     __metadata("design:type", Boolean)
 ], Produto.prototype, "ativo", void 0);
 __decorate([
-    typeorm_1.ManyToMany(type => cardapio_1.Cardapio),
+    typeorm_1.ManyToMany(type => cardapio_1.Cardapio, cardapios => cardapios.produtos),
     typeorm_1.JoinTable(),
     __metadata("design:type", Array)
 ], Produto.prototype, "cardapios", void 0);
 __decorate([
-    typeorm_1.ManyToOne(type => (type = produto_tipo_1.TipoProduto), tipoProduto => tipoProduto.produtos),
+    typeorm_1.ManyToOne(type => produto_tipo_1.TipoProduto, tipoProduto => tipoProduto.produtos),
     class_transformer_1.Type(() => produto_tipo_1.TipoProduto),
     __metadata("design:type", produto_tipo_1.TipoProduto)
 ], Produto.prototype, "tipoProduto", void 0);
 __decorate([
-    typeorm_1.OneToMany(type => (type = produto_adicionais_model_1.ProdutoAdicionais), produtoAdicionais => produtoAdicionais.produto, { lazy: true }),
+    typeorm_1.OneToMany(type => produto_adicionais_model_1.ProdutoAdicionais, produtoAdicionais => produtoAdicionais.produto),
     class_transformer_1.Type(() => produto_adicionais_model_1.ProdutoAdicionais),
     __metadata("design:type", Array)
 ], Produto.prototype, "produtosAdicionais", void 0);
 __decorate([
-    typeorm_1.OneToMany(type => (type = pedido_item_model_1.ItemPedido), itemPedido => itemPedido.produto),
+    typeorm_1.OneToMany(type => pedido_item_model_1.ItemPedido, itemPedido => itemPedido.produto),
     class_transformer_1.Type(() => pedido_item_model_1.ItemPedido),
     __metadata("design:type", Array)
 ], Produto.prototype, "itensPedido", void 0);
 Produto = __decorate([
-    typeorm_1.Entity()
+    typeorm_1.Entity("produtos")
 ], Produto);
 exports.Produto = Produto;

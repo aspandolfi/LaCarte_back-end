@@ -6,7 +6,7 @@ import { BaseEntity } from "../base-entity";
 import { IsNumber, IsBoolean } from "class-validator";
 import { Type } from "class-transformer";
 
-@Entity()
+@Entity("pedidos")
 export class Pedido extends BaseEntity {
   @Column({
     nullable: true,
@@ -21,15 +21,15 @@ export class Pedido extends BaseEntity {
   @IsBoolean()
   public fechado: boolean;
 
-  @ManyToOne(type => type = User, user => user.pedidos)
+  @ManyToOne(type => User, user => user.pedidos)
   @Type(() => User)
   public user: User;
 
-  @ManyToOne(type => type = Mesa, mesa => mesa.pedidos)
+  @ManyToOne(type => Mesa, mesa => mesa.pedidos)
   @Type(() => Mesa)
   public mesa: Mesa;
 
-  @OneToMany(type => type = ItemPedido, item => item.pedido)
+  @OneToMany(type => ItemPedido, item => item.pedido)
   @Type(() => ItemPedido)
   public itens: ItemPedido[];
 }

@@ -34,21 +34,21 @@ __decorate([
     __metadata("design:type", Boolean)
 ], Pedido.prototype, "fechado", void 0);
 __decorate([
-    typeorm_1.ManyToOne(type => type = user_model_1.User, user => user.pedidos),
+    typeorm_1.ManyToOne(type => user_model_1.User, user => user.pedidos),
     class_transformer_1.Type(() => user_model_1.User),
     __metadata("design:type", user_model_1.User)
 ], Pedido.prototype, "user", void 0);
 __decorate([
-    typeorm_1.ManyToOne(type => type = mesa_model_1.Mesa, mesa => mesa.pedidos),
+    typeorm_1.ManyToOne(type => mesa_model_1.Mesa, mesa => mesa.pedidos),
     class_transformer_1.Type(() => mesa_model_1.Mesa),
     __metadata("design:type", mesa_model_1.Mesa)
 ], Pedido.prototype, "mesa", void 0);
 __decorate([
-    typeorm_1.OneToMany(type => type = pedido_item_model_1.ItemPedido, item => item.pedido),
+    typeorm_1.OneToMany(type => pedido_item_model_1.ItemPedido, item => item.pedido),
     class_transformer_1.Type(() => pedido_item_model_1.ItemPedido),
     __metadata("design:type", Array)
 ], Pedido.prototype, "itens", void 0);
 Pedido = __decorate([
-    typeorm_1.Entity()
+    typeorm_1.Entity("pedidos")
 ], Pedido);
 exports.Pedido = Pedido;

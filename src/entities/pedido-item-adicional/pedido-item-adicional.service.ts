@@ -1,23 +1,25 @@
 import { ItemPedidoAdicional } from './pedido-item-adicional.model';
 import { Service } from 'typedi';
 import { IServiceBase } from "../base-entity/base-entity.service";
-import { OrmRepository } from 'typeorm-typedi-extensions';
-import { Repository } from 'typeorm';
+import { Repository, getRepository } from 'typeorm';
 import { ResponseData } from "../response-data";
 import { validate } from "class-validator";
 
 @Service()
 export class ItemPedidoAdicionalService implements IServiceBase<ItemPedidoAdicional> {
+  private repository: Repository<ItemPedidoAdicional>;
 
-  @OrmRepository(ItemPedidoAdicional) repository: Repository<ItemPedidoAdicional>;
+  constructor() {
+    this.repository = getRepository(ItemPedidoAdicional);
+  }
 
-  public create(props: ItemPedidoAdicional, ...params:any[]): Promise<ItemPedidoAdicional | ResponseData> {
+  public create(props: ItemPedidoAdicional, ...params: any[]): Promise<ItemPedidoAdicional | ResponseData> {
     let idItemPedido = params[0];
     let idAdicional = params[1];
     let response = new ResponseData();
     return validate(props).then(errors => {
       if (errors.length > 0) {
-        errors.forEach(function(val) {
+        errors.forEach(function (val) {
           response.mensagens.push(val.value);
         });
         response.status = false;
@@ -26,7 +28,7 @@ export class ItemPedidoAdicionalService implements IServiceBase<ItemPedidoAdicio
         response.mensagens.push("OK!");
         props.adicional = idAdicional;
         props.itemPedido = idItemPedido;
-        response.objeto = this.repository.persist(props);
+        response.objeto = this.repository.create(props);
       }
       return response;
     });
@@ -44,7 +46,7 @@ export class ItemPedidoAdicionalService implements IServiceBase<ItemPedidoAdicio
     return result;
   }
   update(props: ItemPedidoAdicional): Promise<ItemPedidoAdicional> {
-    return this.repository.persist(props);
+    return this.repository.preload(props);
   }
   drop(id: number): Promise<ItemPedidoAdicional> {
     let result: any = {};

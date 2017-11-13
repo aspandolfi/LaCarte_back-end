@@ -3,7 +3,6 @@ import { Cliente } from "../cliente";
 import { ResponseData } from "../response-data";
 import { IServiceBase } from "../base-entity";
 import { Service, Inject } from "typedi";
-import { OrmRepository } from "typeorm-typedi-extensions";
 import { Repository, getRepository } from "typeorm";
 import { validate } from "class-validator";
 
@@ -11,14 +10,15 @@ import { validate } from "class-validator";
 export class RestauranteService implements IServiceBase<Restaurante> {
   @Inject() private response: ResponseData;
   private clienteRepository: Repository<Cliente>;
+  private restauranteRepository: Repository<Restaurante>;
 
-  constructor( @OrmRepository(Restaurante) private restauranteRepository: Repository<Restaurante>) {
-    this.clienteRepository = getRepository(Cliente, "default");
+  constructor() {
+    this.restauranteRepository = getRepository(Restaurante)
+    this.clienteRepository = getRepository(Cliente);
   }
 
   async create(props: Restaurante, ...params: any[]): Promise<ResponseData> {
     let idCliente = params[0];
-
     let errors = await validate(props);
 
     if (errors.length == 0) {
@@ -31,7 +31,7 @@ export class RestauranteService implements IServiceBase<Restaurante> {
       }
 
       props.cliente = dbCliente;
-      let result = await this.restauranteRepository.persist(props);
+      let result = await this.restauranteRepository.create(props);
 
       if (result === undefined) {
         this.response.mensagens.push("Erro ao salvar restaurante no banco de dados.");
@@ -68,7 +68,7 @@ export class RestauranteService implements IServiceBase<Restaurante> {
       return this.response;
     }
 
-    let result = await this.restauranteRepository.persist(props);
+    let result = await this.restauranteRepository.preload(props);
 
     if (result === undefined) {
       this.response.mensagens.push("Falha ao atualizar Restaurante.");
@@ -98,8 +98,8 @@ export class RestauranteService implements IServiceBase<Restaurante> {
   }
 
   async readAll(...params: any[]): Promise<Restaurante[] | ResponseData> {
-    let query = await this.restauranteRepository.find();
 
+    let query = await this.restauranteRepository.find({ relations: ['cliente'] });
     if (query === undefined) {
       this.response.mensagens.push("Falha ao buscar restaurantes.");
       this.response.status = false;

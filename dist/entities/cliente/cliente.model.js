@@ -64,13 +64,11 @@ __decorate([
     __metadata("design:type", String)
 ], Cliente.prototype, "token", void 0);
 __decorate([
-    typeorm_1.OneToMany((type) => restaurante_model_1.Restaurante, r => r.cliente, {
-        lazy: true
-    }),
+    typeorm_1.OneToMany(type => restaurante_model_1.Restaurante, r => r.cliente),
     class_transformer_1.Type(() => restaurante_model_1.Restaurante),
     __metadata("design:type", Array)
 ], Cliente.prototype, "restaurantes", void 0);
 Cliente = __decorate([
-    typeorm_1.Entity()
+    typeorm_1.Entity("clientes")
 ], Cliente);
 exports.Cliente = Cliente;

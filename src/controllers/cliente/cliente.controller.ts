@@ -6,7 +6,8 @@ import {
   JsonController,
   Post,
   Get,
-  UseBefore
+  UseBefore,
+  Put
 } from "routing-controllers";
 import { Inject } from "typedi";
 import { ICliente, Cliente, ClienteService } from "../../entities/cliente";
@@ -24,7 +25,7 @@ export class ClienteController {
       required: true
     })
     props: ICliente
-  ): Promise<Cliente | any> {
+    ): Promise<Cliente | any> {
     let cliente = plainToClass(Cliente, props);
     return this.clienteService.create(cliente);
   }
@@ -35,7 +36,13 @@ export class ClienteController {
   }
 
   @Get("/:id")
-  public httpGet(@Param("id") id: number): Promise<any> {
+  public httpGet( @Param("id") id: number): Promise<any> {
     return this.clienteService.readOne(id);
+  }
+
+  @Put()
+  public async httpPut( @Body({ required: true }) props: any): Promise<Cliente | any> {
+    const cliente = plainToClass(Cliente, props);
+    return await this.clienteService.update(props);
   }
 }

@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const produto_model_1 = require("./../produto/produto.model");
 const typeorm_1 = require("typeorm");
 const base_entity_1 = require("../base-entity");
-// import  Produto  from "../produto";
 const class_validator_1 = require("class-validator");
 const class_transformer_1 = require("class-transformer");
 let TipoProduto = class TipoProduto extends base_entity_1.BaseEntity {
@@ -26,11 +25,11 @@ __decorate([
     __metadata("design:type", String)
 ], TipoProduto.prototype, "nome", void 0);
 __decorate([
-    typeorm_1.OneToMany(type => type = produto_model_1.Produto, produtos => produtos.tipoProduto),
+    typeorm_1.OneToMany(type => produto_model_1.Produto, produtos => produtos.tipoProduto),
     class_transformer_1.Type(() => produto_model_1.Produto),
     __metadata("design:type", Array)
 ], TipoProduto.prototype, "produtos", void 0);
 TipoProduto = __decorate([
-    typeorm_1.Entity()
+    typeorm_1.Entity("tipos_produto")
 ], TipoProduto);
 exports.TipoProduto = TipoProduto;

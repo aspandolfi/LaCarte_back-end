@@ -8,19 +8,15 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
 const typeorm_1 = require("typeorm");
-const typeorm_typedi_extensions_1 = require("typeorm-typedi-extensions");
 const user_model_1 = require("./user.model");
 const response_data_1 = require("../response-data");
 const class_validator_1 = require("class-validator");
 let UserService = class UserService {
-    constructor(repository) {
-        this.repository = repository;
+    constructor() {
+        this.repository = typeorm_1.getRepository(user_model_1.User);
     }
     create(props) {
         let response = new response_data_1.ResponseData();
@@ -33,7 +29,7 @@ let UserService = class UserService {
             //   response.objeto = props;
             // } else {
             //   response.mensagens.push("OK!");
-            response.objeto = this.repository.persist(props);
+            response.objeto = this.repository.create(props);
             // }
             return response;
         });
@@ -59,7 +55,7 @@ let UserService = class UserService {
         return promise;
     }
     update(props) {
-        return this.repository.persist(props);
+        return this.repository.preload(props);
     }
     drop(id) {
         let user;
@@ -76,7 +72,6 @@ let UserService = class UserService {
 };
 UserService = __decorate([
     typedi_1.Service(),
-    __param(0, typeorm_typedi_extensions_1.OrmRepository(user_model_1.User)),
-    __metadata("design:paramtypes", [typeorm_1.Repository])
+    __metadata("design:paramtypes", [])
 ], UserService);
 exports.UserService = UserService;

@@ -3,7 +3,6 @@ import { Restaurante } from "./../restaurante/restaurante.model";
 import { Mesa } from "./mesa.model";
 import { Service } from "typedi";
 import { IServiceBase } from "../base-entity";
-import { OrmRepository } from "typeorm-typedi-extensions";
 import { Repository, getRepository } from "typeorm";
 import { validate } from "class-validator";
 import { ResponseData } from "../response-data";
@@ -11,9 +10,11 @@ import { ResponseData } from "../response-data";
 @Service()
 export class MesaService implements IServiceBase<Mesa> {
   private restauranteRepository: Repository<Restaurante>;
+  private mesaRepository: Repository<Mesa>;
 
-  constructor( @OrmRepository(Mesa) private mesaRepository: Repository<Mesa>) {
-    this.restauranteRepository = getRepository(Restaurante, "default");
+  constructor() {
+    this.mesaRepository = getRepository(Mesa);
+    this.restauranteRepository = getRepository(Restaurante);
   }
 
   async create(props: Mesa, ...params: any[]): Promise<ResponseData> {
@@ -27,20 +28,7 @@ export class MesaService implements IServiceBase<Mesa> {
       let restaurante = await this.restauranteRepository.findOneById(idRestaurante);
       if (restaurante) {
         props.restaurante = restaurante;
-        let result = await this.mesaRepository.persist(props)
-          .then(res => {
-            return res;
-          })
-          .catch(err => {
-            return err
-          });
-
-        if (result.message) {
-          responseData.mensagens.push(result.message);
-        }
-        else {
-          responseData.mensagens.push("OK");
-        }
+        let result = await this.mesaRepository.create(props);
       }
       else {
         errors.forEach(val => responseData.mensagens.push(val.value));
@@ -54,7 +42,7 @@ export class MesaService implements IServiceBase<Mesa> {
     return this.mesaRepository.findOneById(id);
   }
   update(props: Mesa): Promise<Mesa> {
-    return this.mesaRepository.persist(props);
+    return this.mesaRepository.preload(props);
   }
   drop(id: number): Promise<Mesa> {
     let result: any = {};

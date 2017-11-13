@@ -1,15 +1,18 @@
 import { config } from "./../../config/config";
 import { IServiceBase } from "../base-entity";
 import { Service } from "typedi";
-import { Repository } from "typeorm";
-import { OrmRepository } from "typeorm-typedi-extensions";
+import { Repository, getRepository } from "typeorm";
 import { User } from "./user.model";
 import { ResponseData } from "../response-data";
 import { validate } from "class-validator";
 
 @Service()
 export class UserService implements IServiceBase<User> {
-  constructor(@OrmRepository(User) private repository: Repository<User>) {}
+  private repository: Repository<User>;
+
+  constructor() {
+    this.repository = getRepository(User);
+  }
 
   public create(props: User): Promise<User | ResponseData> {
     let response = new ResponseData();
@@ -22,7 +25,7 @@ export class UserService implements IServiceBase<User> {
       //   response.objeto = props;
       // } else {
       //   response.mensagens.push("OK!");
-        response.objeto = this.repository.persist(props);
+      response.objeto = this.repository.create(props);
       // }
       return response;
     });
@@ -52,7 +55,7 @@ export class UserService implements IServiceBase<User> {
   }
 
   public update(props: User): Promise<User> {
-    return this.repository.persist(props);
+    return this.repository.preload(props);
   }
 
   public drop(id: number): Promise<User> {

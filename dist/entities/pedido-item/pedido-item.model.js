@@ -40,7 +40,7 @@ __decorate([
 ], ItemPedido.prototype, "valorDesconto", void 0);
 __decorate([
     typeorm_1.Column({
-        type: 'string',
+        type: 'varchar',
         length: 500,
         nullable: true
     }),
@@ -56,21 +56,21 @@ __decorate([
     __metadata("design:type", Number)
 ], ItemPedido.prototype, "status", void 0);
 __decorate([
-    typeorm_1.ManyToOne(type => type = pedido_model_1.Pedido, p => p.itens),
+    typeorm_1.ManyToOne(type => pedido_model_1.Pedido, p => p.itens),
     class_transformer_1.Type(() => pedido_model_1.Pedido),
     __metadata("design:type", pedido_model_1.Pedido)
 ], ItemPedido.prototype, "pedido", void 0);
 __decorate([
-    typeorm_1.ManyToOne(type => type = produto_model_1.Produto, produto => produto.itensPedido),
+    typeorm_1.ManyToOne(type => produto_model_1.Produto, produto => produto.itensPedido),
     class_transformer_1.Type(() => produto_model_1.Produto),
     __metadata("design:type", produto_model_1.Produto)
 ], ItemPedido.prototype, "produto", void 0);
 __decorate([
-    typeorm_1.OneToMany(type => type = pedido_item_adicional_model_1.ItemPedidoAdicional, i => i.itemPedido),
+    typeorm_1.OneToMany(type => pedido_item_adicional_model_1.ItemPedidoAdicional, i => i.itemPedido),
     class_transformer_1.Type(() => pedido_item_adicional_model_1.ItemPedidoAdicional),
     __metadata("design:type", Array)
 ], ItemPedido.prototype, "adicionais", void 0);
 ItemPedido = __decorate([
-    typeorm_1.Entity()
+    typeorm_1.Entity("itens_pedido")
 ], ItemPedido);
 exports.ItemPedido = ItemPedido;

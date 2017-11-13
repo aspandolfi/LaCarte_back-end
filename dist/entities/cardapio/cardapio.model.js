@@ -40,16 +40,14 @@ __decorate([
     __metadata("design:type", Boolean)
 ], Cardapio.prototype, "ativo", void 0);
 __decorate([
-    typeorm_1.ManyToOne(type => (type = restaurante_1.Restaurante), restaurante => restaurante.cardapios),
+    typeorm_1.ManyToOne(type => restaurante_1.Restaurante, restaurante => restaurante.cardapios),
     __metadata("design:type", restaurante_1.Restaurante)
 ], Cardapio.prototype, "restaurante", void 0);
 __decorate([
-    typeorm_1.ManyToMany(type => (type = produto_model_1.Produto), produtos => produtos.cardapios, {
-        lazy: true
-    }),
+    typeorm_1.ManyToMany(type => produto_model_1.Produto, produtos => produtos.cardapios),
     __metadata("design:type", Array)
 ], Cardapio.prototype, "produtos", void 0);
 Cardapio = __decorate([
-    typeorm_1.Entity()
+    typeorm_1.Entity("cardapios")
 ], Cardapio);
 exports.Cardapio = Cardapio;

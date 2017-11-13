@@ -1,31 +1,30 @@
 import { Adicional } from './adicional.model';
 import { Service } from 'typedi';
 import { IServiceBase } from "../base-entity/base-entity.service";
-import { OrmRepository } from 'typeorm-typedi-extensions';
-import { Repository } from 'typeorm';
+import { Repository, getRepository } from 'typeorm';
 import { validate } from "class-validator";
 import { ResponseData } from "../response-data";
 
-
 @Service()
 export class AdicionalService implements IServiceBase<Adicional> {
+  private repository: Repository<Adicional>;
 
-  constructor(@OrmRepository(Adicional) private repository: Repository<Adicional>){
-
+  constructor() {
+    this.repository = getRepository(Adicional);
   }
-  
+
   public create(props: Adicional): Promise<Adicional | ResponseData> {
     let response = new ResponseData();
     return validate(props).then(errors => {
       if (errors.length > 0) {
-        errors.forEach(function(val) {
+        errors.forEach(function (val) {
           response.mensagens.push(val.value);
         });
         response.status = false;
         response.objeto = props;
       } else {
         response.mensagens.push("OK!");
-        response.objeto = this.repository.persist(props);
+        response.objeto = this.repository.create(props);
       }
       return response;
     });
@@ -44,7 +43,7 @@ export class AdicionalService implements IServiceBase<Adicional> {
     return result;
   }
   update(props: Adicional): Promise<Adicional> {
-    return this.repository.persist(props);
+    return this.repository.preload(props);
   }
   drop(id: number): Promise<Adicional> {
     let result: any = {};

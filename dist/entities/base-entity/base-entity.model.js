@@ -11,31 +11,45 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const class_transformer_1 = require("class-transformer");
 const typeorm_1 = require("typeorm");
-let BaseEntity = class BaseEntity {
-};
+class BaseEntity {
+    create() {
+        this.createdAt = new Date();
+        this.updatedAt = this.createdAt;
+    }
+    update() {
+        this.updatedAt = new Date();
+        this.version++;
+    }
+}
 __decorate([
-    typeorm_1.PrimaryColumn("int", {
-        type: "int",
-        generated: true
-    }),
+    typeorm_1.PrimaryGeneratedColumn({ type: 'int' }),
     __metadata("design:type", Number)
 ], BaseEntity.prototype, "id", void 0);
 __decorate([
-    typeorm_1.CreateDateColumn(),
+    typeorm_1.Column({ type: "datetime" }),
     class_transformer_1.Exclude(),
     __metadata("design:type", Date)
 ], BaseEntity.prototype, "createdAt", void 0);
 __decorate([
-    typeorm_1.UpdateDateColumn(),
+    typeorm_1.Column({ type: "datetime" }),
     class_transformer_1.Exclude(),
     __metadata("design:type", Date)
 ], BaseEntity.prototype, "updatedAt", void 0);
 __decorate([
-    typeorm_1.VersionColumn(),
+    typeorm_1.VersionColumn({ default: 0 }),
     class_transformer_1.Exclude(),
     __metadata("design:type", Number)
 ], BaseEntity.prototype, "version", void 0);
-BaseEntity = __decorate([
-    typeorm_1.AbstractEntity()
-], BaseEntity);
+__decorate([
+    typeorm_1.BeforeInsert(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], BaseEntity.prototype, "create", null);
+__decorate([
+    typeorm_1.BeforeUpdate(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], BaseEntity.prototype, "update", null);
 exports.BaseEntity = BaseEntity;

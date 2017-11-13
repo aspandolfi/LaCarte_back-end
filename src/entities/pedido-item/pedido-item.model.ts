@@ -12,7 +12,7 @@ enum Status {
   Recusado
 }
 
-@Entity()
+@Entity("itens_pedido")
 export class ItemPedido extends BaseEntity {
   @Column({
     type: 'int'
@@ -27,7 +27,7 @@ export class ItemPedido extends BaseEntity {
   public valorDesconto: number;
 
   @Column({
-    type: 'string',
+    type: 'varchar',
     length: 500,
     nullable: true
   })
@@ -41,15 +41,15 @@ export class ItemPedido extends BaseEntity {
   @IsEnum(Status)
   public status: Status;
 
-  @ManyToOne(type => type = Pedido, p => p.itens)
+  @ManyToOne(type => Pedido, p => p.itens)
   @Type(() => Pedido)
   public pedido: Pedido;
 
-  @ManyToOne(type => type = Produto, produto => produto.itensPedido)
+  @ManyToOne(type => Produto, produto => produto.itensPedido)
   @Type(() => Produto)
   public produto: Produto;
 
-  @OneToMany(type => type = ItemPedidoAdicional, i => i.itemPedido)
+  @OneToMany(type => ItemPedidoAdicional, i => i.itemPedido)
   @Type(() => ItemPedidoAdicional)
   public adicionais: ItemPedidoAdicional[];
 }

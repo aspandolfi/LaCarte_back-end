@@ -38,7 +38,7 @@ export class CardapioController {
   }
 
   @Get()
-  public httpGetAll(): Promise<Cardapio[] | string> {
+  public httpGetAll(): Promise<Cardapio[] | any> {
     return this.cardapioService.readAll();
   }
 

@@ -1,28 +1,41 @@
 import { Exclude } from "class-transformer";
 import {
-  AbstractEntity,
+  Column,
   CreateDateColumn,
   PrimaryColumn,
   UpdateDateColumn,
-  VersionColumn
+  VersionColumn,
+  PrimaryGeneratedColumn,
+  BeforeInsert,
+  BeforeUpdate
 } from "typeorm";
 
-@AbstractEntity()
 export abstract class BaseEntity {
-  @PrimaryColumn("int", {
-    type: "int",
-    generated: true
-  })
+  @PrimaryGeneratedColumn({ type: 'int' })
   public id: number;
 
-  @CreateDateColumn()
+  @Column({ type: "datetime" })
   @Exclude()
-  public createdAt?: Date;
+  public createdAt: Date;
 
-  @UpdateDateColumn()
+  @Column({ type: "datetime" })
   @Exclude()
-  public updatedAt?: Date;
-  @VersionColumn()
+  public updatedAt: Date;
+
+  @VersionColumn({ default: 0 })
   @Exclude()
-  public version?: number;
+  public version: number;
+
+  @BeforeInsert()
+  create() {
+    this.createdAt = new Date();
+    this.updatedAt = this.createdAt;
+  }
+
+  @BeforeUpdate()
+  update() {
+    this.updatedAt = new Date();
+    this.version++
+  }
+
 }
