@@ -9,10 +9,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const class_transformer_1 = require("class-transformer");
 const pedido_model_1 = require("./../pedido/pedido.model");
-const typeorm_1 = require("typeorm");
 const base_entity_1 = require("../base-entity");
+const typeorm_1 = require("typeorm");
+const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
 let User = class User extends base_entity_1.BaseEntity {
 };
@@ -21,13 +21,13 @@ __decorate([
         nullable: true
     }),
     class_validator_1.IsOptional(),
-    class_validator_1.IsDate(),
+    class_validator_1.IsDate({ message: 'Data de Nascimento Inválida.' }),
     __metadata("design:type", Date)
 ], User.prototype, "dataNascimento", void 0);
 __decorate([
     typeorm_1.Column({ unique: true }),
-    class_validator_1.IsNotEmpty(),
-    class_validator_1.IsEmail(),
+    class_validator_1.IsNotEmpty({ message: 'E-mail não pode estar em branco.' }),
+    class_validator_1.IsEmail(null, { message: 'E-mail inválido.' }),
     __metadata("design:type", String)
 ], User.prototype, "email", void 0);
 __decorate([
@@ -36,11 +36,12 @@ __decorate([
         length: 11
     }),
     class_validator_1.Length(11, 11),
-    class_validator_1.IsNumberString(),
+    class_validator_1.IsNumberString({ message: 'CPF inválido.' }),
     __metadata("design:type", String)
 ], User.prototype, "cpf", void 0);
 __decorate([
-    typeorm_1.Column(),
+    typeorm_1.Column({ type: 'varchar', length: 128 }),
+    class_transformer_1.Exclude({ toPlainOnly: true }),
     __metadata("design:type", String)
 ], User.prototype, "senha", void 0);
 __decorate([
@@ -70,12 +71,6 @@ __decorate([
     class_validator_1.IsString(),
     __metadata("design:type", String)
 ], User.prototype, "token", void 0);
-__decorate([
-    typeorm_1.Column(),
-    class_validator_1.IsOptional(),
-    class_validator_1.IsString(),
-    __metadata("design:type", String)
-], User.prototype, "tokenFacebook", void 0);
 __decorate([
     typeorm_1.OneToMany(type => pedido_model_1.Pedido, pedido => pedido.user),
     class_transformer_1.Type(() => pedido_model_1.Pedido),

@@ -37,6 +37,7 @@ __decorate([
         length: 50
     }),
     class_validator_1.IsNotEmpty(),
+    class_transformer_1.Exclude({ toPlainOnly: true }),
     __metadata("design:type", String)
 ], Cliente.prototype, "senha", void 0);
 __decorate([

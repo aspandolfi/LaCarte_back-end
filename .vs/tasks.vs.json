@@ -1,0 +1,15 @@
+{
+  "version": "0.2.1",
+  "tasks": [
+    {
+      "taskName": "task-",
+      "appliesTo": ".gitignore",
+      "type": "launch"
+    },
+    {
+      "taskName": "task-www",
+      "appliesTo": "src/bin/www.ts",
+      "type": "launch"
+    }
+  ]
+}

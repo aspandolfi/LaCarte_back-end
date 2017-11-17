@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\bin",
+    "\\src\\config",
+    "\\src\\controllers",
+    "\\src\\controllers\\user",
+    "\\src\\entities",
+    "\\src\\entities\\mesa",
+    "\\src\\entities\\restaurante",
+    "\\src\\entities\\user"
+  ],
+  "SelectedNode": "\\src\\bin\\app.ts",
+  "PreviewInSolutionExplorer": false
+}

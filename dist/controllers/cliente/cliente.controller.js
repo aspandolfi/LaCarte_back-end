@@ -31,7 +31,10 @@ let ClienteController = class ClienteController {
         return this.clienteService.create(cliente);
     }
     httpGetAll() {
-        return this.clienteService.readAll();
+        return __awaiter(this, void 0, void 0, function* () {
+            const clientes = yield this.clienteService.readAll();
+            return class_transformer_1.classToPlain(clientes);
+        });
     }
     httpGet(id) {
         return this.clienteService.readOne(id);

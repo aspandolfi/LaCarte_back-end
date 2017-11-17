@@ -8,68 +8,75 @@ import { validate } from "class-validator";
 
 @Service()
 export class UserService implements IServiceBase<User> {
-  private repository: Repository<User>;
+    private repository: Repository<User>;
+    private response: ResponseData;
 
-  constructor() {
-    this.repository = getRepository(User);
-  }
+    constructor() {
+        this.repository = getRepository(User);
+        this.response = new ResponseData();
+    }
 
-  public create(props: User): Promise<User | ResponseData> {
-    let response = new ResponseData();
-    return validate(props).then(errors => {
-      // if (errors.length > 0) {
-      //   errors.forEach(function(val) {
-      //     response.mensagens.push(val.value);
-      //   });
-      //   response.status = false;
-      //   response.objeto = props;
-      // } else {
-      //   response.mensagens.push("OK!");
-      response.objeto = this.repository.create(props);
-      // }
-      return response;
-    });
-  }
+    public async create(props: User): Promise<User | ResponseData> {
+        const errors = await validate(props);
 
-  public readOne(id: number): Promise<User | ResponseData> {
-    let promise = new Promise<User | ResponseData>((resolve, reject) => {
-      resolve(this.repository.findOneById(id));
-      let response = new ResponseData();
-      response.mensagens.push("Id não encontrado.");
-      response.status = false;
-      reject(response);
-    });
-    return promise;
-  }
+        if (errors.length == 0) {
+            let result = await this.repository.create(props);
 
-  public readOneByEmail(email: string): Promise<User | ResponseData> {
-    let promise = new Promise<User | ResponseData>((resolve, reject) => {
-      resolve(this.repository.findOne({ email: email }));
-      let response = new ResponseData();
-      response.mensagens.push("email não encontrado.");
-      response.status = false;
-      reject(response);
-    });
+            if (result === undefined) {
+                this.response.mensagens.push("Erro ao salvar usuário no banco de dados.");
+                this.response.status = false;
+                return this.response;
+            }
 
-    return promise;
-  }
+            this.response.objeto = result;
+            this.response.mensagens.push("OK");
+        }
+        else {
+            errors.forEach(val => this.response.mensagens.push(val.value));
+            this.response.status = false;
+        }
+        return this.response;
+    }
 
-  public update(props: User): Promise<User> {
-    return this.repository.preload(props);
-  }
+    public readOne(id: number): Promise<User | ResponseData> {
+        let promise = new Promise<User | ResponseData>((resolve, reject) => {
+            resolve(this.repository.findOneById(id));
+            let response = new ResponseData();
+            response.mensagens.push("Id não encontrado.");
+            response.status = false;
+            reject(response);
+        });
+        return promise;
+    }
 
-  public drop(id: number): Promise<User> {
-    let user: User;
-    this.readOne(id).then((res: User) => (user = res));
-    return this.repository.remove(user);
-  }
+    public readOneByEmail(email: string): Promise<User | ResponseData> {
+        let promise = new Promise<User | ResponseData>((resolve, reject) => {
+            resolve(this.repository.findOne({ email: email }));
+            let response = new ResponseData();
+            response.mensagens.push("email não encontrado.");
+            response.status = false;
+            reject(response);
+        });
 
-  public readAll(): Promise<User[]> {
-    return this.repository
-      .find();
-  }
+        return promise;
+    }
 
-  findOneByToken(token: string): Promise<User> {
-    return this.repository.findOne({ token: token });
-  }
+    public update(props: User): Promise<User> {
+        return this.repository.preload(props);
+    }
+
+    public drop(id: number): Promise<User> {
+        let user: User;
+        this.readOne(id).then((res: User) => (user = res));
+        return this.repository.remove(user);
+    }
+
+    public readAll(): Promise<User[]> {
+        return this.repository
+            .find();
+    }
+
+    findOneByToken(token: string): Promise<User> {
+        return this.repository.findOne({ token: token });
+    }
 }

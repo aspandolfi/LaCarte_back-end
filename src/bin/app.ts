@@ -33,9 +33,9 @@ config
   .use(helmet())
   .use(Auth.initialize())
   .use(
-    urlencoded({
-      extended: true
-    })
+  urlencoded({
+    extended: true
+  })
   );
 
 const app: express.Application = useExpressServer(config, {
@@ -64,7 +64,7 @@ const app: express.Application = useExpressServer(config, {
     return false;
   },
   routePrefix: "/api/v1",
-  validation: true
+  validation: true,
 });
 
 export { app };

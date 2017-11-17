@@ -53,6 +53,6 @@ const app = routing_controllers_1.useExpressServer(config, {
         return false;
     }),
     routePrefix: "/api/v1",
-    validation: true
+    validation: true,
 });
 exports.app = app;

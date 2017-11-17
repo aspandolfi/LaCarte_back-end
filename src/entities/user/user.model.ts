@@ -1,70 +1,67 @@
-import { Type } from "class-transformer";
 import { Pedido } from "./../pedido/pedido.model";
-import { Column, Entity, OneToMany } from "typeorm";
 import { BaseEntity } from "../base-entity";
+import { Column, Entity, OneToMany } from "typeorm";
+import { Type, Exclude } from "class-transformer";
 import {
-  Length,
-  IsEmail,
-  IsDate,
-  IsNumberString,
-  IsString,
-  IsNotEmpty,
-  IsOptional
+    Length,
+    IsEmail,
+    IsDate,
+    IsNumberString,
+    IsString,
+    IsNotEmpty,
+    IsOptional
 } from "class-validator";
 
 @Entity("usuarios")
 export class User extends BaseEntity {
-  @Column({
-    nullable: true
-  })
-  @IsOptional()
-  @IsDate()
-  dataNascimento?: Date;
+    @Column({
+        nullable: true
+    })
+    @IsOptional()
+    @IsDate({ message: 'Data de Nascimento Inválida.' })
+    dataNascimento?: Date;
 
-  @Column({ unique: true })
-  @IsNotEmpty()
-  @IsEmail()
-  email: string;
+    @Column({ unique: true })
+    @IsNotEmpty({ message: 'E-mail não pode estar em branco.' })
+    @IsEmail(null, { message: 'E-mail inválido.' })
+    email: string;
 
-  @Column({
-    unique: true,
-    length: 11
-  })
-  @Length(11, 11)
-  @IsNumberString()
-  cpf: string;
+    @Column({
+        unique: true,
+        length: 11
+    })
+    @Length(11, 11)
+    @IsNumberString({ message: 'CPF inválido.' })
+    cpf: string;
 
-  @Column() senha: string;
+    @Column({ type: 'varchar', length: 128 })
+    @Exclude({ toPlainOnly: true })
+    senha: string;
 
-  @Column()
-  @IsNumberString()
-  telefone: string;
+    @Column()
+    @IsNumberString()
+    telefone: string;
 
-  @Column({
-    length: 100
-  })
-  @IsOptional()
-  @IsString()
-  sobrenome?: string;
+    @Column({
+        length: 100
+    })
+    @IsOptional()
+    @IsString()
+    sobrenome?: string;
 
-  @Column({
-    length: 20
-  })
-  @IsNotEmpty()
-  @IsString()
-  nome: string;
+    @Column({
+        length: 20
+    })
+    @IsNotEmpty()
+    @IsString()
+    nome: string;
 
-  @Column()
-  @IsOptional()
-  @IsString()
-  token: string;
+    @Column()
+    @IsOptional()
+    @IsString()
+    token: string;
 
-  @Column()
-  @IsOptional()
-  @IsString()
-  tokenFacebook: string;
-
-  @OneToMany(type => Pedido, pedido => pedido.user)
-  @Type(() => Pedido)
-  public pedidos: Pedido[];
+    @OneToMany(type => Pedido, pedido => pedido.user)
+    @Type(() => Pedido)
+    public pedidos: Pedido[];
 }
