@@ -41,6 +41,7 @@ __decorate([
 ], User.prototype, "cpf", void 0);
 __decorate([
     typeorm_1.Column({ type: 'varchar', length: 128 }),
+    class_validator_1.IsNotEmpty({ message: 'Senha não pode estar em branco.' }),
     class_transformer_1.Exclude({ toPlainOnly: true }),
     __metadata("design:type", String)
 ], User.prototype, "senha", void 0);
@@ -61,7 +62,7 @@ __decorate([
     typeorm_1.Column({
         length: 20
     }),
-    class_validator_1.IsNotEmpty(),
+    class_validator_1.IsNotEmpty({ message: 'Nome não pode estar em branco.' }),
     class_validator_1.IsString(),
     __metadata("design:type", String)
 ], User.prototype, "nome", void 0);

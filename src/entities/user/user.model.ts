@@ -35,6 +35,7 @@ export class User extends BaseEntity {
     cpf: string;
 
     @Column({ type: 'varchar', length: 128 })
+    @IsNotEmpty({ message: 'Senha não pode estar em branco.' })
     @Exclude({ toPlainOnly: true })
     senha: string;
 
@@ -52,7 +53,7 @@ export class User extends BaseEntity {
     @Column({
         length: 20
     })
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'Nome não pode estar em branco.' })
     @IsString()
     nome: string;
 

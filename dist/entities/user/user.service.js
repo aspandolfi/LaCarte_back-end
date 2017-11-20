@@ -22,6 +22,8 @@ const typeorm_1 = require("typeorm");
 const user_model_1 = require("./user.model");
 const response_data_1 = require("../response-data");
 const class_validator_1 = require("class-validator");
+const bcrypt_1 = require("bcrypt");
+const passport_1 = require("passport");
 let UserService = class UserService {
     constructor() {
         this.repository = typeorm_1.getRepository(user_model_1.User);
@@ -31,7 +33,9 @@ let UserService = class UserService {
         return __awaiter(this, void 0, void 0, function* () {
             const errors = yield class_validator_1.validate(props);
             if (errors.length == 0) {
-                let result = yield this.repository.create(props);
+                props.senha = bcrypt_1.hashSync(props.senha, 0);
+                let newUser = yield this.repository.create(props);
+                let result = yield this.repository.save(newUser);
                 if (result === undefined) {
                     this.response.mensagens.push("Erro ao salvar usuário no banco de dados.");
                     this.response.status = false;
@@ -81,6 +85,17 @@ let UserService = class UserService {
     }
     findOneByToken(token) {
         return this.repository.findOne({ token: token });
+    }
+    doLogin(userLogin) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let salt = bcrypt_1.genSaltSync(0);
+            let hash = bcrypt_1.hashSync(userLogin.senha, salt);
+            let dbUser = yield this.repository.findOne({ email: userLogin.email });
+            if (bcrypt_1.compareSync(dbUser.senha, hash)) {
+                let token = passport_1.serializeUser((dbUser, done) => token = done(null, dbUser.id));
+                return token;
+            }
+        });
     }
 };
 UserService = __decorate([

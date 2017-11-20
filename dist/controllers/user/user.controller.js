@@ -34,7 +34,7 @@ const someOtherPlaintextPassword = '1234'; //senha a ser testada
 let UserController = class UserController {
     httpPost(props) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = class_transformer_1.deserialize(user_1.User, props);
+            const user = class_transformer_1.plainToClass(user_1.User, props);
             const result = yield this.userService.create(user);
             return class_transformer_1.classToPlain(result);
         });
@@ -56,6 +56,11 @@ let UserController = class UserController {
     }
     httpGetEmail(email) {
         return this.userService.readOneByEmail(email);
+    }
+    httpToken(props) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.userService.doLogin(props);
+        });
     }
 };
 __decorate([
@@ -93,6 +98,13 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "httpGetEmail", null);
+__decorate([
+    routing_controllers_1.Post("/token"),
+    __param(0, routing_controllers_1.Body({ required: true })),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "httpToken", null);
 UserController = __decorate([
     routing_controllers_1.JsonController("/user")
 ], UserController);

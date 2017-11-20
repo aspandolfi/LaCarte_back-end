@@ -5,6 +5,9 @@ import { Repository, getRepository } from "typeorm";
 import { User } from "./user.model";
 import { ResponseData } from "../response-data";
 import { validate } from "class-validator";
+import { UserLogin } from "./user.login";
+import { genSaltSync, hashSync, compareSync } from "bcrypt";
+import { serializeUser } from "passport"
 
 @Service()
 export class UserService implements IServiceBase<User> {
@@ -17,10 +20,13 @@ export class UserService implements IServiceBase<User> {
     }
 
     public async create(props: User): Promise<User | ResponseData> {
+
         const errors = await validate(props);
 
         if (errors.length == 0) {
-            let result = await this.repository.create(props);
+            props.senha = hashSync(props.senha, 0);
+            let newUser = await this.repository.create(props);
+            let result = await this.repository.save(newUser);
 
             if (result === undefined) {
                 this.response.mensagens.push("Erro ao salvar usuário no banco de dados.");
@@ -76,7 +82,19 @@ export class UserService implements IServiceBase<User> {
             .find();
     }
 
-    findOneByToken(token: string): Promise<User> {
+    public findOneByToken(token: string): Promise<User> {
         return this.repository.findOne({ token: token });
+    }
+
+    public async doLogin(userLogin: UserLogin): Promise<string> {
+        let salt = genSaltSync(0);
+        let hash = hashSync(userLogin.senha, salt);
+
+        let dbUser = await this.repository.findOne({ email: userLogin.email });
+
+        if (compareSync(dbUser.senha, hash)) {
+            let token = serializeUser((dbUser: User, done) => token = done(null, dbUser.id));
+            return token;
+        }
     }
 }

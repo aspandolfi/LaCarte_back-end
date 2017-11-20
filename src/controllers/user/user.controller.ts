@@ -10,7 +10,7 @@ import {
     UseBefore
 } from "routing-controllers";
 import { Inject } from "typedi";
-import { IUser, User, UserService } from "../../entities/user";
+import { IUser, User, UserService, UserLogin } from "../../entities/user";
 // import Auth from "../../config/passport";
 
 
@@ -31,9 +31,9 @@ export class UserController {
         @Body({
             required: true
         })
-        props: any
+        props: IUser
         ): Promise<any> {
-        const user = deserialize(User, props);
+        const user = plainToClass(User, props);
         const result = await this.userService.create(user);
         return classToPlain(result);
     }
@@ -60,5 +60,13 @@ export class UserController {
     @Get("/email/:email")
     public httpGetEmail( @Param("email") email: string): Promise<any> {
         return this.userService.readOneByEmail(email);
+    }
+
+    @Post("/token")
+    public async httpToken(
+        @Body({ required: true })
+        props: UserLogin
+        ): Promise<string> {
+        return await this.userService.doLogin(props);
     }
 }
