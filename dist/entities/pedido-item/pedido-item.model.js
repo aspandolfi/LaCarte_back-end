@@ -56,6 +56,14 @@ __decorate([
     __metadata("design:type", Number)
 ], ItemPedido.prototype, "status", void 0);
 __decorate([
+    typeorm_1.Column({
+        type: 'varchar',
+        length: 100,
+        nullable: true
+    }),
+    __metadata("design:type", String)
+], ItemPedido.prototype, "respostaCozinha", void 0);
+__decorate([
     typeorm_1.ManyToOne(type => pedido_model_1.Pedido, p => p.itens),
     class_transformer_1.Type(() => pedido_model_1.Pedido),
     __metadata("design:type", pedido_model_1.Pedido)

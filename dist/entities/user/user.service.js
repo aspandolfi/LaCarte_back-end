@@ -88,12 +88,13 @@ let UserService = class UserService {
     }
     doLogin(userLogin) {
         return __awaiter(this, void 0, void 0, function* () {
-            let salt = bcrypt_1.genSaltSync(0);
-            let hash = bcrypt_1.hashSync(userLogin.senha, salt);
             let dbUser = yield this.repository.findOne({ email: userLogin.email });
-            if (bcrypt_1.compareSync(dbUser.senha, hash)) {
+            if (bcrypt_1.compareSync(userLogin.senha, dbUser.senha)) {
                 let token = passport_1.serializeUser((dbUser, done) => token = done(null, dbUser.id));
                 return token;
+            }
+            else {
+                return "";
             }
         });
     }

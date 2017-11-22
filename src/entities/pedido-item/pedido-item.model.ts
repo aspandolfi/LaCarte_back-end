@@ -41,6 +41,13 @@ export class ItemPedido extends BaseEntity {
   @IsEnum(Status)
   public status: Status;
 
+  @Column({
+    type: 'varchar',
+    length: 100,
+    nullable: true
+  })
+  public respostaCozinha: string;
+
   @ManyToOne(type => Pedido, p => p.itens)
   @Type(() => Pedido)
   public pedido: Pedido;
