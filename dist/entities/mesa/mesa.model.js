@@ -43,6 +43,6 @@ __decorate([
     __metadata("design:type", restaurante_1.Restaurante)
 ], Mesa.prototype, "restaurante", void 0);
 Mesa = __decorate([
-    typeorm_1.Entity("mesas")
+    typeorm_1.Entity()
 ], Mesa);
 exports.Mesa = Mesa;

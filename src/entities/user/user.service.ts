@@ -91,11 +91,12 @@ export class UserService implements IServiceBase<User> {
         let dbUser = await this.repository.findOne({ email: userLogin.email });
 
         if (compareSync(userLogin.senha, dbUser.senha)) {
-            let token = serializeUser((dbUser: User, done) => token = done(null, dbUser.id));
+            let token;
+            serializeUser((dbUser: User, done) => done(null, dbUser.id));
             return token;
         }
-        else{
-          return "";
+        else {
+            return "";
         }
     }
 }

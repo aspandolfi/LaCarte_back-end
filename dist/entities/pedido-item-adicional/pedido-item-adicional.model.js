@@ -36,6 +36,6 @@ __decorate([
     __metadata("design:type", adicional_model_1.Adicional)
 ], ItemPedidoAdicional.prototype, "adicional", void 0);
 ItemPedidoAdicional = __decorate([
-    typeorm_1.Entity("adicionais_item_pedido")
+    typeorm_1.Entity()
 ], ItemPedidoAdicional);
 exports.ItemPedidoAdicional = ItemPedidoAdicional;

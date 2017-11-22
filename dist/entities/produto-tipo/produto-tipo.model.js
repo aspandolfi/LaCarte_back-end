@@ -30,6 +30,6 @@ __decorate([
     __metadata("design:type", Array)
 ], TipoProduto.prototype, "produtos", void 0);
 TipoProduto = __decorate([
-    typeorm_1.Entity("tipos_produto")
+    typeorm_1.Entity()
 ], TipoProduto);
 exports.TipoProduto = TipoProduto;

@@ -14,7 +14,7 @@ import {
 import { IsNotEmpty, IsNumber, IsOptional, IsString, IsUrl } from 'class-validator';
 import { Exclude, Type } from "class-transformer";
 
-@Entity("produtos")
+@Entity()
 export class Produto extends BaseEntity {
   @Column({
     length: 50

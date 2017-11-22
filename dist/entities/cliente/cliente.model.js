@@ -18,8 +18,8 @@ let Cliente = class Cliente extends base_entity_1.BaseEntity {
 };
 __decorate([
     typeorm_1.Column({ unique: true }),
-    class_validator_1.IsNotEmpty(),
-    class_validator_1.IsEmail(),
+    class_validator_1.IsNotEmpty({ message: "E-mail não pode ser vazio." }),
+    class_validator_1.IsEmail({ require_tld: true }, { message: "E-mail inválido." }),
     __metadata("design:type", String)
 ], Cliente.prototype, "email", void 0);
 __decorate([
@@ -70,6 +70,6 @@ __decorate([
     __metadata("design:type", Array)
 ], Cliente.prototype, "restaurantes", void 0);
 Cliente = __decorate([
-    typeorm_1.Entity("clientes")
+    typeorm_1.Entity()
 ], Cliente);
 exports.Cliente = Cliente;

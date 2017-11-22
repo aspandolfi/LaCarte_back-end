@@ -10,14 +10,16 @@ import { List } from "linqts";
 
 @Service()
 export class CardapioService implements IServiceBase<Cardapio> {
+  private cardapioRepository: Repository<Cardapio>;
   private restauranteRepository: Repository<Restaurante>;
   private produtoRepository: Repository<Produto>;
-  private repository: Repository<Cardapio>;
+  private response: ResponseData;
 
   constructor() {
-    this.repository = getRepository(Cardapio);
+    this.cardapioRepository = getRepository(Cardapio);
     this.restauranteRepository = getRepository(Restaurante);
-    this.produtoRepository = getRepository(Produto);
+    // this.produtoRepository = getRepository(Produto);
+    this.response = new ResponseData();
   }
 
   async create(props: Cardapio, ...params: any[]): Promise<ResponseData> {
@@ -44,7 +46,7 @@ export class CardapioService implements IServiceBase<Cardapio> {
         if (responseData.mensagens.length == 0) {
           responseData.mensagens.push("OK!");
           // props.restaurante = restaurante;
-          responseData.objeto = this.repository.create(props);
+          responseData.objeto = this.cardapioRepository.create(props);
         }
       }
       return responseData;
@@ -52,34 +54,28 @@ export class CardapioService implements IServiceBase<Cardapio> {
   }
 
   async readOne(id: number): Promise<Cardapio | ResponseData> {
-    let promise = new Promise<Cardapio | ResponseData>((resolve, reject) => {
-      resolve(this.repository.findOneById(id));
-      let response = new ResponseData();
-      response.mensagens.push("id não encontrado.");
-      response.status = false;
-      reject(response);
-    });
 
-    return promise;
+    let result = await this.cardapioRepository.findOneById(id);
+
+    if (result === undefined) {
+      this.response.mensagens.push("Cardápio não encontrado.");
+      this.response.status = false
+      return this.response;
+    }
+    return result;
   }
 
   async update(props: Cardapio): Promise<Cardapio> {
-    return this.repository.preload(props);
+    return this.cardapioRepository.preload(props);
   }
 
-  //funcao modificada
   async drop(id: number): Promise<Cardapio> {
     let cardapio: Cardapio;
     this.readOne(id).then((res: Cardapio) => (cardapio = res));
-    return this.repository.remove(cardapio);
+    return this.cardapioRepository.remove(cardapio);
   }
 
   async readAll(): Promise<Cardapio[] | any> {
-
-    let query = await this.repository.find();
-
-    let produtos = [];
-
-    return produtos;
+    return await this.cardapioRepository.find();
   }
 }

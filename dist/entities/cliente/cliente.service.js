@@ -22,33 +22,36 @@ const typedi_1 = require("typedi");
 const typeorm_1 = require("typeorm");
 const class_validator_1 = require("class-validator");
 const response_data_1 = require("../response-data");
+const bcrypt_1 = require("bcrypt");
 let ClienteService = class ClienteService {
     constructor() {
-        this.repository = typeorm_1.getRepository(cliente_1.Cliente);
+        this.clienteRepository = typeorm_1.getRepository(cliente_1.Cliente);
         this.response = new response_data_1.ResponseData();
     }
     create(props, ...params) {
         return __awaiter(this, void 0, void 0, function* () {
-            let responseData = new response_data_1.ResponseData();
-            return class_validator_1.validate(props).then(errors => {
-                if (errors.length > 0) {
-                    errors.forEach(function (val) {
-                        responseData.mensagens.push(val.value);
-                    });
-                    responseData.status = false;
-                    responseData.objeto = props;
+            let cliente = yield this.clienteRepository.create(props);
+            let errors = yield class_validator_1.validate(cliente);
+            if (errors.length == 0) {
+                cliente.senha = bcrypt_1.hashSync(cliente.senha, 0);
+                let result = yield this.clienteRepository.save(cliente);
+                if (result === undefined) {
+                    this.response.mensagens.push("Erro ao salvar restaurante no banco de dados.");
+                    return this.response;
                 }
-                else {
-                    responseData.mensagens.push("OK!");
-                    responseData.objeto = this.repository.create(props);
-                }
-                return responseData;
-            });
+                this.response.objeto = result;
+                this.response.mensagens.push("OK");
+            }
+            else {
+                errors.forEach(val => this.response.mensagens.push(val.value));
+                this.response.status = false;
+            }
+            return this.response;
         });
     }
     readOne(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.repository
+            return yield this.clienteRepository
                 .findOneById(id)
                 .catch(err => { return err; });
         });
@@ -67,7 +70,7 @@ let ClienteService = class ClienteService {
             cliente.nome = props.nome;
             cliente.cnpj = props.cnpj;
             cliente.telefone = props.telefone;
-            const result = yield this.repository.save(cliente)
+            const result = yield this.clienteRepository.save(cliente)
                 .catch(err => { return err; });
             if (result.message) {
                 this.response.status = false;
@@ -80,31 +83,28 @@ let ClienteService = class ClienteService {
     }
     drop(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            let result = {};
-            try {
-                result = this.readOne(id)
-                    .then(res => (result = res))
-                    .catch(res => (result = res));
-                result = this.repository
-                    .remove(result)
-                    .then()
-                    .catch(res => (result = res));
+            let dbCliente = yield this.clienteRepository.findOneById(id);
+            if (dbCliente) {
+                yield this.clienteRepository.removeById(id);
+                return dbCliente;
             }
-            catch (_a) {
-                // console.log(Error);
+            else {
+                this.response.mensagens.push("Falha ao remover cliente.");
+                this.response.status = false;
+                this.response.objeto = id;
+                return this.response;
             }
-            return result;
         });
     }
     readAll() {
         return __awaiter(this, void 0, void 0, function* () {
-            let clientes = yield this.repository.find();
+            let clientes = yield this.clienteRepository.find();
             return clientes;
         });
     }
     findOneByToken(token) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.repository.findOne({ token: token });
+            return this.clienteRepository.findOne({ token: token });
         });
     }
 };

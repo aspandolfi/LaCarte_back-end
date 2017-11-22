@@ -12,7 +12,7 @@ enum Status {
   Recusado
 }
 
-@Entity("itens_pedido")
+@Entity()
 export class ItemPedido extends BaseEntity {
   @Column({
     type: 'int'

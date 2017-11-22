@@ -17,7 +17,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const produto_1 = require("../produto");
 const restaurante_model_1 = require("./../restaurante/restaurante.model");
 const typedi_1 = require("typedi");
 const cardapio_model_1 = require("./cardapio.model");
@@ -26,9 +25,10 @@ const class_validator_1 = require("class-validator");
 const response_data_1 = require("../response-data");
 let CardapioService = class CardapioService {
     constructor() {
-        this.repository = typeorm_1.getRepository(cardapio_model_1.Cardapio);
+        this.cardapioRepository = typeorm_1.getRepository(cardapio_model_1.Cardapio);
         this.restauranteRepository = typeorm_1.getRepository(restaurante_model_1.Restaurante);
-        this.produtoRepository = typeorm_1.getRepository(produto_1.Produto);
+        // this.produtoRepository = getRepository(Produto);
+        this.response = new response_data_1.ResponseData();
     }
     create(props, ...params) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -55,7 +55,7 @@ let CardapioService = class CardapioService {
                     if (responseData.mensagens.length == 0) {
                         responseData.mensagens.push("OK!");
                         // props.restaurante = restaurante;
-                        responseData.objeto = this.repository.create(props);
+                        responseData.objeto = this.cardapioRepository.create(props);
                     }
                 }
                 return responseData;
@@ -64,34 +64,30 @@ let CardapioService = class CardapioService {
     }
     readOne(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            let promise = new Promise((resolve, reject) => {
-                resolve(this.repository.findOneById(id));
-                let response = new response_data_1.ResponseData();
-                response.mensagens.push("id não encontrado.");
-                response.status = false;
-                reject(response);
-            });
-            return promise;
+            let result = yield this.cardapioRepository.findOneById(id);
+            if (result === undefined) {
+                this.response.mensagens.push("Cardápio não encontrado.");
+                this.response.status = false;
+                return this.response;
+            }
+            return result;
         });
     }
     update(props) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.repository.preload(props);
+            return this.cardapioRepository.preload(props);
         });
     }
-    //funcao modificada
     drop(id) {
         return __awaiter(this, void 0, void 0, function* () {
             let cardapio;
             this.readOne(id).then((res) => (cardapio = res));
-            return this.repository.remove(cardapio);
+            return this.cardapioRepository.remove(cardapio);
         });
     }
     readAll() {
         return __awaiter(this, void 0, void 0, function* () {
-            let query = yield this.repository.find();
-            let produtos = [];
-            return produtos;
+            return yield this.cardapioRepository.find();
         });
     }
 };

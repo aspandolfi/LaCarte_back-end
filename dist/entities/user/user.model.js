@@ -78,6 +78,6 @@ __decorate([
     __metadata("design:type", Array)
 ], User.prototype, "pedidos", void 0);
 User = __decorate([
-    typeorm_1.Entity("usuarios")
+    typeorm_1.Entity()
 ], User);
 exports.User = User;

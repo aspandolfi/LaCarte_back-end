@@ -6,7 +6,7 @@ import { BaseEntity } from "../base-entity";
 import { IsNumber, IsBoolean } from "class-validator";
 import { Type } from "class-transformer";
 
-@Entity("pedidos")
+@Entity()
 export class Pedido extends BaseEntity {
   @Column({
     nullable: true,

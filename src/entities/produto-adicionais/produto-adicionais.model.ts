@@ -6,7 +6,7 @@ import { Column, Entity, ManyToOne } from 'typeorm';
 import { IsNumber } from "class-validator";
 import { Type } from "class-transformer";
 
-@Entity("adicionais_produto")
+@Entity()
 export class ProdutoAdicionais extends BaseEntity {
   @Column({
     precision: 10,

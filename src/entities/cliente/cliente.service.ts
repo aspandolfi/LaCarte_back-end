@@ -4,35 +4,42 @@ import { IServiceBase } from "../base-entity";
 import { Repository, getRepository } from "typeorm";
 import { validate } from "class-validator";
 import { ResponseData } from "../response-data";
+import { hashSync } from "bcrypt";
 
 @Service()
 export class ClienteService implements IServiceBase<Cliente> {
-    private repository: Repository<Cliente>;
+    private clienteRepository: Repository<Cliente>;
     private response: ResponseData;
 
     constructor() {
-        this.repository = getRepository(Cliente);
+        this.clienteRepository = getRepository(Cliente);
         this.response = new ResponseData();
     }
 
     async create(props: Cliente, ...params: any[]): Promise<Cliente | ResponseData> {
-        let responseData = new ResponseData();
-        return validate(props).then(errors => {
-            if (errors.length > 0) {
-                errors.forEach(function (val) {
-                    responseData.mensagens.push(val.value);
-                });
-                responseData.status = false;
-                responseData.objeto = props;
-            } else {
-                responseData.mensagens.push("OK!");
-                responseData.objeto = this.repository.create(props);
+
+        let cliente = await this.clienteRepository.create(props);
+        let errors = await validate(cliente);
+
+        if (errors.length == 0) {
+            cliente.senha = hashSync(cliente.senha, 0);
+            
+            let result = await this.clienteRepository.save(cliente);
+            if (result === undefined) {
+                this.response.mensagens.push("Erro ao salvar restaurante no banco de dados.");
+                return this.response;
             }
-            return responseData;
-        });
+            this.response.objeto = result;
+            this.response.mensagens.push("OK");
+        }
+        else {
+            errors.forEach(val => this.response.mensagens.push(val.value));
+            this.response.status = false;
+        }
+        return this.response;
     }
     async readOne(id: number): Promise<Cliente> {
-        return await this.repository
+        return await this.clienteRepository
             .findOneById(id)
             .catch(err => { return err });
     }
@@ -52,7 +59,7 @@ export class ClienteService implements IServiceBase<Cliente> {
         cliente.cnpj = props.cnpj;
         cliente.telefone = props.telefone;
 
-        const result = await this.repository.save(cliente)
+        const result = await this.clienteRepository.save(cliente)
             .catch(err => { return err });
 
         if (result.message) {
@@ -64,27 +71,25 @@ export class ClienteService implements IServiceBase<Cliente> {
 
         return result;
     }
-    async drop(id: number): Promise<Cliente> {
-        let result: any = {};
-        try {
-            result = this.readOne(id)
-                .then(res => (result = res))
-                .catch(res => (result = res));
+    async drop(id: number): Promise<Cliente | any> {
+        let dbCliente = await this.clienteRepository.findOneById(id);
 
-            result = this.repository
-                .remove(result)
-                .then()
-                .catch(res => (result = res));
-        } catch {
-            // console.log(Error);
+        if (dbCliente) {
+            await this.clienteRepository.removeById(id);
+            return dbCliente;
         }
-        return result;
+        else {
+            this.response.mensagens.push("Falha ao remover cliente.");
+            this.response.status = false;
+            this.response.objeto = id;
+            return this.response;
+        }
     }
     async readAll(): Promise<Cliente[]> {
-        let clientes = await this.repository.find();
+        let clientes = await this.clienteRepository.find();
         return clientes;
     }
     async findOneByToken(token: string): Promise<Cliente> {
-        return this.repository.findOne({ token: token });
+        return this.clienteRepository.findOne({ token: token });
     }
 }

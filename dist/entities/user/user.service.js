@@ -90,7 +90,8 @@ let UserService = class UserService {
         return __awaiter(this, void 0, void 0, function* () {
             let dbUser = yield this.repository.findOne({ email: userLogin.email });
             if (bcrypt_1.compareSync(userLogin.senha, dbUser.senha)) {
-                let token = passport_1.serializeUser((dbUser, done) => token = done(null, dbUser.id));
+                let token;
+                passport_1.serializeUser((dbUser, done) => done(null, dbUser.id));
                 return token;
             }
             else {

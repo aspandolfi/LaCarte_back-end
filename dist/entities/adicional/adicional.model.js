@@ -36,6 +36,6 @@ __decorate([
     __metadata("design:type", Array)
 ], Adicional.prototype, "itemPedidoAdicionais", void 0);
 Adicional = __decorate([
-    typeorm_1.Entity("adicionais")
+    typeorm_1.Entity()
 ], Adicional);
 exports.Adicional = Adicional;

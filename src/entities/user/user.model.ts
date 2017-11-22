@@ -12,7 +12,7 @@ import {
     IsOptional
 } from "class-validator";
 
-@Entity("usuarios")
+@Entity()
 export class User extends BaseEntity {
     @Column({
         nullable: true

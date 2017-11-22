@@ -6,7 +6,7 @@ import { BaseEntity } from "../base-entity";
 import { IsInt } from "class-validator";
 import { Type } from "class-transformer";
 
-@Entity("adicionais_item_pedido")
+@Entity()
 export class ItemPedidoAdicional extends BaseEntity {
   @Column({
     type: 'int'

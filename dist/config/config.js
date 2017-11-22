@@ -9,7 +9,8 @@ exports.config = {
         type: 'mysql',
         username: 'bd957709ee8ba0',
         synchronize: true,
-        logging: "all"
+        logging: "all",
+        dropSchema: true
         // entities: ['src/entities/**/*.model.js'],
         // type: "postgres",
         // host: "localhost",

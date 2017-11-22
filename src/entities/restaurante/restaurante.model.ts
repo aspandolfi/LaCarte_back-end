@@ -7,7 +7,7 @@ import { Mesa } from "../mesa/mesa.model";
 import { IsString, IsNotEmpty, IsNumberString, IsUrl } from "class-validator";
 import { Exclude, Type } from "class-transformer";
 
-@Entity("restaurantes")
+@Entity()
 export class Restaurante extends BaseEntity {
   @Column({
     length: 100

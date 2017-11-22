@@ -79,6 +79,6 @@ __decorate([
     __metadata("design:type", Array)
 ], ItemPedido.prototype, "adicionais", void 0);
 ItemPedido = __decorate([
-    typeorm_1.Entity("itens_pedido")
+    typeorm_1.Entity()
 ], ItemPedido);
 exports.ItemPedido = ItemPedido;

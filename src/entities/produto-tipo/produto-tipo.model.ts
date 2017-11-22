@@ -4,7 +4,7 @@ import { BaseEntity } from "../base-entity";
 import { IsString, IsNotEmpty } from "class-validator";
 import { Type } from "class-transformer";
 
-@Entity("tipos_produto")
+@Entity()
 export class TipoProduto extends BaseEntity {
   @Column({
     length: 20

@@ -5,7 +5,7 @@ import { Column, Entity, OneToMany } from "typeorm";
 import { BaseEntity } from "../base-entity";
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
-@Entity("adicionais")
+@Entity()
 export class Adicional extends BaseEntity {
   @Column({
     length: 20

@@ -11,11 +11,11 @@ import {
     IsOptional
 } from "class-validator";
 
-@Entity("clientes")
+@Entity()
 export class Cliente extends BaseEntity {
     @Column({ unique: true })
-    @IsNotEmpty()
-    @IsEmail()
+    @IsNotEmpty({ message: "E-mail não pode ser vazio." })
+    @IsEmail({ require_tld: true }, { message: "E-mail inválido." })
     public email: string;
 
     @Column({

@@ -76,6 +76,6 @@ __decorate([
     __metadata("design:type", Array)
 ], Produto.prototype, "itensPedido", void 0);
 Produto = __decorate([
-    typeorm_1.Entity("produtos")
+    typeorm_1.Entity()
 ], Produto);
 exports.Produto = Produto;

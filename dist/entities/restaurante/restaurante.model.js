@@ -77,6 +77,6 @@ __decorate([
     __metadata("design:type", Array)
 ], Restaurante.prototype, "mesas", void 0);
 Restaurante = __decorate([
-    typeorm_2.Entity("restaurantes")
+    typeorm_2.Entity()
 ], Restaurante);
 exports.Restaurante = Restaurante;

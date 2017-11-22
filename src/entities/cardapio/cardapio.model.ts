@@ -4,7 +4,7 @@ import { BaseEntity } from "../base-entity";
 import { Restaurante } from "../restaurante";
 import { IsString, IsNotEmpty } from "class-validator";
 
-@Entity("cardapios")
+@Entity()
 export class Cardapio extends BaseEntity {
   @Column({
     length: 50
