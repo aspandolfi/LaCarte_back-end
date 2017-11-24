@@ -13,7 +13,7 @@ const typedi_1 = require("typedi");
 let ResponseData = class ResponseData {
     constructor() {
         this.status = true;
-        this.mensagens = new Array();
+        this.mensagens = [];
     }
 };
 ResponseData = __decorate([

@@ -42,7 +42,7 @@ let ClienteController = class ClienteController {
     httpPut(props) {
         return __awaiter(this, void 0, void 0, function* () {
             const cliente = class_transformer_1.plainToClass(cliente_1.Cliente, props);
-            return yield this.clienteService.update(props);
+            return yield this.clienteService.update(cliente);
         });
     }
 };

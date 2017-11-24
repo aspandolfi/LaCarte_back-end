@@ -40,7 +40,8 @@ let RestauranteService = class RestauranteService {
                     return this.response;
                 }
                 props.cliente = dbCliente;
-                let result = yield this.restauranteRepository.create(props);
+                let restauramte = yield this.restauranteRepository.create(props);
+                let result = yield this.restauranteRepository.save(restauramte);
                 if (result === undefined) {
                     this.response.mensagens.push("Erro ao salvar restaurante no banco de dados.");
                     return this.response;

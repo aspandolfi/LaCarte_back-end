@@ -51,16 +51,22 @@ let ClienteService = class ClienteService {
     }
     readOne(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.clienteRepository
-                .findOneById(id)
+            const query = yield this.clienteRepository.findOneById(id)
                 .catch(err => { return err; });
+            if (query === undefined) {
+                this.response.status = false;
+                this.response.mensagens.push("Cliente não encontrado.");
+                this.response.objeto = query;
+                return this.response;
+            }
+            return query;
         });
     }
     update(props) {
         return __awaiter(this, void 0, void 0, function* () {
             const query = yield this.readOne(props.id)
                 .catch(err => { return err; });
-            if (query.message) {
+            if (query.mensagens.length > 0) {
                 this.response.status = false;
                 this.response.mensagens.push("Cliente não encontrado.");
                 this.response.objeto = query;

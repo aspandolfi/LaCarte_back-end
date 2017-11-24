@@ -35,7 +35,7 @@ export abstract class BaseEntity {
   @BeforeUpdate()
   update() {
     this.updatedAt = new Date();
-    this.version++
+    this.version++;
   }
 
 }

@@ -23,7 +23,7 @@ export class ClienteService implements IServiceBase<Cliente> {
 
         if (errors.length == 0) {
             cliente.senha = hashSync(cliente.senha, 0);
-            
+
             let result = await this.clienteRepository.save(cliente);
             if (result === undefined) {
                 this.response.mensagens.push("Erro ao salvar restaurante no banco de dados.");
@@ -38,16 +38,26 @@ export class ClienteService implements IServiceBase<Cliente> {
         }
         return this.response;
     }
-    async readOne(id: number): Promise<Cliente> {
-        return await this.clienteRepository
-            .findOneById(id)
+
+    async readOne(id: number): Promise<Cliente | any> {
+        const query = await this.clienteRepository.findOneById(id)
             .catch(err => { return err });
+
+        if (query === undefined) {
+            this.response.status = false;
+            this.response.mensagens.push("Cliente não encontrado.");
+            this.response.objeto = query;
+            return this.response;
+        }
+
+        return query;
     }
+
     async update(props: Cliente): Promise<Cliente | ResponseData> {
         const query = await this.readOne(props.id)
             .catch(err => { return err });
 
-        if (query.message) {
+        if (query.mensagens.length > 0) {
             this.response.status = false;
             this.response.mensagens.push("Cliente não encontrado.");
             this.response.objeto = query;
@@ -71,6 +81,7 @@ export class ClienteService implements IServiceBase<Cliente> {
 
         return result;
     }
+
     async drop(id: number): Promise<Cliente | any> {
         let dbCliente = await this.clienteRepository.findOneById(id);
 
@@ -85,10 +96,12 @@ export class ClienteService implements IServiceBase<Cliente> {
             return this.response;
         }
     }
+
     async readAll(): Promise<Cliente[]> {
         let clientes = await this.clienteRepository.find();
         return clientes;
     }
+
     async findOneByToken(token: string): Promise<Cliente> {
         return this.clienteRepository.findOne({ token: token });
     }

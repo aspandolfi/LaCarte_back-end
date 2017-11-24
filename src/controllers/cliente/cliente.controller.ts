@@ -9,7 +9,7 @@ import {
     UseBefore,
     Put
 } from "routing-controllers";
-import { Inject } from "typedi";
+import { Inject, Container } from "typedi";
 import { ICliente, Cliente, ClienteService } from "../../entities/cliente";
 import Auth from "../../config/passport";
 
@@ -43,8 +43,8 @@ export class ClienteController {
     }
 
     @Put()
-    public async httpPut( @Body({ required: true }) props: any): Promise<Cliente | any> {
+    public async httpPut( @Body({ required: true }) props: ICliente): Promise<Cliente | any> {
         const cliente = plainToClass(Cliente, props);
-        return await this.clienteService.update(props);
+        return await this.clienteService.update(cliente);
     }
 }

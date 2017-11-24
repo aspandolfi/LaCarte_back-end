@@ -31,7 +31,8 @@ export class RestauranteService implements IServiceBase<Restaurante> {
             }
 
             props.cliente = dbCliente;
-            let result = await this.restauranteRepository.create(props);
+            let restauramte = await this.restauranteRepository.create(props);
+            let result = await this.restauranteRepository.save(restauramte);
 
             if (result === undefined) {
                 this.response.mensagens.push("Erro ao salvar restaurante no banco de dados.");

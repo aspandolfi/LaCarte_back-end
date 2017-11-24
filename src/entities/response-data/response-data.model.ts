@@ -3,7 +3,7 @@ import { Service } from "typedi";
 @Service()
 export class ResponseData {
   constructor() {
-    this.mensagens = new Array();
+    this.mensagens = [];
   }
   status: boolean = true;
   objeto: any;
