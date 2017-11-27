@@ -30,8 +30,8 @@ export class RestauranteService implements IServiceBase<Restaurante> {
                 return this.response;
             }
 
-            props.cliente = dbCliente;
             let restauramte = await this.restauranteRepository.create(props);
+            restauramte.cliente = dbCliente;
             let result = await this.restauranteRepository.save(restauramte);
 
             if (result === undefined) {
@@ -100,7 +100,7 @@ export class RestauranteService implements IServiceBase<Restaurante> {
 
     async readAll(...params: any[]): Promise<Restaurante[] | ResponseData> {
 
-        let query = await this.restauranteRepository.find({ relations: ['cliente'] });
+        let query = await this.restauranteRepository.find();
         if (query === undefined) {
             this.response.mensagens.push("Falha ao buscar restaurantes.");
             this.response.status = false;

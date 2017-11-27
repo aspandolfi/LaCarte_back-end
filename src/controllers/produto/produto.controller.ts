@@ -10,7 +10,6 @@ import {
 } from "routing-controllers";
 import { Inject } from "typedi";
 import { IProduto,  Produto, ProdutoService  } from "../../entities/produto";
-import Auth from "../../config/passport";
 
 // @UseBefore(() => Auth.authenticate())
 @JsonController("/produto")

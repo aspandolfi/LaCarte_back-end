@@ -11,7 +11,6 @@ import {
 } from "routing-controllers";
 import { Inject, Container } from "typedi";
 import { ICliente, Cliente, ClienteService } from "../../entities/cliente";
-import Auth from "../../config/passport";
 
 // @UseBefore(() => Auth.authenticate())
 @JsonController("/cliente")

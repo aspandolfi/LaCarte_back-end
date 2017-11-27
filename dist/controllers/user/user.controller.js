@@ -24,13 +24,12 @@ const class_transformer_1 = require("class-transformer");
 const routing_controllers_1 = require("routing-controllers");
 const typedi_1 = require("typedi");
 const user_1 = require("../../entities/user");
-// import Auth from "../../config/passport";
+const config_1 = require("../../config");
 let bcrypt = require("bcrypt");
 let compression = require("compression");
 const saltRounds = 0;
 const myPlaintextPassword = "123"; //minha senha
 const someOtherPlaintextPassword = '1234'; //senha a ser testada
-// @UseBefore(() => Auth.authenticate())
 let UserController = class UserController {
     httpPost(props) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -79,6 +78,7 @@ __decorate([
 ], UserController.prototype, "httpPost", null);
 __decorate([
     routing_controllers_1.Get(),
+    routing_controllers_1.UseBefore(config_1.Auth.Authorize()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)

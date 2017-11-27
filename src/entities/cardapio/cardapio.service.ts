@@ -12,13 +12,12 @@ import { List } from "linqts";
 export class CardapioService implements IServiceBase<Cardapio> {
   private cardapioRepository: Repository<Cardapio>;
   private restauranteRepository: Repository<Restaurante>;
-  private produtoRepository: Repository<Produto>;
+  // private produtoRepository: Repository<Produto>;
   private response: ResponseData;
 
   constructor() {
     this.cardapioRepository = getRepository(Cardapio);
     this.restauranteRepository = getRepository(Restaurante);
-    // this.produtoRepository = getRepository(Produto);
     this.response = new ResponseData();
   }
 

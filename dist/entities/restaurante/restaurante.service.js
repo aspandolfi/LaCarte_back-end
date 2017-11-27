@@ -39,8 +39,8 @@ let RestauranteService = class RestauranteService {
                     this.response.status = false;
                     return this.response;
                 }
-                props.cliente = dbCliente;
                 let restauramte = yield this.restauranteRepository.create(props);
+                restauramte.cliente = dbCliente;
                 let result = yield this.restauranteRepository.save(restauramte);
                 if (result === undefined) {
                     this.response.mensagens.push("Erro ao salvar restaurante no banco de dados.");
@@ -103,7 +103,7 @@ let RestauranteService = class RestauranteService {
     }
     readAll(...params) {
         return __awaiter(this, void 0, void 0, function* () {
-            let query = yield this.restauranteRepository.find({ relations: ['cliente'] });
+            let query = yield this.restauranteRepository.find();
             if (query === undefined) {
                 this.response.mensagens.push("Falha ao buscar restaurantes.");
                 this.response.status = false;

@@ -7,15 +7,18 @@ import { ResponseData } from "../response-data";
 import { validate } from "class-validator";
 import { UserLogin } from "./user.login";
 import { genSaltSync, hashSync, compareSync } from "bcrypt";
-import { serializeUser } from "passport"
+import { encode } from "jwt-simple";
+import { sign } from "jsonwebtoken";
 
 @Service()
 export class UserService implements IServiceBase<User> {
     private repository: Repository<User>;
+    private passportUserRepository: Repository<User>;
     private response: ResponseData;
 
     constructor() {
         this.repository = getRepository(User);
+        this.passportUserRepository = getRepository(User, "passport");
         this.response = new ResponseData();
     }
 
@@ -24,8 +27,8 @@ export class UserService implements IServiceBase<User> {
         const errors = await validate(props);
 
         if (errors.length == 0) {
-            props.senha = hashSync(props.senha, 0);
             let newUser = await this.repository.create(props);
+            newUser.senha = hashSync(props.senha, 0);
             let result = await this.repository.save(newUser);
 
             if (result === undefined) {
@@ -53,6 +56,15 @@ export class UserService implements IServiceBase<User> {
             reject(response);
         });
         return promise;
+    }
+
+    public async readOneToToken(id: number): Promise<User | ResponseData> {
+        let result = await this.passportUserRepository.findOneById(id);
+        if (result === undefined) {
+            this.response.mensagens.push("Id não encontrado.");
+            this.response.status = false;
+        }
+        return result;
     }
 
     public readOneByEmail(email: string): Promise<User | ResponseData> {
@@ -86,17 +98,22 @@ export class UserService implements IServiceBase<User> {
         return this.repository.findOne({ token: token });
     }
 
-    public async doLogin(userLogin: UserLogin): Promise<string> {
+    public async doLogin(userLogin: UserLogin): Promise<any> {
 
-        let dbUser = await this.repository.findOne({ email: userLogin.email });
+        let dbUser = await this.passportUserRepository.findOne({ email: userLogin.email });
+
+        if (dbUser === undefined) {
+            return "Usuário não encontrado.";
+        }
 
         if (compareSync(userLogin.senha, dbUser.senha)) {
-            let token;
-            serializeUser((dbUser: User, done) => done(null, dbUser.id));
+            let payload = { id: dbUser.id };
+            // let token = encode(payload, config.jwt.jwtSecret);
+            let token = sign(payload, config.jwt.jwtSecret, { algorithm: "HS512", expiresIn: config.jwt.jwtExpiration * 3600 * 24 });
             return token;
         }
         else {
-            return "";
+            return "E-mail ou senha inválido.";
         }
     }
 }

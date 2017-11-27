@@ -19,8 +19,7 @@ import {
   RestauranteController,
   ProdutoController
 } from "../controllers";
-import { ClienteService } from "../entities/cliente";
-import Auth from "../config/passport";
+import { Auth } from "../config";
 
 useContainer(Container);
 
@@ -31,7 +30,7 @@ const config: express.Application = express();
 config
   .use(morgan("dev"))
   .use(helmet())
-  .use(Auth.initialize())
+  .use(Auth.Initialize())
   .use(
   urlencoded({
     extended: true
@@ -53,18 +52,7 @@ const app: express.Application = useExpressServer(config, {
     RestauranteController,
     ProdutoController
   ],
-  authorizationChecker: async (action: Action, roles: string[]) => {
-    const token = action.request.headers["authorization"];
-
-    const user = await Container.get(ClienteService).findOneByToken(token);
-    if (user /*&& !roles.length*/) return true;
-    // if (user && roles.find(role => user.roles.indexOf(role) !== -1))
-    //   return true;
-
-    return false;
-  },
-  routePrefix: "/api/v1",
-  validation: true,
+  routePrefix: "/api/v1"
 });
 
 export { app };

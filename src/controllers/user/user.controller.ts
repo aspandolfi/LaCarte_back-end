@@ -11,8 +11,7 @@ import {
 } from "routing-controllers";
 import { Inject } from "typedi";
 import { IUser, User, UserService, UserLogin } from "../../entities/user";
-// import Auth from "../../config/passport";
-
+import { Auth } from '../../config';
 
 let bcrypt = require("bcrypt");
 let compression = require("compression");
@@ -20,7 +19,6 @@ const saltRounds = 0;
 const myPlaintextPassword = "123"; //minha senha
 const someOtherPlaintextPassword = '1234'; //senha a ser testada
 
-// @UseBefore(() => Auth.authenticate())
 @JsonController("/user")
 export class UserController {
     @Inject() private userService: UserService;
@@ -39,6 +37,7 @@ export class UserController {
     }
 
     @Get()
+    @UseBefore(Auth.Authorize())
     public async httpGetAll(): Promise<any> {
         const users = await this.userService.readAll();
 

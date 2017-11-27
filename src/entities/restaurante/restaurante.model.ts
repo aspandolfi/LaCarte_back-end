@@ -5,7 +5,7 @@ import { BaseEntity } from "../base-entity";
 import { Cardapio } from "../cardapio";
 import { Mesa } from "../mesa/mesa.model";
 import { IsString, IsNotEmpty, IsNumberString, IsUrl } from "class-validator";
-import { Exclude, Type } from "class-transformer";
+import { Exclude, Type, Expose } from "class-transformer";
 
 @Entity()
 export class Restaurante extends BaseEntity {
@@ -41,19 +41,19 @@ export class Restaurante extends BaseEntity {
   @IsUrl()
   public site: string;
 
-  @Column()
+  @Column({ default: true })
   @Exclude()
   public ativo: boolean;
 
-  @ManyToOne(type => Cliente, c => c.restaurantes, { lazy: true, eager: true })
+  @ManyToOne(type => Cliente, c => c.restaurantes, { lazy: true, eager: true, nullable: false })
   @Type(() => Cliente)
   public cliente: Cliente;
 
-  @OneToMany(type => Cardapio, cardapio => cardapio.restaurante)
+  @OneToMany(type => Cardapio, cardapio => cardapio.restaurante, { eager: true })
   @Type(() => Cardapio)
   public cardapios: Cardapio[];
 
-  @OneToMany(type => Mesa, mesa => mesa.restaurante)
+  @OneToMany(type => Mesa, mesa => mesa.restaurante, { eager: true })
   @Type(() => Mesa)
   public mesas: Mesa[];
 }

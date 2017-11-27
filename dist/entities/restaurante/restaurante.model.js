@@ -57,22 +57,22 @@ __decorate([
     __metadata("design:type", String)
 ], Restaurante.prototype, "site", void 0);
 __decorate([
-    typeorm_2.Column(),
+    typeorm_2.Column({ default: true }),
     class_transformer_1.Exclude(),
     __metadata("design:type", Boolean)
 ], Restaurante.prototype, "ativo", void 0);
 __decorate([
-    typeorm_1.ManyToOne(type => cliente_model_1.Cliente, c => c.restaurantes, { lazy: true, eager: true }),
+    typeorm_1.ManyToOne(type => cliente_model_1.Cliente, c => c.restaurantes, { lazy: true, eager: true, nullable: false }),
     class_transformer_1.Type(() => cliente_model_1.Cliente),
     __metadata("design:type", cliente_model_1.Cliente)
 ], Restaurante.prototype, "cliente", void 0);
 __decorate([
-    typeorm_2.OneToMany(type => cardapio_1.Cardapio, cardapio => cardapio.restaurante),
+    typeorm_2.OneToMany(type => cardapio_1.Cardapio, cardapio => cardapio.restaurante, { eager: true }),
     class_transformer_1.Type(() => cardapio_1.Cardapio),
     __metadata("design:type", Array)
 ], Restaurante.prototype, "cardapios", void 0);
 __decorate([
-    typeorm_2.OneToMany(type => mesa_model_1.Mesa, mesa => mesa.restaurante),
+    typeorm_2.OneToMany(type => mesa_model_1.Mesa, mesa => mesa.restaurante, { eager: true }),
     class_transformer_1.Type(() => mesa_model_1.Mesa),
     __metadata("design:type", Array)
 ], Restaurante.prototype, "mesas", void 0);

@@ -31,7 +31,11 @@ let RestauranteController = class RestauranteController {
         return this.restauranteService.create(restaurante, props.cliente);
     }
     httpGetAll() {
-        return this.restauranteService.readAll();
+        return __awaiter(this, void 0, void 0, function* () {
+            let restaurantes = yield this.restauranteService.readAll();
+            return class_transformer_1.classToPlain(restaurantes);
+            // return restaurantes;
+        });
     }
     httpGet(id) {
         return this.restauranteService.readOne(id);
@@ -40,6 +44,11 @@ let RestauranteController = class RestauranteController {
         return __awaiter(this, void 0, void 0, function* () {
             const restaurante = class_transformer_1.plainToClass(restaurante_1.Restaurante, props);
             return yield this.restauranteService.update(restaurante);
+        });
+    }
+    httpDelete(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.restauranteService.drop(id);
         });
     }
 };
@@ -77,6 +86,13 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], RestauranteController.prototype, "httpPut", null);
+__decorate([
+    routing_controllers_1.Delete("/:id"),
+    __param(0, routing_controllers_1.Param("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], RestauranteController.prototype, "httpDelete", null);
 RestauranteController = __decorate([
     routing_controllers_1.JsonController("/restaurante")
 ], RestauranteController);

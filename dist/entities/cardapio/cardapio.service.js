@@ -27,7 +27,6 @@ let CardapioService = class CardapioService {
     constructor() {
         this.cardapioRepository = typeorm_1.getRepository(cardapio_model_1.Cardapio);
         this.restauranteRepository = typeorm_1.getRepository(restaurante_model_1.Restaurante);
-        // this.produtoRepository = getRepository(Produto);
         this.response = new response_data_1.ResponseData();
     }
     create(props, ...params) {

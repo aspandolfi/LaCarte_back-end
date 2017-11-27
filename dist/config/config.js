@@ -26,7 +26,8 @@ exports.config = {
         // database: "gxiubqwv"
     },
     jwt: {
-        jwtSecret: "l@Cart3A$$PiE$%T/s",
-        jwtSession: { session: false }
+        jwtSecret: "l@Cart3A$$PirE$%T/s",
+        jwtSession: { session: false },
+        jwtExpiration: 5
     }
 };

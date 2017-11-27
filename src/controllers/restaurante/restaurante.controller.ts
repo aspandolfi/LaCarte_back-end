@@ -1,4 +1,4 @@
-import { plainToClass } from "class-transformer";
+import { plainToClass, classToPlain } from "class-transformer";
 import {
   Body,
   Param,
@@ -8,11 +8,11 @@ import {
   Get,
   UseBefore,
   Authorized,
-  Put
+  Put,
+  Delete
 } from "routing-controllers";
 import { Inject } from "typedi";
 import { IRestaurante, Restaurante, RestauranteService } from "../../entities/restaurante";
-import Auth from "../../config/passport";
 
 // @Authorized()
 @JsonController("/restaurante")
@@ -32,8 +32,10 @@ export class RestauranteController {
   }
 
   @Get()
-  public httpGetAll(): Promise<Restaurante[] | any> {
-    return this.restauranteService.readAll();
+  public async httpGetAll(): Promise<Restaurante[] | any> {
+    let restaurantes = await this.restauranteService.readAll();
+    return classToPlain(restaurantes);
+    // return restaurantes;
   }
 
   @Get("/:id")
@@ -45,5 +47,10 @@ export class RestauranteController {
   public async httpPut( @Body({ required: true }) props: IRestaurante): Promise<Restaurante | any> {
     const restaurante = plainToClass(Restaurante, props);
     return await this.restauranteService.update(restaurante);
+  }
+
+  @Delete("/:id")
+  public async httpDelete( @Param("id") id: number): Promise<any> {
+    return this.restauranteService.drop(id);
   }
 }
