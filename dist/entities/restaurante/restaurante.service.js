@@ -75,7 +75,7 @@ let RestauranteService = class RestauranteService {
                 this.response.status = false;
                 return this.response;
             }
-            let result = yield this.restauranteRepository.preload(props);
+            let result = yield this.restauranteRepository.save(props);
             if (result === undefined) {
                 this.response.mensagens.push("Falha ao atualizar Restaurante.");
                 this.response.status = false;

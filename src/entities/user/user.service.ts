@@ -7,7 +7,6 @@ import { ResponseData } from "../response-data";
 import { validate } from "class-validator";
 import { UserLogin } from "./user.login";
 import { genSaltSync, hashSync, compareSync } from "bcrypt";
-import { encode } from "jwt-simple";
 import { sign } from "jsonwebtoken";
 
 @Service()
@@ -47,15 +46,14 @@ export class UserService implements IServiceBase<User> {
         return this.response;
     }
 
-    public readOne(id: number): Promise<User | ResponseData> {
-        let promise = new Promise<User | ResponseData>((resolve, reject) => {
-            resolve(this.repository.findOneById(id));
-            let response = new ResponseData();
-            response.mensagens.push("Id não encontrado.");
-            response.status = false;
-            reject(response);
-        });
-        return promise;
+    public async readOne(id: number): Promise<User | ResponseData> {
+        let result = await this.passportUserRepository.findOneById(id);
+        if (result === undefined) {
+            this.response.mensagens.push("Id não encontrado.");
+            this.response.status = false;
+            return this.response;
+        }
+        return result;
     }
 
     public async readOneToToken(id: number): Promise<User | ResponseData> {
@@ -63,35 +61,59 @@ export class UserService implements IServiceBase<User> {
         if (result === undefined) {
             this.response.mensagens.push("Id não encontrado.");
             this.response.status = false;
+            return this.response;
         }
         return result;
     }
 
-    public readOneByEmail(email: string): Promise<User | ResponseData> {
-        let promise = new Promise<User | ResponseData>((resolve, reject) => {
-            resolve(this.repository.findOne({ email: email }));
-            let response = new ResponseData();
-            response.mensagens.push("email não encontrado.");
-            response.status = false;
-            reject(response);
-        });
-
-        return promise;
+    public async readOneByEmail(email: string): Promise<User | ResponseData> {
+        let result = await this.passportUserRepository.findOne({ email: email });
+        if (result === undefined) {
+            this.response.mensagens.push("Email não encontrado.");
+            this.response.status = false;
+            return this.response;
+        }
+        return result;
     }
 
-    public update(props: User): Promise<User> {
-        return this.repository.preload(props);
+    public async update(props: User): Promise<any> {
+        let dbUser = await this.repository.findOneById(props.id);
+
+        if (dbUser === undefined) {
+            this.response.mensagens.push("Usuário não encontrado.");
+            this.response.status = false;
+            return this.response;
+        }
+
+        dbUser.cpf = props.cpf;
+        dbUser.email = props.email;
+        dbUser.nome = props.nome;
+        dbUser.dataNascimento = props.dataNascimento;
+        dbUser.telefone = props.telefone;
+
+        let result = await this.repository.save(dbUser);
+
+        if (result === undefined) {
+            this.response.mensagens.push("Falha ao atualizar usuário.");
+            this.response.status = false;
+            return this.response;
+        }
+        return result;
     }
 
-    public drop(id: number): Promise<User> {
-        let user: User;
-        this.readOne(id).then((res: User) => (user = res));
-        return this.repository.remove(user);
+    public async drop(id: number): Promise<any> {
+        let result = await this.repository.findOneById(id);
+
+        if (result === undefined) {
+            this.response.mensagens.push("Usuário não encontrado.");
+            this.response.status = false;
+            return this.response;
+        }
+        return await this.repository.remove(result);
     }
 
-    public readAll(): Promise<User[]> {
-        return this.repository
-            .find();
+    public async readAll(): Promise<User[]> {
+        return await this.repository.find();
     }
 
     public findOneByToken(token: string): Promise<User> {
@@ -99,21 +121,23 @@ export class UserService implements IServiceBase<User> {
     }
 
     public async doLogin(userLogin: UserLogin): Promise<any> {
-
         let dbUser = await this.passportUserRepository.findOne({ email: userLogin.email });
-
         if (dbUser === undefined) {
-            return "Usuário não encontrado.";
+            this.response.mensagens.push("Usuário não encontrado.");
+            this.response.status = false;
+            return this.response;
         }
-
         if (compareSync(userLogin.senha, dbUser.senha)) {
             let payload = { id: dbUser.id };
-            // let token = encode(payload, config.jwt.jwtSecret);
             let token = sign(payload, config.jwt.jwtSecret, { algorithm: "HS512", expiresIn: config.jwt.jwtExpiration * 3600 * 24 });
-            return token;
+            await this.passportUserRepository.update({ id: dbUser.id }, { token: token });
+            this.response.objeto = token;
+            return this.response;
         }
         else {
-            return "E-mail ou senha inválido.";
+            this.response.mensagens.push("E-mail ou senha inválido.");
+            this.response.status = false;
+            return this.response;
         }
     }
 }

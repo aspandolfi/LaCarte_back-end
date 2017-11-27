@@ -54,14 +54,15 @@ let UserService = class UserService {
         });
     }
     readOne(id) {
-        let promise = new Promise((resolve, reject) => {
-            resolve(this.repository.findOneById(id));
-            let response = new response_data_1.ResponseData();
-            response.mensagens.push("Id não encontrado.");
-            response.status = false;
-            reject(response);
+        return __awaiter(this, void 0, void 0, function* () {
+            let result = yield this.passportUserRepository.findOneById(id);
+            if (result === undefined) {
+                this.response.mensagens.push("Id não encontrado.");
+                this.response.status = false;
+                return this.response;
+            }
+            return result;
         });
-        return promise;
     }
     readOneToToken(id) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -69,31 +70,59 @@ let UserService = class UserService {
             if (result === undefined) {
                 this.response.mensagens.push("Id não encontrado.");
                 this.response.status = false;
+                return this.response;
             }
             return result;
         });
     }
     readOneByEmail(email) {
-        let promise = new Promise((resolve, reject) => {
-            resolve(this.repository.findOne({ email: email }));
-            let response = new response_data_1.ResponseData();
-            response.mensagens.push("email não encontrado.");
-            response.status = false;
-            reject(response);
+        return __awaiter(this, void 0, void 0, function* () {
+            let result = yield this.passportUserRepository.findOne({ email: email });
+            if (result === undefined) {
+                this.response.mensagens.push("Email não encontrado.");
+                this.response.status = false;
+                return this.response;
+            }
+            return result;
         });
-        return promise;
     }
     update(props) {
-        return this.repository.preload(props);
+        return __awaiter(this, void 0, void 0, function* () {
+            let dbUser = yield this.repository.findOneById(props.id);
+            if (dbUser === undefined) {
+                this.response.mensagens.push("Usuário não encontrado.");
+                this.response.status = false;
+                return this.response;
+            }
+            dbUser.cpf = props.cpf;
+            dbUser.email = props.email;
+            dbUser.nome = props.nome;
+            dbUser.dataNascimento = props.dataNascimento;
+            dbUser.telefone = props.telefone;
+            let result = yield this.repository.save(dbUser);
+            if (result === undefined) {
+                this.response.mensagens.push("Falha ao atualizar usuário.");
+                this.response.status = false;
+                return this.response;
+            }
+            return result;
+        });
     }
     drop(id) {
-        let user;
-        this.readOne(id).then((res) => (user = res));
-        return this.repository.remove(user);
+        return __awaiter(this, void 0, void 0, function* () {
+            let result = yield this.repository.findOneById(id);
+            if (result === undefined) {
+                this.response.mensagens.push("Usuário não encontrado.");
+                this.response.status = false;
+                return this.response;
+            }
+            return yield this.repository.remove(result);
+        });
     }
     readAll() {
-        return this.repository
-            .find();
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.repository.find();
+        });
     }
     findOneByToken(token) {
         return this.repository.findOne({ token: token });
@@ -102,16 +131,21 @@ let UserService = class UserService {
         return __awaiter(this, void 0, void 0, function* () {
             let dbUser = yield this.passportUserRepository.findOne({ email: userLogin.email });
             if (dbUser === undefined) {
-                return "Usuário não encontrado.";
+                this.response.mensagens.push("Usuário não encontrado.");
+                this.response.status = false;
+                return this.response;
             }
             if (bcrypt_1.compareSync(userLogin.senha, dbUser.senha)) {
                 let payload = { id: dbUser.id };
-                // let token = encode(payload, config.jwt.jwtSecret);
                 let token = jsonwebtoken_1.sign(payload, config_1.config.jwt.jwtSecret, { algorithm: "HS512", expiresIn: config_1.config.jwt.jwtExpiration * 3600 * 24 });
-                return token;
+                yield this.passportUserRepository.update({ id: dbUser.id }, { token: token });
+                this.response.objeto = token;
+                return this.response;
             }
             else {
-                return "E-mail ou senha inválido.";
+                this.response.mensagens.push("E-mail ou senha inválido.");
+                this.response.status = false;
+                return this.response;
             }
         });
     }

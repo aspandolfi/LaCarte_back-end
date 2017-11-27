@@ -69,7 +69,7 @@ export class RestauranteService implements IServiceBase<Restaurante> {
             return this.response;
         }
 
-        let result = await this.restauranteRepository.preload(props);
+        let result = await this.restauranteRepository.save(props);
 
         if (result === undefined) {
             this.response.mensagens.push("Falha ao atualizar Restaurante.");

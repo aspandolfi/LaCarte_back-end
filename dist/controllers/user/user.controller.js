@@ -44,17 +44,22 @@ let UserController = class UserController {
             return class_transformer_1.classToPlain(users);
         });
     }
+    httpPut(props) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = class_transformer_1.plainToClass(user_1.User, props);
+            const result = yield this.userService.update(user);
+            return class_transformer_1.classToPlain(result);
+        });
+    }
     httpGet(id) {
-        //testando criptografia na senha
-        var salt = bcrypt.genSaltSync(saltRounds);
-        var hash = bcrypt.hashSync(myPlaintextPassword, salt);
-        console.log(hash);
-        console.log(bcrypt.compareSync(myPlaintextPassword, hash));
-        console.log(bcrypt.compareSync(someOtherPlaintextPassword, hash));
-        return this.userService.readOne(id);
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.userService.readOne(id);
+        });
     }
     httpGetEmail(email) {
-        return this.userService.readOneByEmail(email);
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.userService.readOneByEmail(email);
+        });
     }
     httpToken(props) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -84,8 +89,18 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "httpGetAll", null);
 __decorate([
+    routing_controllers_1.Put(),
+    routing_controllers_1.UseBefore(config_1.Auth.Authorize()),
+    __param(0, routing_controllers_1.Body({
+        required: true
+    })),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "httpPut", null);
+__decorate([
     routing_controllers_1.Get("/:id"),
-    routing_controllers_1.UseBefore(compression()),
+    routing_controllers_1.UseBefore(config_1.Auth.Authorize()),
     __param(0, routing_controllers_1.Param("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
@@ -93,6 +108,7 @@ __decorate([
 ], UserController.prototype, "httpGet", null);
 __decorate([
     routing_controllers_1.Get("/email/:email"),
+    routing_controllers_1.UseBefore(config_1.Auth.Authorize()),
     __param(0, routing_controllers_1.Param("email")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),

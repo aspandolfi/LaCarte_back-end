@@ -7,7 +7,8 @@ import {
     JsonController,
     Param,
     Post,
-    UseBefore
+    UseBefore,
+    Put
 } from "routing-controllers";
 import { Inject } from "typedi";
 import { IUser, User, UserService, UserLogin } from "../../entities/user";
@@ -40,25 +41,32 @@ export class UserController {
     @UseBefore(Auth.Authorize())
     public async httpGetAll(): Promise<any> {
         const users = await this.userService.readAll();
-
         return classToPlain(users);
     }
 
+    @Put()
+    @UseBefore(Auth.Authorize())
+    public async httpPut(
+        @Body({
+            required: true
+        })
+        props: IUser
+        ): Promise<any> {
+        const user = plainToClass(User, props);
+        const result = await this.userService.update(user);
+        return classToPlain(result);
+    }
+
     @Get("/:id")
-    @UseBefore(compression())
-    public httpGet( @Param("id") id: number): Promise<any> {
-        //testando criptografia na senha
-        var salt = bcrypt.genSaltSync(saltRounds);
-        var hash = bcrypt.hashSync(myPlaintextPassword, salt);
-        console.log(hash)
-        console.log(bcrypt.compareSync(myPlaintextPassword, hash));
-        console.log(bcrypt.compareSync(someOtherPlaintextPassword, hash));
-        return this.userService.readOne(id);
+    @UseBefore(Auth.Authorize())
+    public async httpGet( @Param("id") id: number): Promise<any> {
+        return await this.userService.readOne(id);
     }
 
     @Get("/email/:email")
-    public httpGetEmail( @Param("email") email: string): Promise<any> {
-        return this.userService.readOneByEmail(email);
+    @UseBefore(Auth.Authorize())
+    public async httpGetEmail( @Param("email") email: string): Promise<any> {
+        return await this.userService.readOneByEmail(email);
     }
 
     @Post("/token")
