@@ -14,11 +14,11 @@ export abstract class BaseEntity {
   @PrimaryGeneratedColumn({ type: 'int' })
   public id: number;
 
-  @Column({ type: "datetime" })
+  @Column()
   @Exclude()
   public createdAt: Date;
 
-  @Column({ type: "datetime" })
+  @Column()
   @Exclude()
   public updatedAt: Date;
 

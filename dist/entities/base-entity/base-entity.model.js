@@ -26,12 +26,12 @@ __decorate([
     __metadata("design:type", Number)
 ], BaseEntity.prototype, "id", void 0);
 __decorate([
-    typeorm_1.Column({ type: "datetime" }),
+    typeorm_1.Column(),
     class_transformer_1.Exclude(),
     __metadata("design:type", Date)
 ], BaseEntity.prototype, "createdAt", void 0);
 __decorate([
-    typeorm_1.Column({ type: "datetime" }),
+    typeorm_1.Column(),
     class_transformer_1.Exclude(),
     __metadata("design:type", Date)
 ], BaseEntity.prototype, "updatedAt", void 0);

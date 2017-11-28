@@ -20,8 +20,7 @@ let Pedido = class Pedido extends base_entity_1.BaseEntity {
 };
 __decorate([
     typeorm_1.Column({
-        nullable: true,
-        precision: 10
+        nullable: true
     }),
     class_validator_1.IsNumber({ message: "Deve ser um número do tipo inteiro." }),
     __metadata("design:type", Number)

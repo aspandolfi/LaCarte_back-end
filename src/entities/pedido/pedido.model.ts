@@ -9,8 +9,7 @@ import { Type } from "class-transformer";
 @Entity()
 export class Pedido extends BaseEntity {
   @Column({
-    nullable: true,
-    precision: 10
+    nullable: true
   })
   @IsNumber({ message: "Deve ser um número do tipo inteiro." })
   public valorTotal: number;

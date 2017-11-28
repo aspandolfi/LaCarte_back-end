@@ -19,10 +19,7 @@ const class_transformer_1 = require("class-transformer");
 let ProdutoAdicionais = class ProdutoAdicionais extends base_entity_1.BaseEntity {
 };
 __decorate([
-    typeorm_1.Column({
-        precision: 10,
-        scale: 2
-    }),
+    typeorm_1.Column(),
     class_validator_1.IsNumber(),
     __metadata("design:type", Number)
 ], ProdutoAdicionais.prototype, "valor", void 0);
