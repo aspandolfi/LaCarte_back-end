@@ -14,18 +14,18 @@ export const config: IConfig = {
 
     // entities: ['src/entities/**/*.model.js'],
 
-    type: "postgres",
-    host: "localhost",
-    port: 5432,
-    username: "postgres",
-    password: "123456",
-    database: "lacarte",
     // type: "postgres",
-    // host: "stampy.db.elephantsql.com",
+    // host: "localhost",
     // port: 5432,
-    // username: "gxiubqwv",
-    // password: "Eor0v0XVSaO5EkcKrqGwSL2tlWo_huxc",
-    // database: "gxiubqwv"
+    // username: "postgres",
+    // password: "123456",
+    // database: "lacarte",
+    type: "postgres",
+    host: "stampy.db.elephantsql.com",
+    port: 5432,
+    username: "gxiubqwv",
+    password: "Eor0v0XVSaO5EkcKrqGwSL2tlWo_huxc",
+    database: "gxiubqwv"
   },
   jwt: {
     jwtSecret: "l@Cart3A$$PirE$%T/s",
