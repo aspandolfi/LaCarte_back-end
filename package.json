@@ -2,9 +2,9 @@
   "name": "lacarte",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "www.js",
   "scripts": {
-    "start": "node  server.js"
+    "start": "node  dist/bin/www.js"
   },
   "keywords": [],
   "author": "Grupo LaCarte - IFES",
