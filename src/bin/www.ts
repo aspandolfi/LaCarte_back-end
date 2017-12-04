@@ -3,22 +3,6 @@ import 'reflect-metadata';
 import 'es6-shim';
 import { Container } from 'typedi';
 import { createConnection, useContainer } from 'typeorm';
-import { config } from '../config';
-import {
-    BaseEntity,
-    User,
-    Cardapio,
-    Adicional,
-    Cliente,
-    Mesa,
-    Pedido,
-    ItemPedido,
-    ItemPedidoAdicional,
-    Produto,
-    ProdutoAdicionais,
-    TipoProduto,
-    Restaurante
-} from '../entities';
 import { app } from './app';
 
 useContainer(Container);
