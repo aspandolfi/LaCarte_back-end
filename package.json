@@ -19,6 +19,7 @@
     "compression": "^1.7.1",
     "es6-shim": "^0.35.3",
     "express": "^4.15.3",
+    "gulp": "^3.9.1",
     "gulp-typescript": "^3.2.3",
     "helmet": "^3.6.1",
     "http": "0.0.0",
