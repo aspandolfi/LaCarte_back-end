@@ -29,7 +29,7 @@ __decorate([
     __metadata("design:type", produto_model_1.Produto)
 ], ProdutoAdicionais.prototype, "produto", void 0);
 __decorate([
-    typeorm_1.ManyToOne(type => adicional_model_1.Adicional, adicionais => adicionais.produtosAdicionais),
+    typeorm_1.ManyToOne(type => adicional_model_1.Adicional, adicionais => adicionais.produtosAdicionais, { eager: true }),
     class_transformer_1.Type(() => produto_tipo_1.TipoProduto),
     __metadata("design:type", adicional_model_1.Adicional)
 ], ProdutoAdicionais.prototype, "adicionais", void 0);

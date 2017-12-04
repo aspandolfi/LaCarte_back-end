@@ -8,6 +8,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const pedido_item_model_1 = require("./pedido-item.model");
 const typedi_1 = require("typedi");
@@ -19,63 +27,105 @@ let ItemPedidoService = class ItemPedidoService {
     constructor() {
         this.PedidoRepository = typeorm_1.getRepository(index_1.Pedido);
         this.ProdutoRepository = typeorm_1.getRepository(index_1.Produto);
-        this.repository = typeorm_1.getRepository(pedido_item_model_1.ItemPedido);
+        this.PedidoItemRepository = typeorm_1.getRepository(pedido_item_model_1.ItemPedido);
     }
     create(props, ...params) {
-        let idPedido = params[0];
-        let idProduto = params[1];
-        let responseData = new response_data_1.ResponseData();
-        return class_validator_1.validate(props).then(errors => {
-            if (errors.length > 0) {
-                errors.forEach(function (val) {
-                    responseData.mensagens.push(val.value);
-                });
-                responseData.status = false;
-                responseData.objeto = props;
+        return __awaiter(this, void 0, void 0, function* () {
+            let idPedido = params[0];
+            let idProduto = params[1];
+            let errors = yield class_validator_1.validate(props);
+            if (errors.length == 0) {
+                let dbPedido = yield this.PedidoRepository.findOneById(idPedido);
+                let dbProduto = yield this.ProdutoRepository.findOneById(idProduto);
+                if (dbPedido === undefined) {
+                    this.response.mensagens.push("pedido não encontrado.");
+                    this.response.status = false;
+                    return this.response;
+                }
+                if (dbProduto === undefined) {
+                    this.response.mensagens.push("produto não encontrado.");
+                    this.response.status = false;
+                    return this.response;
+                }
+                let pedidoItem = yield this.PedidoItemRepository.create(props);
+                pedidoItem.pedido = dbPedido;
+                pedidoItem.produto = dbProduto;
+                let result = yield this.PedidoItemRepository.save(pedidoItem);
+                if (result === undefined) {
+                    this.response.mensagens.push("Erro ao salvar pedido item no banco de dados.");
+                    return this.response;
+                }
+                this.response.objeto = result;
+                this.response.mensagens.push("OK");
             }
             else {
-                responseData.mensagens.push("OK!");
-                responseData.objeto = this.repository.create(props);
+                errors.forEach(val => this.response.mensagens.push(val.value));
+                this.response.status = false;
             }
-            return responseData;
+            return this.response;
         });
     }
     readOne(id) {
-        let result = {};
-        try {
-            result = this.repository
-                .findOneById(id)
-                .then()
-                .catch(res => (result = res));
-        }
-        catch (_a) {
-            // console.log(Error);
-        }
-        return result;
+        return __awaiter(this, void 0, void 0, function* () {
+            let result = yield this.PedidoItemRepository.findOneById(id);
+            if (result === undefined) {
+                this.response.mensagens.push("pedido item não encontrado");
+                this.response.status = false;
+                return this.response;
+            }
+            return result;
+        });
     }
     update(props) {
-        return this.repository.preload(props);
+        return __awaiter(this, void 0, void 0, function* () {
+            let errors = yield class_validator_1.validate(props);
+            if (errors.length > 0) {
+                errors.forEach(val => this.response.mensagens.push(val.value));
+                this.response.status = false;
+                return this.response;
+            }
+            let result = yield this.PedidoItemRepository.save(props);
+            if (result === undefined) {
+                this.response.mensagens.push("Falha ao atualizar pedido item.");
+                this.response.status = false;
+                return this.response;
+            }
+            return result;
+        });
     }
     drop(id) {
-        let result = {};
-        try {
-            result = this.readOne(id)
-                .then(res => (result = res))
-                .catch(res => (result = res));
-            result = this.repository
-                .remove(result)
-                .then()
-                .catch(res => (result = res));
-        }
-        catch (_a) {
-            // console.log(Error);
-        }
-        return result;
+        return __awaiter(this, void 0, void 0, function* () {
+            let query = yield this.PedidoItemRepository.findOneById(id);
+            if (query === undefined) {
+                this.response.mensagens.push("Falha ao excluir: Id não encontrado.");
+                this.response.status = false;
+                return this.response;
+            }
+            let result = yield this.PedidoItemRepository.remove(query);
+            if (result === undefined) {
+                this.response.mensagens.push("Falha ao excluir.");
+                this.response.status = false;
+                return this.response;
+            }
+            return result;
+        });
     }
-    readAll() {
-        return this.repository.find();
+    readAll(...params) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let query = yield this.PedidoItemRepository.find();
+            if (query === undefined) {
+                this.response.mensagens.push("Falha ao buscar pedido item.");
+                this.response.status = false;
+                return this.response;
+            }
+            return query;
+        });
     }
 };
+__decorate([
+    typedi_1.Inject(),
+    __metadata("design:type", response_data_1.ResponseData)
+], ItemPedidoService.prototype, "response", void 0);
 ItemPedidoService = __decorate([
     typedi_1.Service(),
     __metadata("design:paramtypes", [])

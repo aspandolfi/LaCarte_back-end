@@ -32,40 +32,36 @@ let CardapioService = class CardapioService {
     create(props, ...params) {
         return __awaiter(this, void 0, void 0, function* () {
             let idRestaurante = params[0];
-            let responseData = new response_data_1.ResponseData();
-            return class_validator_1.validate(props).then(errors => {
-                if (errors.length > 0) {
-                    errors.forEach(function (val) {
-                        responseData.mensagens.push(val.value);
-                    });
-                    responseData.status = false;
-                    responseData.objeto = props;
+            let errors = yield class_validator_1.validate(props);
+            if (errors.length == 0) {
+                let dbRestaurante = yield this.restauranteRepository.findOneById(idRestaurante);
+                if (dbRestaurante === undefined) {
+                    this.response.mensagens.push("restaurante não encontrado.");
+                    this.response.status = false;
+                    return this.response;
                 }
-                else {
-                    // let restaurante: Restaurante;
-                    // this.restauranteRepository
-                    //   .findOneById(idRestaurante)
-                    //   .then(res => (restaurante = res))
-                    //   .catch(err => {
-                    //     responseData.mensagens.push(err);
-                    //     responseData.status = false;
-                    //   });
-                    //verifica se não ocorreu erro ao buscar o restaurante
-                    if (responseData.mensagens.length == 0) {
-                        responseData.mensagens.push("OK!");
-                        // props.restaurante = restaurante;
-                        responseData.objeto = this.cardapioRepository.create(props);
-                    }
+                let cardapio = yield this.cardapioRepository.create(props);
+                cardapio.restaurante = dbRestaurante;
+                let result = yield this.cardapioRepository.save(cardapio);
+                if (result === undefined) {
+                    this.response.mensagens.push("Erro ao salvar cardapio no banco de dados.");
+                    return this.response;
                 }
-                return responseData;
-            });
+                this.response.objeto = result;
+                this.response.mensagens.push("OK");
+            }
+            else {
+                errors.forEach(val => this.response.mensagens.push(val.value));
+                this.response.status = false;
+            }
+            return this.response;
         });
     }
     readOne(id) {
         return __awaiter(this, void 0, void 0, function* () {
             let result = yield this.cardapioRepository.findOneById(id);
             if (result === undefined) {
-                this.response.mensagens.push("Cardápio não encontrado.");
+                this.response.mensagens.push("cardapio não encontrado");
                 this.response.status = false;
                 return this.response;
             }
@@ -74,19 +70,47 @@ let CardapioService = class CardapioService {
     }
     update(props) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.cardapioRepository.preload(props);
+            let errors = yield class_validator_1.validate(props);
+            if (errors.length > 0) {
+                errors.forEach(val => this.response.mensagens.push(val.value));
+                this.response.status = false;
+                return this.response;
+            }
+            let result = yield this.cardapioRepository.save(props);
+            if (result === undefined) {
+                this.response.mensagens.push("Falha ao atualizar cardapio.");
+                this.response.status = false;
+                return this.response;
+            }
+            return result;
         });
     }
     drop(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            let cardapio;
-            this.readOne(id).then((res) => (cardapio = res));
-            return this.cardapioRepository.remove(cardapio);
+            let cardapio = yield this.cardapioRepository.findOneById(id);
+            if (cardapio === undefined) {
+                this.response.mensagens.push("Falha ao excluir: Id não encontrado.");
+                this.response.status = false;
+                return this.response;
+            }
+            let result = yield this.cardapioRepository.remove(cardapio);
+            if (result === undefined) {
+                this.response.mensagens.push("Falha ao excluir.");
+                this.response.status = false;
+                return this.response;
+            }
+            return result;
         });
     }
     readAll() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.cardapioRepository.find();
+            let query = yield this.cardapioRepository.find();
+            if (query === undefined) {
+                this.response.mensagens.push("Falha ao buscar cardapios.");
+                this.response.status = false;
+                return this.response;
+            }
+            return query;
         });
     }
 };

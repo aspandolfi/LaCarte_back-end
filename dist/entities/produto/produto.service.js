@@ -17,6 +17,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const produto_tipo_model_1 = require("./../produto-tipo/produto-tipo.model");
 const produto_1 = require("../produto");
 const response_data_1 = require("../response-data");
 const typeorm_1 = require("typeorm");
@@ -24,49 +25,106 @@ const typedi_1 = require("typedi");
 const class_validator_1 = require("class-validator");
 let ProdutoService = class ProdutoService {
     constructor() {
-        this.repository = typeorm_1.getRepository(produto_1.Produto);
+        this.produtoRepository = typeorm_1.getRepository(produto_1.Produto);
+        this.tipoProdutoRepository = typeorm_1.getRepository(produto_tipo_model_1.TipoProduto);
     }
     create(props, ...params) {
-        let responseData = new response_data_1.ResponseData();
-        return class_validator_1.validate(props).then(errors => {
-            if (errors.length > 0) {
-                errors.forEach(function (val) {
-                    responseData.mensagens.push(val.value);
-                });
-                responseData.objeto = props;
+        return __awaiter(this, void 0, void 0, function* () {
+            let idTipoProduto = params[0];
+            let errors = yield class_validator_1.validate(props);
+            if (errors.length == 0) {
+                let dbTipo = yield this.tipoProdutoRepository.findOneById(idTipoProduto);
+                if (dbTipo === undefined) {
+                    this.response.mensagens.push("tipo não encontrado.");
+                    this.response.status = false;
+                    return this.response;
+                }
+                let restauramte = yield this.produtoRepository.create(props);
+                restauramte.tipoProduto = dbTipo;
+                let result = yield this.produtoRepository.save(restauramte);
+                if (result === undefined) {
+                    this.response.mensagens.push("Erro ao salvar produto no banco de dados.");
+                    return this.response;
+                }
+                this.response.objeto = result;
+                this.response.mensagens.push("OK");
             }
             else {
-                responseData.mensagens.push("OK!");
-                responseData.objeto = this.repository.create(props);
+                errors.forEach(val => this.response.mensagens.push(val.value));
+                this.response.status = false;
             }
-            return responseData;
+            return this.response;
         });
     }
     readOne(id) {
-        return this.repository.findOneById(id);
+        return __awaiter(this, void 0, void 0, function* () {
+            let result = yield this.produtoRepository.findOneById(id);
+            if (result === undefined) {
+                this.response.mensagens.push("produto não encontrado");
+                this.response.status = false;
+                return this.response;
+            }
+            return result;
+        });
     }
     readOneByTipo(tipoProduto) {
         return __awaiter(this, void 0, void 0, function* () {
-            let query = yield this.repository.find({ where: { tipoProduto: tipoProduto } });
+            let query = yield this.produtoRepository.find({
+                where: { tipoProduto: tipoProduto }
+            });
             return query;
         });
     }
     update(props) {
-        return this.repository.preload(props);
-    }
-    drop(id) {
-        return new Promise((resolve, reject) => {
-            this.readOne(id)
-                .then(res => { return resolve(true); })
-                .catch(error => {
-                return reject(false);
-            });
+        return __awaiter(this, void 0, void 0, function* () {
+            let errors = yield class_validator_1.validate(props);
+            if (errors.length > 0) {
+                errors.forEach(val => this.response.mensagens.push(val.value));
+                this.response.status = false;
+                return this.response;
+            }
+            let result = yield this.produtoRepository.save(props);
+            if (result === undefined) {
+                this.response.mensagens.push("Falha ao atualizar produto.");
+                this.response.status = false;
+                return this.response;
+            }
+            return result;
         });
     }
-    readAll() {
-        return this.repository.find();
+    drop(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let query = yield this.produtoRepository.findOneById(id);
+            if (query === undefined) {
+                this.response.mensagens.push("Falha ao excluir: Id não encontrado.");
+                this.response.status = false;
+                return this.response;
+            }
+            let result = yield this.produtoRepository.remove(query);
+            if (result === undefined) {
+                this.response.mensagens.push("Falha ao excluir.");
+                this.response.status = false;
+                return this.response;
+            }
+            return result;
+        });
+    }
+    readAll(...params) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let query = yield this.produtoRepository.find();
+            if (query === undefined) {
+                this.response.mensagens.push("Falha ao buscar produto.");
+                this.response.status = false;
+                return this.response;
+            }
+            return query;
+        });
     }
 };
+__decorate([
+    typedi_1.Inject(),
+    __metadata("design:type", response_data_1.ResponseData)
+], ProdutoService.prototype, "response", void 0);
 ProdutoService = __decorate([
     typedi_1.Service(),
     __metadata("design:paramtypes", [])

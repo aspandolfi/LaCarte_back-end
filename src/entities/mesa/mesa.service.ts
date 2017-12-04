@@ -1,7 +1,7 @@
 import * as console from "console";
 import { Restaurante } from "./../restaurante/restaurante.model";
 import { Mesa } from "./mesa.model";
-import { Service } from "typedi";
+import { Inject, Service } from "typedi";
 import { IServiceBase } from "../base-entity";
 import { Repository, getRepository } from "typeorm";
 import { validate } from "class-validator";
@@ -9,6 +9,7 @@ import { ResponseData } from "../response-data";
 
 @Service()
 export class MesaService implements IServiceBase<Mesa> {
+  @Inject() private response: ResponseData;
   private restauranteRepository: Repository<Restaurante>;
   private mesaRepository: Repository<Mesa>;
 
@@ -17,50 +18,95 @@ export class MesaService implements IServiceBase<Mesa> {
     this.restauranteRepository = getRepository(Restaurante);
   }
 
-  async create(props: Mesa, ...params: any[]): Promise<ResponseData> {
-    console.log(params[0]);
+  public async create(
+    props: Mesa,
+    ...params: any[]
+  ): Promise<Mesa | ResponseData> {
     let idRestaurante = params[0];
-    const responseData = new ResponseData();
-
     let errors = await validate(props);
 
     if (errors.length == 0) {
-      let restaurante = await this.restauranteRepository.findOneById(idRestaurante);
-      if (restaurante) {
-        props.restaurante = restaurante;
-        let result = await this.mesaRepository.create(props);
+      let dbRestaurante = await this.restauranteRepository.findOneById(
+        idRestaurante
+      );
+
+      if (dbRestaurante === undefined) {
+        this.response.mensagens.push("restaurante não encontrado.");
+        this.response.status = false;
+        return this.response;
       }
-      else {
-        errors.forEach(val => responseData.mensagens.push(val.value));
-        responseData.status = false;
+
+      let mesa = await this.mesaRepository.create(props);
+      mesa.restaurante = dbRestaurante;
+      let result = await this.mesaRepository.save(mesa);
+
+      if (result === undefined) {
+        this.response.mensagens.push("Erro ao salvar mesa no banco de dados.");
+        return this.response;
       }
-      return responseData;
+
+      this.response.objeto = result;
+      this.response.mensagens.push("OK");
+    } else {
+      errors.forEach(val => this.response.mensagens.push(val.value));
+      this.response.status = false;
     }
+    return this.response;
   }
 
-  readOne(id: number): Promise<Mesa> {
-    return this.mesaRepository.findOneById(id);
-  }
-  update(props: Mesa): Promise<Mesa> {
-    return this.mesaRepository.preload(props);
-  }
-  drop(id: number): Promise<Mesa> {
-    let result: any = {};
-    try {
-      result = this.readOne(id)
-        .then(res => (result = res))
-        .catch(res => (result = res));
+  public async readOne(id: number): Promise<Mesa | ResponseData> {
+    let result = await this.mesaRepository.findOneById(id);
 
-      result = this.mesaRepository
-        .remove(result)
-        .then()
-        .catch(res => (result = res));
-    } catch {
-      // console.log(Error);
+    if (result === undefined) {
+      this.response.mensagens.push("mesa não encontrado");
+      this.response.status = false;
+      return this.response;
     }
     return result;
   }
-  readAll(): Promise<Mesa[]> {
-    return this.mesaRepository.find();
+  public async update(props: Mesa): Promise<Mesa | ResponseData> {
+    let errors = await validate(props);
+
+    if (errors.length > 0) {
+      errors.forEach(val => this.response.mensagens.push(val.value));
+      this.response.status = false;
+      return this.response;
+    }
+
+    let result = await this.mesaRepository.save(props);
+
+    if (result === undefined) {
+      this.response.mensagens.push("Falha ao atualizar mesa.");
+      this.response.status = false;
+      return this.response;
+    }
+    return result;
+  }
+  public async drop(id: number): Promise<Mesa | ResponseData> {
+    let mesa = await this.mesaRepository.findOneById(id);
+
+    if (mesa === undefined) {
+      this.response.mensagens.push("Falha ao excluir: Id não encontrado.");
+      this.response.status = false;
+      return this.response;
+    }
+
+    let result = await this.mesaRepository.remove(mesa);
+
+    if (result === undefined) {
+      this.response.mensagens.push("Falha ao excluir.");
+      this.response.status = false;
+      return this.response;
+    }
+    return result;
+  }
+  public async readAll(): Promise<Mesa[] | ResponseData> {
+    let query = await this.mesaRepository.find();
+    if (query === undefined) {
+        this.response.mensagens.push("Falha ao buscar mesa.");
+        this.response.status = false;
+        return this.response;
+    }
+    return query;
   }
 }

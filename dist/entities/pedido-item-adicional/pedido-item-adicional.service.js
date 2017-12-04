@@ -8,7 +8,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const adicional_model_1 = require("./../adicional/adicional.model");
+const pedido_item_model_1 = require("./../pedido-item/pedido-item.model");
 const pedido_item_adicional_model_1 = require("./pedido-item-adicional.model");
 const typedi_1 = require("typedi");
 const typeorm_1 = require("typeorm");
@@ -16,64 +26,107 @@ const response_data_1 = require("../response-data");
 const class_validator_1 = require("class-validator");
 let ItemPedidoAdicionalService = class ItemPedidoAdicionalService {
     constructor() {
-        this.repository = typeorm_1.getRepository(pedido_item_adicional_model_1.ItemPedidoAdicional);
+        this.itemPedidoAdicionalRepository = typeorm_1.getRepository(pedido_item_adicional_model_1.ItemPedidoAdicional);
+        this.itemPedidoRepository = typeorm_1.getRepository(pedido_item_model_1.ItemPedido);
+        this.adicionalRepository = typeorm_1.getRepository(adicional_model_1.Adicional);
     }
     create(props, ...params) {
-        let idItemPedido = params[0];
-        let idAdicional = params[1];
-        let response = new response_data_1.ResponseData();
-        return class_validator_1.validate(props).then(errors => {
-            if (errors.length > 0) {
-                errors.forEach(function (val) {
-                    response.mensagens.push(val.value);
-                });
-                response.status = false;
-                response.objeto = props;
+        return __awaiter(this, void 0, void 0, function* () {
+            let idItemPedido = params[0];
+            let idAdicional = params[1];
+            let errors = yield class_validator_1.validate(props);
+            if (errors.length == 0) {
+                let dbItemPedido = yield this.itemPedidoRepository.findOneById(idItemPedido);
+                let dbAdicional = yield this.adicionalRepository.findOneById(idAdicional);
+                if (dbItemPedido === undefined) {
+                    this.response.mensagens.push("pedido item não encontrado.");
+                    this.response.status = false;
+                    return this.response;
+                }
+                if (dbAdicional === undefined) {
+                    this.response.mensagens.push("adicional não encontrado.");
+                    this.response.status = false;
+                    return this.response;
+                }
+                let itemPedido = yield this.itemPedidoAdicionalRepository.create(props);
+                itemPedido.itemPedido = dbItemPedido;
+                itemPedido.adicional = dbAdicional;
+                let result = yield this.itemPedidoAdicionalRepository.save(itemPedido);
+                if (result === undefined) {
+                    this.response.mensagens.push("Erro ao pedido item adicional no banco de dados.");
+                    return this.response;
+                }
+                this.response.objeto = result;
+                this.response.mensagens.push("OK");
             }
             else {
-                response.mensagens.push("OK!");
-                props.adicional = idAdicional;
-                props.itemPedido = idItemPedido;
-                response.objeto = this.repository.create(props);
+                errors.forEach(val => this.response.mensagens.push(val.value));
+                this.response.status = false;
             }
-            return response;
+            return this.response;
         });
     }
     readOne(id) {
-        let result = {};
-        try {
-            result = this.repository
-                .findOneById(id)
-                .then()
-                .catch(res => (result = res));
-        }
-        catch (_a) {
-            // console.log(Error);
-        }
-        return result;
+        return __awaiter(this, void 0, void 0, function* () {
+            let result = yield this.itemPedidoAdicionalRepository.findOneById(id);
+            if (result === undefined) {
+                this.response.mensagens.push("pedido item adicional não encontrado");
+                this.response.status = false;
+                return this.response;
+            }
+            return result;
+        });
     }
     update(props) {
-        return this.repository.preload(props);
+        return __awaiter(this, void 0, void 0, function* () {
+            let errors = yield class_validator_1.validate(props);
+            if (errors.length > 0) {
+                errors.forEach(val => this.response.mensagens.push(val.value));
+                this.response.status = false;
+                return this.response;
+            }
+            let result = yield this.itemPedidoAdicionalRepository.save(props);
+            if (result === undefined) {
+                this.response.mensagens.push("Falha ao atualizar pedido item adicional.");
+                this.response.status = false;
+                return this.response;
+            }
+            return result;
+        });
     }
     drop(id) {
-        let result = {};
-        try {
-            result = this.readOne(id)
-                .then(res => (result = res))
-                .catch(res => (result = res));
-            result = this.repository.remove(result)
-                .then()
-                .catch(res => (result = res));
-        }
-        catch (_a) {
-            // console.log(Error);
-        }
-        return result;
+        return __awaiter(this, void 0, void 0, function* () {
+            let query = yield this.itemPedidoAdicionalRepository.findOneById(id);
+            if (query === undefined) {
+                this.response.mensagens.push("Falha ao excluir: Id não encontrado.");
+                this.response.status = false;
+                return this.response;
+            }
+            let result = yield this.itemPedidoAdicionalRepository.remove(query);
+            if (result === undefined) {
+                this.response.mensagens.push("Falha ao excluir.");
+                this.response.status = false;
+                return this.response;
+            }
+            return result;
+        });
     }
-    readAll() {
-        return this.repository.find();
+    readAll(...params) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let query = yield this.itemPedidoAdicionalRepository.find();
+            if (query === undefined) {
+                this.response.mensagens.push("Falha ao buscar pedido item adicional.");
+                this.response.status = false;
+                return this.response;
+            }
+            return query;
+        });
     }
 };
+__decorate([
+    typedi_1.Inject(),
+    __metadata("design:type", response_data_1.ResponseData)
+], ItemPedidoAdicionalService.prototype, "response", void 0);
 ItemPedidoAdicionalService = __decorate([
     typedi_1.Service(),
     __metadata("design:paramtypes", [])

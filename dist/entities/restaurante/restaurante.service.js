@@ -86,13 +86,13 @@ let RestauranteService = class RestauranteService {
     }
     drop(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            let restauramte = yield this.restauranteRepository.findOneById(id);
-            if (restauramte === undefined) {
+            let query = yield this.restauranteRepository.findOneById(id);
+            if (query === undefined) {
                 this.response.mensagens.push("Falha ao excluir: Id não encontrado.");
                 this.response.status = false;
                 return this.response;
             }
-            let result = yield this.restauranteRepository.remove(restauramte);
+            let result = yield this.restauranteRepository.remove(query);
             if (result === undefined) {
                 this.response.mensagens.push("Falha ao excluir.");
                 this.response.status = false;

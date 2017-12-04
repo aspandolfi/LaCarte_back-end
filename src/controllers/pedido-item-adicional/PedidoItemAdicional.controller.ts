@@ -1,3 +1,4 @@
+import { ResponseData } from './../../entities/response-data/response-data.model';
 import { plainToClass } from "class-transformer";
 import {
   Body,
@@ -29,7 +30,7 @@ export class PedidoItemAdicionalController {
   }
 
   @Get()
-  public httpGetAll(): Promise<ItemPedidoAdicional[]> {
+  public httpGetAll(): Promise<ItemPedidoAdicional[] | ResponseData> {
     return this.itemPedidoAdicionalService.readAll();
   }
 

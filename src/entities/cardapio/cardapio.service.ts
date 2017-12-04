@@ -1,4 +1,4 @@
-import { Produto } from '../produto';
+import { Produto } from "../produto";
 import { Restaurante } from "./../restaurante/restaurante.model";
 import { Service, Inject } from "typedi";
 import { Cardapio } from "./cardapio.model";
@@ -12,7 +12,6 @@ import { List } from "linqts";
 export class CardapioService implements IServiceBase<Cardapio> {
   private cardapioRepository: Repository<Cardapio>;
   private restauranteRepository: Repository<Restaurante>;
-  // private produtoRepository: Repository<Produto>;
   private response: ResponseData;
 
   constructor() {
@@ -21,60 +20,100 @@ export class CardapioService implements IServiceBase<Cardapio> {
     this.response = new ResponseData();
   }
 
-  async create(props: Cardapio, ...params: any[]): Promise<ResponseData> {
+  public async create(
+    props: Cardapio,
+    ...params: any[]
+  ): Promise<Cardapio | ResponseData> {
     let idRestaurante = params[0];
-    let responseData = new ResponseData();
-    return validate(props).then(errors => {
-      if (errors.length > 0) {
-        errors.forEach(function (val) {
-          responseData.mensagens.push(val.value);
-        });
-        responseData.status = false;
-        responseData.objeto = props;
-      } else {
-        // let restaurante: Restaurante;
-        // this.restauranteRepository
-        //   .findOneById(idRestaurante)
-        //   .then(res => (restaurante = res))
-        //   .catch(err => {
-        //     responseData.mensagens.push(err);
-        //     responseData.status = false;
-        //   });
+    let errors = await validate(props);
 
-        //verifica se não ocorreu erro ao buscar o restaurante
-        if (responseData.mensagens.length == 0) {
-          responseData.mensagens.push("OK!");
-          // props.restaurante = restaurante;
-          responseData.objeto = this.cardapioRepository.create(props);
-        }
+    if (errors.length == 0) {
+      let dbRestaurante = await this.restauranteRepository.findOneById(
+        idRestaurante
+      );
+
+      if (dbRestaurante === undefined) {
+        this.response.mensagens.push("restaurante não encontrado.");
+        this.response.status = false;
+        return this.response;
       }
-      return responseData;
-    });
+
+      let cardapio = await this.cardapioRepository.create(props);
+      cardapio.restaurante = dbRestaurante;
+      let result = await this.cardapioRepository.save(cardapio);
+
+      if (result === undefined) {
+        this.response.mensagens.push(
+          "Erro ao salvar cardapio no banco de dados."
+        );
+        return this.response;
+      }
+
+      this.response.objeto = result;
+      this.response.mensagens.push("OK");
+    } else {
+      errors.forEach(val => this.response.mensagens.push(val.value));
+      this.response.status = false;
+    }
+    return this.response;
   }
 
-  async readOne(id: number): Promise<Cardapio | ResponseData> {
-
+  public async readOne(id: number): Promise<Cardapio | ResponseData> {
     let result = await this.cardapioRepository.findOneById(id);
 
     if (result === undefined) {
-      this.response.mensagens.push("Cardápio não encontrado.");
-      this.response.status = false
+      this.response.mensagens.push("cardapio não encontrado");
+      this.response.status = false;
       return this.response;
     }
     return result;
   }
 
-  async update(props: Cardapio): Promise<Cardapio> {
-    return this.cardapioRepository.preload(props);
+  public async update(props: Cardapio): Promise<Cardapio | ResponseData> {
+    let errors = await validate(props);
+
+    if (errors.length > 0) {
+      errors.forEach(val => this.response.mensagens.push(val.value));
+      this.response.status = false;
+      return this.response;
+    }
+
+    let result = await this.cardapioRepository.save(props);
+
+    if (result === undefined) {
+      this.response.mensagens.push("Falha ao atualizar cardapio.");
+      this.response.status = false;
+      return this.response;
+    }
+    return result;
   }
 
-  async drop(id: number): Promise<Cardapio> {
-    let cardapio: Cardapio;
-    this.readOne(id).then((res: Cardapio) => (cardapio = res));
-    return this.cardapioRepository.remove(cardapio);
+  public async drop(id: number): Promise<Cardapio | ResponseData> {
+    let cardapio = await this.cardapioRepository.findOneById(id);
+
+    if (cardapio === undefined) {
+      this.response.mensagens.push("Falha ao excluir: Id não encontrado.");
+      this.response.status = false;
+      return this.response;
+    }
+
+    let result = await this.cardapioRepository.remove(cardapio);
+
+    if (result === undefined) {
+      this.response.mensagens.push("Falha ao excluir.");
+      this.response.status = false;
+      return this.response;
+    }
+    return result;
   }
 
-  async readAll(): Promise<Cardapio[] | any> {
-    return await this.cardapioRepository.find();
+  public async readAll(): Promise<Cardapio[] | ResponseData> {
+    let query = await this.cardapioRepository.find();
+    if (query === undefined) {
+      this.response.mensagens.push("Falha ao buscar cardapios.");
+      this.response.status = false;
+      return this.response;
+    }
+    return query;
   }
 }
