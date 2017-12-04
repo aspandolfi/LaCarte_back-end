@@ -1,75 +1,121 @@
 import { ItemPedido } from "./pedido-item.model";
-import { Service } from "typedi";
+import { Inject, Service } from "typedi";
 import { IServiceBase } from "../base-entity/base-entity.service";
-import { getRepository, Repository } from 'typeorm';
+import { getRepository, Repository } from "typeorm";
 import { ResponseData } from "../response-data";
 import { validate } from "class-validator";
 import { Pedido, Produto } from "../index";
 
 @Service()
 export class ItemPedidoService implements IServiceBase<ItemPedido> {
+  @Inject() private response: ResponseData;
   private PedidoRepository: Repository<Pedido>;
   private ProdutoRepository: Repository<Produto>;
-  private repository: Repository<ItemPedido>;
+  private PedidoItemRepository: Repository<ItemPedido>;
 
   constructor() {
     this.PedidoRepository = getRepository(Pedido);
     this.ProdutoRepository = getRepository(Produto);
-    this.repository = getRepository(ItemPedido);
+    this.PedidoItemRepository = getRepository(ItemPedido);
   }
 
-
-  create(props: ItemPedido, ...params: any[]): Promise<ItemPedido | ResponseData> {
+  public async create(
+    props: ItemPedido,
+    ...params: any[]
+  ): Promise<ItemPedido | ResponseData> {
     let idPedido = params[0];
     let idProduto = params[1];
-    let responseData = new ResponseData();
-    return validate(props).then(errors => {
-      if (errors.length > 0) {
-        errors.forEach(function (val) {
-          responseData.mensagens.push(val.value);
-        });
-        responseData.status = false;
-        responseData.objeto = props;
-      } else {
-        responseData.mensagens.push("OK!");
-        responseData.objeto = this.repository.create(props);
+    let errors = await validate(props);
+
+    if (errors.length == 0) {
+      let dbPedido = await this.PedidoRepository.findOneById(idPedido);
+      let dbProduto = await this.ProdutoRepository.findOneById(idProduto);
+
+      if (dbPedido === undefined) {
+        this.response.mensagens.push("pedido não encontrado.");
+        this.response.status = false;
+        return this.response;
       }
-      return responseData;
-    });
+      if (dbProduto === undefined) {
+        this.response.mensagens.push("produto não encontrado.");
+        this.response.status = false;
+        return this.response;
+      }
+
+      let pedidoItem = await this.PedidoItemRepository.create(props);
+      pedidoItem.pedido = dbPedido;
+      pedidoItem.produto = dbProduto;
+      let result = await this.PedidoItemRepository.save(pedidoItem);
+
+      if (result === undefined) {
+        this.response.mensagens.push(
+          "Erro ao salvar pedido item no banco de dados."
+        );
+        return this.response;
+      }
+
+      this.response.objeto = result;
+      this.response.mensagens.push("OK");
+    } else {
+      errors.forEach(val => this.response.mensagens.push(val.value));
+      this.response.status = false;
+    }
+    return this.response;
   }
 
-  readOne(id: number): Promise<ItemPedido> {
-    let result: any = {};
-    try {
-      result = this.repository
-        .findOneById(id)
-        .then()
-        .catch(res => (result = res));
-    } catch {
-      // console.log(Error);
+  public async readOne(id: number): Promise<ItemPedido | ResponseData> {
+    let result = await this.PedidoItemRepository.findOneById(id);
+
+    if (result === undefined) {
+      this.response.mensagens.push("pedido item não encontrado");
+      this.response.status = false;
+      return this.response;
     }
     return result;
   }
-  update(props: ItemPedido): Promise<ItemPedido> {
-    return this.repository.preload(props);
-  }
-  drop(id: number): Promise<ItemPedido> {
-    let result: any = {};
-    try {
-      result = this.readOne(id)
-        .then(res => (result = res))
-        .catch(res => (result = res));
+  public async update(props: ItemPedido): Promise<ItemPedido | ResponseData> {
+    let errors = await validate(props);
 
-      result = this.repository
-        .remove(result)
-        .then()
-        .catch(res => (result = res));
-    } catch {
-      // console.log(Error);
-    }
-    return result;
+        if (errors.length > 0) {
+          errors.forEach(val => this.response.mensagens.push(val.value));
+          this.response.status = false;
+          return this.response;
+        }
+
+        let result = await this.PedidoItemRepository.save(props);
+
+        if (result === undefined) {
+          this.response.mensagens.push("Falha ao atualizar pedido item.");
+          this.response.status = false;
+          return this.response;
+        }
+        return result;
   }
-  readAll(): Promise<ItemPedido[]> {
-    return this.repository.find();
+  public async drop(id: number): Promise<ItemPedido | ResponseData> {
+    let query = await this.PedidoItemRepository.findOneById(id);
+
+        if (query === undefined) {
+          this.response.mensagens.push("Falha ao excluir: Id não encontrado.");
+          this.response.status = false;
+          return this.response;
+        }
+
+        let result = await this.PedidoItemRepository.remove(query);
+
+        if (result === undefined) {
+          this.response.mensagens.push("Falha ao excluir.");
+          this.response.status = false;
+          return this.response;
+        }
+        return result;
+  }
+  public async readAll(...params: any[]): Promise<ItemPedido[] | ResponseData> {
+    let query = await this.PedidoItemRepository.find();
+    if (query === undefined) {
+      this.response.mensagens.push("Falha ao buscar pedido item.");
+      this.response.status = false;
+      return this.response;
+    }
+    return query;
   }
 }

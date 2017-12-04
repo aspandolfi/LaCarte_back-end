@@ -16,7 +16,7 @@ export class ProdutoAdicionais extends BaseEntity {
   @Type(() => Produto)
   public produto: Produto;
 
-  @ManyToOne(type => Adicional, adicionais => adicionais.produtosAdicionais)
+  @ManyToOne(type => Adicional, adicionais => adicionais.produtosAdicionais, { eager: true })
   @Type(() => TipoProduto)
   public adicionais: Adicional;
 }

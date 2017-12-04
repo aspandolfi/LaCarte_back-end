@@ -17,7 +17,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const console = require("console");
 const restaurante_model_1 = require("./../restaurante/restaurante.model");
 const mesa_model_1 = require("./mesa.model");
 const typedi_1 = require("typedi");
@@ -31,50 +30,93 @@ let MesaService = class MesaService {
     }
     create(props, ...params) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(params[0]);
             let idRestaurante = params[0];
-            const responseData = new response_data_1.ResponseData();
             let errors = yield class_validator_1.validate(props);
             if (errors.length == 0) {
-                let restaurante = yield this.restauranteRepository.findOneById(idRestaurante);
-                if (restaurante) {
-                    props.restaurante = restaurante;
-                    let result = yield this.mesaRepository.create(props);
+                let dbRestaurante = yield this.restauranteRepository.findOneById(idRestaurante);
+                if (dbRestaurante === undefined) {
+                    this.response.mensagens.push("restaurante não encontrado.");
+                    this.response.status = false;
+                    return this.response;
                 }
-                else {
-                    errors.forEach(val => responseData.mensagens.push(val.value));
-                    responseData.status = false;
+                let mesa = yield this.mesaRepository.create(props);
+                mesa.restaurante = dbRestaurante;
+                let result = yield this.mesaRepository.save(mesa);
+                if (result === undefined) {
+                    this.response.mensagens.push("Erro ao salvar mesa no banco de dados.");
+                    return this.response;
                 }
-                return responseData;
+                this.response.objeto = result;
+                this.response.mensagens.push("OK");
             }
+            else {
+                errors.forEach(val => this.response.mensagens.push(val.value));
+                this.response.status = false;
+            }
+            return this.response;
         });
     }
     readOne(id) {
-        return this.mesaRepository.findOneById(id);
+        return __awaiter(this, void 0, void 0, function* () {
+            let result = yield this.mesaRepository.findOneById(id);
+            if (result === undefined) {
+                this.response.mensagens.push("mesa não encontrado");
+                this.response.status = false;
+                return this.response;
+            }
+            return result;
+        });
     }
     update(props) {
-        return this.mesaRepository.preload(props);
+        return __awaiter(this, void 0, void 0, function* () {
+            let errors = yield class_validator_1.validate(props);
+            if (errors.length > 0) {
+                errors.forEach(val => this.response.mensagens.push(val.value));
+                this.response.status = false;
+                return this.response;
+            }
+            let result = yield this.mesaRepository.save(props);
+            if (result === undefined) {
+                this.response.mensagens.push("Falha ao atualizar mesa.");
+                this.response.status = false;
+                return this.response;
+            }
+            return result;
+        });
     }
     drop(id) {
-        let result = {};
-        try {
-            result = this.readOne(id)
-                .then(res => (result = res))
-                .catch(res => (result = res));
-            result = this.mesaRepository
-                .remove(result)
-                .then()
-                .catch(res => (result = res));
-        }
-        catch (_a) {
-            // console.log(Error);
-        }
-        return result;
+        return __awaiter(this, void 0, void 0, function* () {
+            let mesa = yield this.mesaRepository.findOneById(id);
+            if (mesa === undefined) {
+                this.response.mensagens.push("Falha ao excluir: Id não encontrado.");
+                this.response.status = false;
+                return this.response;
+            }
+            let result = yield this.mesaRepository.remove(mesa);
+            if (result === undefined) {
+                this.response.mensagens.push("Falha ao excluir.");
+                this.response.status = false;
+                return this.response;
+            }
+            return result;
+        });
     }
     readAll() {
-        return this.mesaRepository.find();
+        return __awaiter(this, void 0, void 0, function* () {
+            let query = yield this.mesaRepository.find();
+            if (query === undefined) {
+                this.response.mensagens.push("Falha ao buscar mesa.");
+                this.response.status = false;
+                return this.response;
+            }
+            return query;
+        });
     }
 };
+__decorate([
+    typedi_1.Inject(),
+    __metadata("design:type", response_data_1.ResponseData)
+], MesaService.prototype, "response", void 0);
 MesaService = __decorate([
     typedi_1.Service(),
     __metadata("design:paramtypes", [])
