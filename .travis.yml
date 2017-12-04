@@ -2,7 +2,7 @@ dist: trusty
 sudo: false
 language: node_js
 node_js:
-  - "lts/6"
+  - "6"
 addons:
   sonarqube:
     organization: "LaCarte"
