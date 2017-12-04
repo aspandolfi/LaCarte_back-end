@@ -1,1 +1,1 @@
-export * from './produtoTipo.Controller';
+export * from './produto-tipo.controller';

@@ -10,12 +10,12 @@ import {
   UseBefore
 } from "routing-controllers";
 import { Inject } from "typedi";
-import {ITipoProduto, TipoProduto , TipoProdutoService } from "../../entities/produto-tipo";
+import { ITipoProduto, TipoProduto, TipoProdutoService } from "../../entities/produto-tipo";
 
 // @UseBefore(() => Auth.authenticate())
 @JsonController("/produtotipo")
 export class ProdutoTipoController {
-  @Inject() private  tipoProdutoService:  TipoProdutoService;
+  @Inject() private tipoProdutoService: TipoProdutoService;
 
   @Post()
   @HttpCode(201)
@@ -24,7 +24,7 @@ export class ProdutoTipoController {
       required: true
     })
     props: ITipoProduto
-  ): Promise<TipoProduto | any> {
+    ): Promise<TipoProduto | any> {
     let tipoProduto = plainToClass(TipoProduto, props);
     return this.tipoProdutoService.create(tipoProduto);
   }
@@ -35,7 +35,7 @@ export class ProdutoTipoController {
   }
 
   @Get("/:id")
-  public httpGet(@Param("id") id: number): Promise<any> {
+  public httpGet( @Param("id") id: number): Promise<any> {
     return this.tipoProdutoService.readOne(id);
   }
 }
