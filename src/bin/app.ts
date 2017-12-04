@@ -3,7 +3,8 @@ import * as express from "express";
 import * as helmet from "helmet";
 import * as morgan from "morgan";
 import { useContainer as useContainerClassValidator } from "class-validator";
-import { useContainer, useExpressServer, Action } from "routing-controllers";
+import { useContainer as useContainerClassRouting, useExpressServer, Action } from "routing-controllers";
+import { useContainer as useContainerTypeOrm } from 'typeorm';
 import { Container } from "typedi";
 import {
   UserController,
@@ -21,7 +22,9 @@ import {
 } from "../controllers";
 import { Auth } from "../config";
 
-useContainer(Container);
+useContainerTypeOrm(Container);
+
+useContainerClassRouting(Container);
 
 useContainerClassValidator(Container);
 

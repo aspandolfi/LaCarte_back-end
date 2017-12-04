@@ -23,7 +23,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const class_transformer_1 = require("class-transformer");
 const routing_controllers_1 = require("routing-controllers");
 const typedi_1 = require("typedi");
-const _1 = require("../../entities/user/");
+const user_1 = require("../../entities/user");
 const auth_1 = require("../../config/auth");
 let bcrypt = require("bcrypt");
 let compression = require("compression");
@@ -33,7 +33,7 @@ const someOtherPlaintextPassword = '1234'; //senha a ser testada
 let UserController = class UserController {
     httpPost(props) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = class_transformer_1.plainToClass(_1.User, props);
+            const user = class_transformer_1.plainToClass(user_1.User, props);
             const result = yield this.userService.create(user);
             return class_transformer_1.classToPlain(result);
         });
@@ -46,7 +46,7 @@ let UserController = class UserController {
     }
     httpPut(props) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = class_transformer_1.plainToClass(_1.User, props);
+            const user = class_transformer_1.plainToClass(user_1.User, props);
             const result = yield this.userService.update(user);
             return class_transformer_1.classToPlain(result);
         });
@@ -69,7 +69,7 @@ let UserController = class UserController {
 };
 __decorate([
     typedi_1.Inject(),
-    __metadata("design:type", _1.UserService)
+    __metadata("design:type", user_1.UserService)
 ], UserController.prototype, "userService", void 0);
 __decorate([
     routing_controllers_1.Post(),
