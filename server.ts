@@ -3,7 +3,7 @@ import 'reflect-metadata';
 import 'es6-shim';
 import { Container } from 'typedi';
 import { createConnection, useContainer } from 'typeorm';
-import { config } from './config/config';
+import { config } from './src/config/config';
 import {
     BaseEntity,
     User,
@@ -18,8 +18,8 @@ import {
     ProdutoAdicionais,
     TipoProduto,
     Restaurante
-} from './entities';
-import { app } from './bin/app';
+} from './src/entities';
+import { app } from './src/bin/app';
 
 useContainer(Container);
 
