@@ -86,7 +86,7 @@ export class ProdutoService implements IServiceBase<Produto> {
     let result = await this.produtoRepository.save(props);
 
     if (result === undefined) {
-      this.response.mensagens.push("Falha ao atualizar Restaurante.");
+      this.response.mensagens.push("Falha ao atualizar produto.");
       this.response.status = false;
       return this.response;
     }
@@ -114,7 +114,7 @@ export class ProdutoService implements IServiceBase<Produto> {
   public async readAll(...params: any[]): Promise<Produto[] | ResponseData> {
     let query = await this.produtoRepository.find();
     if (query === undefined) {
-      this.response.mensagens.push("Falha ao buscar restaurantes.");
+      this.response.mensagens.push("Falha ao buscar produto.");
       this.response.status = false;
       return this.response;
     }

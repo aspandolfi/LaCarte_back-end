@@ -33,7 +33,7 @@ let TipoProdutoService = class TipoProdutoService {
                 let restauramte = yield this.repository.create(props);
                 let result = yield this.repository.save(restauramte);
                 if (result === undefined) {
-                    this.response.mensagens.push("Erro ao salvar tipo no banco de dados.");
+                    this.response.mensagens.push("Erro ao salvar tipo do produto no banco de dados.");
                     return this.response;
                 }
                 this.response.objeto = result;
@@ -50,7 +50,7 @@ let TipoProdutoService = class TipoProdutoService {
         return __awaiter(this, void 0, void 0, function* () {
             let result = yield this.repository.findOneById(id);
             if (result === undefined) {
-                this.response.mensagens.push("tipo não encontrado");
+                this.response.mensagens.push("tipo do produto não encontrado");
                 this.response.status = false;
                 return this.response;
             }
@@ -67,7 +67,7 @@ let TipoProdutoService = class TipoProdutoService {
             }
             let result = yield this.repository.save(props);
             if (result === undefined) {
-                this.response.mensagens.push("Falha ao atualizar tipo.");
+                this.response.mensagens.push("Falha ao atualizar tipo do produto.");
                 this.response.status = false;
                 return this.response;
             }
@@ -95,7 +95,7 @@ let TipoProdutoService = class TipoProdutoService {
         return __awaiter(this, void 0, void 0, function* () {
             let query = yield this.repository.find();
             if (query === undefined) {
-                this.response.mensagens.push("Falha ao buscar tipo.");
+                this.response.mensagens.push("Falha ao buscar tipo do produto.");
                 this.response.status = false;
                 return this.response;
             }

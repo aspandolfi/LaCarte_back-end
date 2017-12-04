@@ -25,7 +25,7 @@ export class TipoProdutoService implements IServiceBase<TipoProduto> {
       let result = await this.repository.save(restauramte);
 
       if (result === undefined) {
-        this.response.mensagens.push("Erro ao salvar tipo no banco de dados.");
+        this.response.mensagens.push("Erro ao salvar tipo do produto no banco de dados.");
         return this.response;
       }
 
@@ -42,7 +42,7 @@ export class TipoProdutoService implements IServiceBase<TipoProduto> {
     let result = await this.repository.findOneById(id);
 
     if (result === undefined) {
-      this.response.mensagens.push("tipo não encontrado");
+      this.response.mensagens.push("tipo do produto não encontrado");
       this.response.status = false;
       return this.response;
     }
@@ -60,7 +60,7 @@ export class TipoProdutoService implements IServiceBase<TipoProduto> {
     let result = await this.repository.save(props);
 
     if (result === undefined) {
-      this.response.mensagens.push("Falha ao atualizar tipo.");
+      this.response.mensagens.push("Falha ao atualizar tipo do produto.");
       this.response.status = false;
       return this.response;
     }
@@ -89,7 +89,7 @@ export class TipoProdutoService implements IServiceBase<TipoProduto> {
   public async readAll(): Promise<TipoProduto[] | ResponseData> {
     let query = await this.repository.find();
     if (query === undefined) {
-      this.response.mensagens.push("Falha ao buscar tipo.");
+      this.response.mensagens.push("Falha ao buscar tipo do produto.");
       this.response.status = false;
       return this.response;
     }

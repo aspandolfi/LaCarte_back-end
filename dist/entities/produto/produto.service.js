@@ -85,7 +85,7 @@ let ProdutoService = class ProdutoService {
             }
             let result = yield this.produtoRepository.save(props);
             if (result === undefined) {
-                this.response.mensagens.push("Falha ao atualizar Restaurante.");
+                this.response.mensagens.push("Falha ao atualizar produto.");
                 this.response.status = false;
                 return this.response;
             }
@@ -113,7 +113,7 @@ let ProdutoService = class ProdutoService {
         return __awaiter(this, void 0, void 0, function* () {
             let query = yield this.produtoRepository.find();
             if (query === undefined) {
-                this.response.mensagens.push("Falha ao buscar restaurantes.");
+                this.response.mensagens.push("Falha ao buscar produto.");
                 this.response.status = false;
                 return this.response;
             }
