@@ -1,4 +1,3 @@
-import { ResponseData } from "./../response-data/response-data.model";
 import { Adicional } from "./../adicional/adicional.model";
 import { ItemPedido } from "./../pedido-item/pedido-item.model";
 import { ItemPedidoAdicional } from "./pedido-item-adicional.model";

@@ -17,9 +17,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const response_data_model_1 = require("./../response-data/response-data.model");
 const produto_tipo_model_1 = require("./../produto-tipo/produto-tipo.model");
 const produto_1 = require("../produto");
+const response_data_1 = require("../response-data");
 const typeorm_1 = require("typeorm");
 const typedi_1 = require("typedi");
 const class_validator_1 = require("class-validator");
@@ -123,7 +123,7 @@ let ProdutoService = class ProdutoService {
 };
 __decorate([
     typedi_1.Inject(),
-    __metadata("design:type", response_data_model_1.ResponseData)
+    __metadata("design:type", response_data_1.ResponseData)
 ], ProdutoService.prototype, "response", void 0);
 ProdutoService = __decorate([
     typedi_1.Service(),

@@ -1,4 +1,3 @@
-import { ResponseData } from "./../response-data/response-data.model";
 import { TipoProduto } from "./../produto-tipo/produto-tipo.model";
 import { Produto } from "../produto";
 import { IServiceBase } from "../base-entity";

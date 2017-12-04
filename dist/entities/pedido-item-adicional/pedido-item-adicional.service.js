@@ -17,12 +17,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const response_data_model_1 = require("./../response-data/response-data.model");
 const adicional_model_1 = require("./../adicional/adicional.model");
 const pedido_item_model_1 = require("./../pedido-item/pedido-item.model");
 const pedido_item_adicional_model_1 = require("./pedido-item-adicional.model");
 const typedi_1 = require("typedi");
 const typeorm_1 = require("typeorm");
+const response_data_1 = require("../response-data");
 const class_validator_1 = require("class-validator");
 let ItemPedidoAdicionalService = class ItemPedidoAdicionalService {
     constructor() {
@@ -125,7 +125,7 @@ let ItemPedidoAdicionalService = class ItemPedidoAdicionalService {
 };
 __decorate([
     typedi_1.Inject(),
-    __metadata("design:type", response_data_model_1.ResponseData)
+    __metadata("design:type", response_data_1.ResponseData)
 ], ItemPedidoAdicionalService.prototype, "response", void 0);
 ItemPedidoAdicionalService = __decorate([
     typedi_1.Service(),
