@@ -1,51 +1,98 @@
-import { TipoProduto } from './produto-tipo.model';
-import { Service } from 'typedi';
+import { ResponseData } from "./../response-data/response-data.model";
+import { TipoProduto } from "./produto-tipo.model";
+import { Service, Inject } from "typedi";
 import { IServiceBase } from "../base-entity/base-entity.service";
-import { Repository, getRepository } from 'typeorm';
+import { Repository, getRepository } from "typeorm";
+import { validate } from "class-validator";
 
 @Service()
 export class TipoProdutoService implements IServiceBase<TipoProduto> {
-
+  @Inject() private response: ResponseData;
   private repository: Repository<TipoProduto>;
 
   constructor() {
     this.repository = getRepository(TipoProduto);
   }
 
-  async  create(props: TipoProduto): Promise<TipoProduto> {
-    return this.repository.create(props);
-  }
-  readOne(id: number): Promise<TipoProduto> {
-    let result: any = {};
-    try {
-      result = this.repository
-        .findOneById(id)
-        .then()
-        .catch(res => (result = res));
-    } catch {
-      // console.log(Error);
-    }
-    return result;
-  }
-  update(props: TipoProduto): Promise<TipoProduto> {
-    return this.repository.preload(props);
-  }
-  drop(id: number): Promise<TipoProduto> {
-    let result: any = {};
-    try {
-      result = this.readOne(id)
-        .then(res => (result = res))
-        .catch(res => (result = res));
+  public async create(
+    props: TipoProduto,
+    ...params: any[]
+  ): Promise<TipoProduto | ResponseData> {
+    let errors = await validate(props);
 
-      result = this.repository.remove(result)
-        .then()
-        .catch(res => (result = res));
-    } catch {
-      // console.log(Error);
+    if (errors.length == 0) {
+      let restauramte = await this.repository.create(props);
+      let result = await this.repository.save(restauramte);
+
+      if (result === undefined) {
+        this.response.mensagens.push("Erro ao salvar tipo no banco de dados.");
+        return this.response;
+      }
+
+      this.response.objeto = result;
+      this.response.mensagens.push("OK");
+    } else {
+      errors.forEach(val => this.response.mensagens.push(val.value));
+      this.response.status = false;
+    }
+    return this.response;
+  }
+
+  public async readOne(id: number): Promise<TipoProduto | ResponseData> {
+    let result = await this.repository.findOneById(id);
+
+    if (result === undefined) {
+      this.response.mensagens.push("tipo não encontrado");
+      this.response.status = false;
+      return this.response;
     }
     return result;
   }
-  readAll(): Promise<TipoProduto[]> {
-    return this.repository.find();
+
+  public async update(props: TipoProduto): Promise<TipoProduto | ResponseData> {
+    let errors = await validate(props);
+
+    if (errors.length > 0) {
+      errors.forEach(val => this.response.mensagens.push(val.value));
+      this.response.status = false;
+      return this.response;
+    }
+    let result = await this.repository.save(props);
+
+    if (result === undefined) {
+      this.response.mensagens.push("Falha ao atualizar tipo.");
+      this.response.status = false;
+      return this.response;
+    }
+    return result;
+  }
+
+  public async drop(id: number): Promise<TipoProduto | ResponseData> {
+    let tipo = await this.repository.findOneById(id);
+
+    if (tipo === undefined) {
+      this.response.mensagens.push("Falha ao excluir: Id não encontrado.");
+      this.response.status = false;
+      return this.response;
+    }
+
+    let result = await this.repository.remove(tipo);
+
+    if (result === undefined) {
+      this.response.mensagens.push("Falha ao excluir.");
+      this.response.status = false;
+      return this.response;
+    }
+    return result;
+  }
+
+  public async readAll(): Promise<TipoProduto[] | ResponseData> {
+    let query = await this.repository.find();
+    if (query === undefined) {
+      this.response.mensagens.push("Falha ao buscar tipo.");
+      this.response.status = false;
+      return this.response;
+    }
+    return query;
   }
 }

@@ -1,3 +1,4 @@
+import { ResponseData } from './../../entities/response-data/response-data.model';
 import * as stream from 'stream';
 import { plainToClass } from "class-transformer";
 import {
@@ -29,7 +30,7 @@ export class CardapioController {
   }
 
   @Get()
-  public async httpGetAll(): Promise<Cardapio[] | any> {
+  public async httpGetAll(): Promise<Cardapio[] | ResponseData> {
     return await this.cardapioService.readAll();
   }
 

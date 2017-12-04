@@ -1,3 +1,4 @@
+import { ResponseData } from './../../entities/response-data/response-data.model';
 import { plainToClass } from "class-transformer";
 import {
   Body,
@@ -27,7 +28,7 @@ export class AdicionalController {
   }
 
   @Get()
-  public httpGetAll(): Promise<Adicional[]> {
+  public httpGetAll(): Promise<Adicional[] | ResponseData> {
     return this.adicionalService.readAll();
   }
 

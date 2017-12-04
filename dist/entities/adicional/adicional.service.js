@@ -8,6 +8,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const adicional_model_1 = require("./adicional.model");
 const typedi_1 = require("typedi");
@@ -18,58 +26,87 @@ let AdicionalService = class AdicionalService {
     constructor() {
         this.repository = typeorm_1.getRepository(adicional_model_1.Adicional);
     }
-    create(props) {
-        let response = new response_data_1.ResponseData();
-        return class_validator_1.validate(props).then(errors => {
-            if (errors.length > 0) {
-                errors.forEach(function (val) {
-                    response.mensagens.push(val.value);
-                });
-                response.status = false;
-                response.objeto = props;
+    create(props, ...params) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let errors = yield class_validator_1.validate(props);
+            if (errors.length == 0) {
+                let restauramte = yield this.repository.create(props);
+                let result = yield this.repository.save(restauramte);
+                if (result === undefined) {
+                    this.response.mensagens.push("Erro ao salvar adicional no banco de dados.");
+                    return this.response;
+                }
+                this.response.objeto = result;
+                this.response.mensagens.push("OK");
             }
             else {
-                response.mensagens.push("OK!");
-                response.objeto = this.repository.create(props);
+                errors.forEach(val => this.response.mensagens.push(val.value));
+                this.response.status = false;
             }
-            return response;
+            return this.response;
         });
     }
     readOne(id) {
-        let result = {};
-        try {
-            result = this.repository
-                .findOneById(id)
-                .then()
-                .catch(res => (result = res));
-        }
-        catch (_a) {
-            // console.log(Error);
-        }
-        return result;
+        return __awaiter(this, void 0, void 0, function* () {
+            let result = yield this.repository.findOneById(id);
+            if (result === undefined) {
+                this.response.mensagens.push("tipo não encontrado");
+                this.response.status = false;
+                return this.response;
+            }
+            return result;
+        });
     }
     update(props) {
-        return this.repository.preload(props);
+        return __awaiter(this, void 0, void 0, function* () {
+            let errors = yield class_validator_1.validate(props);
+            if (errors.length > 0) {
+                errors.forEach(val => this.response.mensagens.push(val.value));
+                this.response.status = false;
+                return this.response;
+            }
+            let result = yield this.repository.save(props);
+            if (result === undefined) {
+                this.response.mensagens.push("Falha ao atualizar adicional.");
+                this.response.status = false;
+                return this.response;
+            }
+            return result;
+        });
     }
     drop(id) {
-        let result = {};
-        try {
-            result = this.readOne(id)
-                .then(res => (result = res))
-                .catch(res => (result = res));
-            result = this.repository.remove(result)
-                .then()
-                .catch(res => (result = res));
-        }
-        catch (_a) {
-            // console.log(Error);
-        }
-        return result;
+        return __awaiter(this, void 0, void 0, function* () {
+            let tipo = yield this.repository.findOneById(id);
+            if (tipo === undefined) {
+                this.response.mensagens.push("Falha ao excluir: Id não encontrado.");
+                this.response.status = false;
+                return this.response;
+            }
+            let result = yield this.repository.remove(tipo);
+            if (result === undefined) {
+                this.response.mensagens.push("Falha ao excluir.");
+                this.response.status = false;
+                return this.response;
+            }
+            return result;
+        });
     }
     readAll() {
-        return this.repository.find();
+        return __awaiter(this, void 0, void 0, function* () {
+            let query = yield this.repository.find();
+            if (query === undefined) {
+                this.response.mensagens.push("Falha ao buscar tipo.");
+                this.response.status = false;
+                return this.response;
+            }
+            return query;
+        });
     }
 };
+__decorate([
+    typedi_1.Inject(),
+    __metadata("design:type", response_data_1.ResponseData)
+], AdicionalService.prototype, "response", void 0);
 AdicionalService = __decorate([
     typedi_1.Service(),
     __metadata("design:paramtypes", [])
