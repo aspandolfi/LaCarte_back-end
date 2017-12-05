@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const entities_1 = require("../entities");
 exports.config = {
     sql: {
         // database: 'dblacarte',
@@ -23,7 +24,10 @@ exports.config = {
         port: 5432,
         username: "gxiubqwv",
         password: "Eor0v0XVSaO5EkcKrqGwSL2tlWo_huxc",
-        database: "gxiubqwv"
+        database: "gxiubqwv",
+        entities: [
+            entities_1.User, entities_1.Adicional, entities_1.Cardapio, entities_1.Cliente,
+        ]
     },
     jwt: {
         jwtSecret: "l@Cart3A$$PirE$%T/s",
