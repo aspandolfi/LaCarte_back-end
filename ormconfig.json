@@ -1,34 +1,24 @@
 [
     {
-      "type": "postgres",
-      "host": "stampy.db.elephantsql.com",
-      "port": 5432,
-      "username": "gxiubqwv",
-      "password": "Eor0v0XVSaO5EkcKrqGwSL2tlWo_huxc",
-      "database": "gxiubqwv",
-        "cli": {
-            "entitiesDir": "dist/entities/**/*.js"
-        },
-        "entitySchemas": [
-            "dist/entities/**/*.model.js"
-        ],
+        "type": "postgres",
+        "host": "stampy.db.elephantsql.com",
+        "port": 5432,
+        "username": "gxiubqwv",
+        "password": "Eor0v0XVSaO5EkcKrqGwSL2tlWo_huxc",
+        "database": "gxiubqwv",
         "logging": "all",
-        "name": "default"
+        "name": "default",
+        "entities": ["dist/entities/**/*.model.js"]
     },
     {
-      "type": "postgres",
-      "host": "stampy.db.elephantsql.com",
-      "port": 5432,
-      "username": "gxiubqwv",
-      "password": "Eor0v0XVSaO5EkcKrqGwSL2tlWo_huxc",
-      "database": "gxiubqwv",
-        "cli": {
-            "entitiesDir": "dist/entities/**/*.js"
-        },
-        "entitySchemas": [
-            "dist/entities/**/*.model.js"
-        ],
+        "type": "postgres",
+        "host": "stampy.db.elephantsql.com",
+        "port": 5432,
+        "username": "gxiubqwv",
+        "password": "Eor0v0XVSaO5EkcKrqGwSL2tlWo_huxc",
+        "database": "gxiubqwv",
         "logging": "all",
-        "name": "passport"
+        "name": "passport",
+        "entities": ["dist/entities/**/*.model.js"]
     }
 ]

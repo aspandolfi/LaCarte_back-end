@@ -3,10 +3,9 @@ import { use, authenticate, initialize } from "passport";
 import { Container } from "typedi";
 import { UserService, User } from "../entities/user";
 import { config } from "./config";
-import { createConnections, useContainer as useContainerTypeOrm } from "typeorm";
+import { createConnections } from "typeorm";
 
 export module Auth {
-  useContainerTypeOrm(Container);
 
   createConnections().then(() => {
     let userService: UserService = Container.get(UserService);
