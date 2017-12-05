@@ -6,6 +6,7 @@ const typedi_1 = require("typedi");
 const user_1 = require("../entities/user");
 const config_1 = require("./config");
 const typeorm_1 = require("typeorm");
+typeorm_1.useContainer(typedi_1.Container);
 var Auth;
 (function (Auth) {
     typeorm_1.createConnections().then(() => {
