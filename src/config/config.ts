@@ -5,11 +5,11 @@ import {
   Cliente,
   Adicional,
   Mesa,
-  Pedido, 
-  ItemPedido, 
-  ItemPedidoAdicional, 
-  Produto, 
-  ProdutoAdicionais, 
+  Pedido,
+  ItemPedido,
+  ItemPedidoAdicional,
+  Produto,
+  ProdutoAdicionais,
   TipoProduto,
   Restaurante
 } from '../entities';

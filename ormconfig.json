@@ -9,7 +9,7 @@
         "cli": {
             "entitiesDir": "dist/entities/**/*.js"
         },
-        "entities": [
+        "entitySchemas": [
             "dist/entities/**/*.model.js"
         ],
         "logging": "all",
@@ -25,7 +25,7 @@
         "cli": {
             "entitiesDir": "dist/entities/**/*.js"
         },
-        "entities": [
+        "entitySchemas": [
             "dist/entities/**/*.model.js"
         ],
         "logging": "all",
