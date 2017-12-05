@@ -1,4 +1,18 @@
 import { IConfig } from './config.interface';
+import {
+  User,
+  Cardapio,
+  Cliente,
+  Adicional,
+  Mesa,
+  Pedido, 
+  ItemPedido, 
+  ItemPedidoAdicional, 
+  Produto, 
+  ProdutoAdicionais, 
+  TipoProduto,
+  Restaurante
+} from '../entities';
 
 export const config: IConfig = {
   sql: {
@@ -25,7 +39,10 @@ export const config: IConfig = {
     port: 5432,
     username: "gxiubqwv",
     password: "Eor0v0XVSaO5EkcKrqGwSL2tlWo_huxc",
-    database: "gxiubqwv"
+    database: "gxiubqwv",
+    entities: [
+      User, Adicional, Cardapio, Cliente,
+    ]
   },
   jwt: {
     jwtSecret: "l@Cart3A$$PirE$%T/s",

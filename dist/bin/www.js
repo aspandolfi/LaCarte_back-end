@@ -4,5 +4,5 @@ const http = require("http");
 require("reflect-metadata");
 require("es6-shim");
 const app_1 = require("./app");
-const port = process.env.port || 8082;
+const port = process.env.PORT || 8082;
 http.createServer(app_1.app).listen(port, () => console.log('Server started on port ' + port));
