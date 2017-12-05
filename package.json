@@ -4,7 +4,7 @@
   "description": "",
   "main": "www.js",
   "scripts": {
-    "start": "node  dist/bin/www.js"
+    "start": "ts-node  dist/bin/www.js"
   },
   "keywords": [],
   "author": "Grupo LaCarte - IFES",
