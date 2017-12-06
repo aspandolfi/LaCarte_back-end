@@ -4,9 +4,7 @@
   "description": "",
   "main": "www.js",
   "scripts": {
-    "start": "node  dist/bin/www.js",
-    "gulp": "gulp",
-    "postinstall": "npm run gulp scripts"
+    "start": "node  dist/bin/www.js"
   },
   "keywords": [],
   "author": "Grupo LaCarte - IFES",
