@@ -23,7 +23,7 @@ import { app } from './app';
 
 useContainer(Container);
 
-const port = process.env.port || 8082;
+const port = process.env.PORT || 8082;
 
 http.createServer(app).listen(port, () => console.log('Server started on port ' + port));
 
