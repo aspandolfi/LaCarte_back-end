@@ -39,12 +39,13 @@ export class User extends BaseEntity {
     @Exclude({ toPlainOnly: true })
     senha: string;
 
-    @Column()
+    @Column({ nullable: true })
     @IsNumberString()
     telefone: string;
 
     @Column({
-        length: 100
+        length: 100,
+        nullable: true
     })
     @IsOptional()
     @IsString()
@@ -57,7 +58,9 @@ export class User extends BaseEntity {
     @IsString()
     nome: string;
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     @IsOptional()
     @IsString()
     token: string;

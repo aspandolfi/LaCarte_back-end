@@ -22,7 +22,6 @@ const typedi_1 = require("typedi");
 const typeorm_1 = require("typeorm");
 const user_model_1 = require("./user.model");
 const response_data_1 = require("../response-data");
-const class_validator_1 = require("class-validator");
 const bcrypt_1 = require("bcrypt");
 const jsonwebtoken_1 = require("jsonwebtoken");
 let UserService = class UserService {
@@ -33,7 +32,8 @@ let UserService = class UserService {
     }
     create(props) {
         return __awaiter(this, void 0, void 0, function* () {
-            const errors = yield class_validator_1.validate(props);
+            // const errors = await validate(props);
+            const errors = this.validate(props);
             if (errors.length == 0) {
                 let newUser = yield this.repository.create(props);
                 newUser.senha = bcrypt_1.hashSync(props.senha, 0);
@@ -43,11 +43,12 @@ let UserService = class UserService {
                     this.response.status = false;
                     return this.response;
                 }
+                result = yield this.doLogin({ email: props.email, senha: props.senha });
                 this.response.objeto = result;
                 this.response.mensagens.push("OK");
             }
             else {
-                errors.forEach(val => this.response.mensagens.push(val.value));
+                errors.forEach(val => this.response.mensagens.push(val));
                 this.response.status = false;
             }
             return this.response;
@@ -148,6 +149,20 @@ let UserService = class UserService {
                 return this.response;
             }
         });
+    }
+    validate(user) {
+        let errors = [];
+        let emailRegex = new RegExp(/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/);
+        if (user.nome == undefined || user.nome == null) {
+            errors.push("Nome é obrigatório.");
+        }
+        if (user.email == undefined || user.email == null) {
+            errors.push("E-mail é obrigatório.");
+        }
+        if (!user.email.search(emailRegex)) {
+            errors.push("E-mail inválido.");
+        }
+        return errors;
     }
 };
 UserService = __decorate([
