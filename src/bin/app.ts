@@ -52,7 +52,8 @@ const app: express.Application = useExpressServer(config, {
     RestauranteController,
     ProdutoController
   ],
-  routePrefix: "/api/v1"
+  routePrefix: "/api/v1",
+  cors: true
 });
 
 export { app };
