@@ -37,11 +37,11 @@ INSERT INTO public.produto(
             nome, descricao, valor, "urlImagem", ativo, "createdAt",
             "updatedAt", version, "tipoProdutoId")
     VALUES ('lasanha', 'Lorem ipsum dolorectetur. Suspendisse potenti. Phasellus aliquet.', 16.00, 'http://www.pifpaf.com.br/img/000000000000050138006.JPG', true,  '12-12-2017' , '12-12-2017', 1, 1);
-    INSERT INTO public.produto(
+INSERT INTO public.produto(
             nome, descricao, valor, "urlImagem", ativo, "createdAt",
             "updatedAt", version, "tipoProdutoId")
     VALUES ('Hamburguer', 'Lorem ipsum dolorectetur. Suspendisse potenti. Phasellus aliquet.', 16.00, 'https://www.designmaster.com.br/designmarketing/produtos/g_foto1_3246.jpg', true,  '12-12-2017' , '12-12-2017', 1, 1);
-    INSERT INTO public.produto(
+INSERT INTO public.produto(
             nome, descricao, valor, "urlImagem", ativo, "createdAt",
             "updatedAt", version, "tipoProdutoId")
     VALUES ('Macarrão', 'Lorem ipsum dolorectetur. Suspendisse potenti. Phasellus aliquet.', 16.00, 'https://s3.amazonaws.com/midia.naminhapanela.com/wp-content/uploads/2016/08/14134251/amatriciana4.png', true,  '12-12-2017' , '12-12-2017', 1, 1);
@@ -69,7 +69,7 @@ INSERT INTO public.produto(
             nome, descricao, valor, "urlImagem", ativo, "createdAt",
             "updatedAt", version, "tipoProdutoId")
     VALUES ('Torta de limão', 'Lorem ipsum dolorectetur. Suspendisse potenti. Phasellus aliquet.', 16.00, 'http://www.corpoealma.com/wp-content/uploads/2016/08/Receita-de-Torta-de-Lima%CC%83o-2.jpg', true,  '12-12-2017' , '12-12-2017', 1, 3);
-    INSERT INTO public.produto(
+INSERT INTO public.produto(
             nome, descricao, valor, "urlImagem", ativo, "createdAt",
             "updatedAt", version, "tipoProdutoId")
     VALUES ('Mousse de morango', 'Lorem ipsum dolorectetur. Suspendisse potenti. Phasellus aliquet.', 16.00, 'https://www.embare.com.br/wp-content/uploads/2013/06/mousse-de-morango-receitas-embare.jpg', true,  '12-12-2017' , '12-12-2017', 1, 3);
@@ -77,6 +77,21 @@ INSERT INTO public.produto(
 INSERT INTO public.adicional(
             nome, "createdAt", "updatedAt", version)
     VALUES ('queijo', '12-12-2017' , '12-12-2017', 1);
+INSERT INTO public.adicional(
+            nome, "createdAt", "updatedAt", version)
+    VALUES ('bacon', '12-12-2017' , '12-12-2017', 1);
+INSERT INTO public.adicional(
+            nome, "createdAt", "updatedAt", version)
+    VALUES ('ovo', '12-12-2017' , '12-12-2017', 1);
+INSERT INTO public.adicional(
+            nome, "createdAt", "updatedAt", version)
+    VALUES ('calda', '12-12-2017' , '12-12-2017', 1);
+INSERT INTO public.adicional(
+            nome, "createdAt", "updatedAt", version)
+    VALUES ('granulado', '12-12-2017' , '12-12-2017', 1);
+INSERT INTO public.adicional(
+            nome, "createdAt", "updatedAt", version)
+    VALUES ('morango picado', '12-12-2017' , '12-12-2017', 1);
 
 INSERT INTO public.adicional(
             nome, "createdAt", "updatedAt", version)
