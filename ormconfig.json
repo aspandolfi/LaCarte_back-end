@@ -1,33 +1,33 @@
 [
     {
-      "type": "postgres",
-      "host": "stampy.db.elephantsql.com",
-      "port": 5432,
-      "username": "gxiubqwv",
-      "password": "Eor0v0XVSaO5EkcKrqGwSL2tlWo_huxc",
-      "database": "gxiubqwv",
+        "type": "postgres",
+        "host": "stampy.db.elephantsql.com",
+        "port": 5432,
+        "username": "gxiubqwv",
+        "password": "Eor0v0XVSaO5EkcKrqGwSL2tlWo_huxc",
+        "database": "gxiubqwv",
         "cli": {
             "entitiesDir": "dist/entities/**/*.model.js",
             "migrationsDir": "src/migration"
         },
-        "entitySchemas": [
+        "entities": [
             "dist/entities/**/*.model.js"
         ],
         "logging": "all",
         "name": "default"
     },
     {
-      "type": "postgres",
-      "host": "stampy.db.elephantsql.com",
-      "port": 5432,
-      "username": "gxiubqwv",
-      "password": "Eor0v0XVSaO5EkcKrqGwSL2tlWo_huxc",
-      "database": "gxiubqwv",
+        "type": "postgres",
+        "host": "stampy.db.elephantsql.com",
+        "port": 5432,
+        "username": "gxiubqwv",
+        "password": "Eor0v0XVSaO5EkcKrqGwSL2tlWo_huxc",
+        "database": "gxiubqwv",
         "cli": {
             "entitiesDir": "dist/entities/**/*.model.js",
             "migrationsDir": "src/migration"
         },
-        "entitySchemas": [
+        "entities": [
             "dist/entities/**/*.model.js"
         ],
         "logging": "all",

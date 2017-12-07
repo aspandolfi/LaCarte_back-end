@@ -5,8 +5,6 @@ import { UserService, User } from "../entities/user";
 import { config } from "./config";
 import { createConnections, useContainer as useContainerTypeOrm } from "typeorm";
 
-useContainerTypeOrm(Container);
-
 export module Auth {
   createConnections().then(() => {
     let userService: UserService = Container.get(UserService);
