@@ -12,7 +12,7 @@ import {
 } from "routing-controllers";
 import { Inject } from "typedi";
 import { IUser, User, UserService, UserLogin } from "../../entities/user";
-import { Auth } from '../../config';
+import { Auth } from '../../config/auth';
 
 let bcrypt = require("bcrypt");
 let compression = require("compression");

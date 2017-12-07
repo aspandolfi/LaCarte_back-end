@@ -9,12 +9,11 @@
         "cli": {
             "entitiesDir": "dist/entities/**/*.js"
         },
-        "entities": [
+        "entitySchemas": [
             "dist/entities/**/*.model.js"
         ],
         "logging": "all",
         "name": "default"
-
     },
     {
       "type": "postgres",
@@ -26,11 +25,10 @@
         "cli": {
             "entitiesDir": "dist/entities/**/*.js"
         },
-        "entities": [
+        "entitySchemas": [
             "dist/entities/**/*.model.js"
         ],
         "logging": "all",
         "name": "passport"
-
     }
 ]

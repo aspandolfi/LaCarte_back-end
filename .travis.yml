@@ -2,18 +2,18 @@ dist: trusty
 sudo: false
 language: node_js
 node_js:
-  - "iojs"
-
+  - "6"
 addons:
   sonarqube:
-    organization: "LaCarte"
+    organization: "lacarte"
     token:
       secure: "$SONAR_TOKEN"
 branches:
   only:
   - master
-  - desenvolvimento
-  script:
+  - andre
+script:
   - sonar-scanner 
-notifications:
+  
+#notifications:
 #slack: 

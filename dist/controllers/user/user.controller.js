@@ -24,7 +24,7 @@ const class_transformer_1 = require("class-transformer");
 const routing_controllers_1 = require("routing-controllers");
 const typedi_1 = require("typedi");
 const user_1 = require("../../entities/user");
-const config_1 = require("../../config");
+const auth_1 = require("../../config/auth");
 let bcrypt = require("bcrypt");
 let compression = require("compression");
 const saltRounds = 0;
@@ -83,14 +83,14 @@ __decorate([
 ], UserController.prototype, "httpPost", null);
 __decorate([
     routing_controllers_1.Get(),
-    routing_controllers_1.UseBefore(config_1.Auth.Authorize()),
+    routing_controllers_1.UseBefore(auth_1.Auth.Authorize()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "httpGetAll", null);
 __decorate([
     routing_controllers_1.Put(),
-    routing_controllers_1.UseBefore(config_1.Auth.Authorize()),
+    routing_controllers_1.UseBefore(auth_1.Auth.Authorize()),
     __param(0, routing_controllers_1.Body({
         required: true
     })),
@@ -100,7 +100,7 @@ __decorate([
 ], UserController.prototype, "httpPut", null);
 __decorate([
     routing_controllers_1.Get("/:id"),
-    routing_controllers_1.UseBefore(config_1.Auth.Authorize()),
+    routing_controllers_1.UseBefore(auth_1.Auth.Authorize()),
     __param(0, routing_controllers_1.Param("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
@@ -108,7 +108,7 @@ __decorate([
 ], UserController.prototype, "httpGet", null);
 __decorate([
     routing_controllers_1.Get("/email/:email"),
-    routing_controllers_1.UseBefore(config_1.Auth.Authorize()),
+    routing_controllers_1.UseBefore(auth_1.Auth.Authorize()),
     __param(0, routing_controllers_1.Param("email")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
