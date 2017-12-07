@@ -7,7 +7,8 @@
       "password": "Eor0v0XVSaO5EkcKrqGwSL2tlWo_huxc",
       "database": "gxiubqwv",
         "cli": {
-            "entitiesDir": "dist/entities/**/*.js"
+            "entitiesDir": "dist/entities/**/*.model.js",
+            "migrationsDir": "src/migration"
         },
         "entitySchemas": [
             "dist/entities/**/*.model.js"
@@ -23,7 +24,8 @@
       "password": "Eor0v0XVSaO5EkcKrqGwSL2tlWo_huxc",
       "database": "gxiubqwv",
         "cli": {
-            "entitiesDir": "dist/entities/**/*.js"
+            "entitiesDir": "dist/entities/**/*.model.js",
+            "migrationsDir": "src/migration"
         },
         "entitySchemas": [
             "dist/entities/**/*.model.js"

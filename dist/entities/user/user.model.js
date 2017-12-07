@@ -46,13 +46,14 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "senha", void 0);
 __decorate([
-    typeorm_1.Column(),
+    typeorm_1.Column({ nullable: true }),
     class_validator_1.IsNumberString(),
     __metadata("design:type", String)
 ], User.prototype, "telefone", void 0);
 __decorate([
     typeorm_1.Column({
-        length: 100
+        length: 100,
+        nullable: true
     }),
     class_validator_1.IsOptional(),
     class_validator_1.IsString(),
@@ -67,7 +68,9 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "nome", void 0);
 __decorate([
-    typeorm_1.Column(),
+    typeorm_1.Column({
+        nullable: true
+    }),
     class_validator_1.IsOptional(),
     class_validator_1.IsString(),
     __metadata("design:type", String)
