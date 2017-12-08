@@ -23,7 +23,9 @@ export class UserService implements IServiceBase<User> {
 
     public async create(props: User): Promise<User | ResponseData> {
 
-        const errors = await validate(props);
+        // const errors = await validate(props);
+
+        const errors = this.validate(props);
 
         if (errors.length == 0) {
             let newUser = await this.repository.create(props);
@@ -36,11 +38,15 @@ export class UserService implements IServiceBase<User> {
                 return this.response;
             }
 
-            this.response.objeto = result;
+            let payload = { id: result.id };
+            let token = sign(payload, config.jwt.jwtSecret, { algorithm: "HS512", expiresIn: config.jwt.jwtExpiration * 3600 * 24 });
+            await this.passportUserRepository.update({ id: result.id }, { token: token });
+
+            this.response.objeto = token;
             this.response.mensagens.push("OK");
         }
         else {
-            errors.forEach(val => this.response.mensagens.push(val.value));
+            errors.forEach(val => this.response.mensagens.push(val));
             this.response.status = false;
         }
         return this.response;
@@ -139,5 +145,24 @@ export class UserService implements IServiceBase<User> {
             this.response.status = false;
             return this.response;
         }
+    }
+
+    private validate(user: User): string[] {
+        let errors: string[] = [];
+        let emailRegex = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+
+        if (user.nome === undefined || user.nome === null) {
+            errors.push("Nome é obrigatório.");
+        }
+
+        if (user.email === undefined || user.email === null) {
+            errors.push("E-mail é obrigatório.");
+            return errors;
+        }
+
+        if (!user.email.match(emailRegex)) {
+            errors.push("E-mail inválido.");
+        }
+        return errors;
     }
 }

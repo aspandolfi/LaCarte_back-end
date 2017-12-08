@@ -34,6 +34,7 @@ const app = routing_controllers_1.useExpressServer(config, {
         controllers_1.RestauranteController,
         controllers_1.ProdutoController
     ],
-    routePrefix: "/api/v1"
+    routePrefix: "/api/v1",
+    cors: true
 });
 exports.app = app;

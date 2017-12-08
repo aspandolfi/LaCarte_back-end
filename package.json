@@ -17,6 +17,7 @@
     "class-transformer": "^0.1.8",
     "class-validator": "^0.7.2",
     "compression": "^1.7.1",
+    "cors": "^2.8.4",
     "es6-shim": "^0.35.3",
     "express": "^4.15.3",
     "gulp": "^3.9.1",

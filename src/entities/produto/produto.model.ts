@@ -51,7 +51,7 @@ export class Produto extends BaseEntity {
   @JoinTable()
   public cardapios: Cardapio[];
 
-  @ManyToOne(type => TipoProduto, tipoProduto => tipoProduto.produtos)
+  @ManyToOne(type => TipoProduto, tipoProduto => tipoProduto.produtos, { eager: true })
   @Type(() => TipoProduto)
   public tipoProduto: TipoProduto;
 

@@ -61,7 +61,7 @@ __decorate([
     __metadata("design:type", Array)
 ], Produto.prototype, "cardapios", void 0);
 __decorate([
-    typeorm_1.ManyToOne(type => produto_tipo_1.TipoProduto, tipoProduto => tipoProduto.produtos),
+    typeorm_1.ManyToOne(type => produto_tipo_1.TipoProduto, tipoProduto => tipoProduto.produtos, { eager: true }),
     class_transformer_1.Type(() => produto_tipo_1.TipoProduto),
     __metadata("design:type", produto_tipo_1.TipoProduto)
 ], Produto.prototype, "tipoProduto", void 0);

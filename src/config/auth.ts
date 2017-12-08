@@ -6,8 +6,6 @@ import { config } from "./config";
 import { createConnections, useContainer as useContainerTypeOrm } from "typeorm";
 
 export module Auth {
-  useContainerTypeOrm(Container);
-
   createConnections().then(() => {
     let userService: UserService = Container.get(UserService);
     use(new Strategy(
