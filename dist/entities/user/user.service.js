@@ -33,7 +33,7 @@ let UserService = class UserService {
     create(props) {
         return __awaiter(this, void 0, void 0, function* () {
             // const errors = await validate(props);
-            const errors = this.validate(props);
+            const errors = props.validate(props);
             if (errors.length == 0) {
                 let newUser = yield this.repository.create(props);
                 newUser.senha = bcrypt_1.hashSync(props.senha, 0);
@@ -151,21 +151,6 @@ let UserService = class UserService {
                 return this.response;
             }
         });
-    }
-    validate(user) {
-        let errors = [];
-        let emailRegex = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
-        if (user.nome === undefined || user.nome === null) {
-            errors.push("Nome é obrigatório.");
-        }
-        if (user.email === undefined || user.email === null) {
-            errors.push("E-mail é obrigatório.");
-            return errors;
-        }
-        if (!user.email.match(emailRegex)) {
-            errors.push("E-mail inválido.");
-        }
-        return errors;
     }
 };
 UserService = __decorate([

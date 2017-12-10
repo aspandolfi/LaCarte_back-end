@@ -17,6 +17,16 @@ const typeorm_1 = require("typeorm");
 const class_validator_1 = require("class-validator");
 const class_transformer_1 = require("class-transformer");
 let ProdutoAdicionais = class ProdutoAdicionais extends base_entity_1.BaseEntity {
+    validate(obj) {
+        let errors = [];
+        if (obj.valor === undefined || obj.valor === null) {
+            errors.push("Valor é obrigatório.");
+        }
+        if (obj.produto === undefined || obj.produto === null) {
+            errors.push("Produto é obrigatório.");
+        }
+        return errors;
+    }
 };
 __decorate([
     typeorm_1.Column(),

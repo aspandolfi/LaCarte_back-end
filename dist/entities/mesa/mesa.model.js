@@ -16,6 +16,19 @@ const base_entity_1 = require("../base-entity");
 const class_validator_1 = require("class-validator");
 const class_transformer_1 = require("class-transformer");
 let Mesa = class Mesa extends base_entity_1.BaseEntity {
+    validate(obj) {
+        let errors = [];
+        if (obj.numero === undefined || obj.numero == null) {
+            errors.push("Numero da mesa é obrigatório.");
+        }
+        if (obj.qrcode === undefined || obj.qrcode == null) {
+            errors.push("QR CODE é obrigatório.");
+        }
+        if (obj.restaurante === undefined || obj.restaurante == null) {
+            errors.push("Restaurante é obrigatório.");
+        }
+        return errors;
+    }
 };
 __decorate([
     typeorm_1.Column({

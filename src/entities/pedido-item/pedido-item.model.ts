@@ -13,7 +13,29 @@ enum Status {
 }
 
 @Entity()
-export class ItemPedido extends BaseEntity {
+export class ItemPedido extends BaseEntity<ItemPedido> {
+  public validate(obj: ItemPedido): string[] {
+    let errors: string[] = [];
+    if (obj.quantidade === undefined || obj.quantidade == null) {
+      errors.push("Quantidade é obrigatório.");
+    }
+    if (obj.status === undefined || obj.status == null) {
+      errors.push("Status é obrigatório.");
+    }
+    else {
+      if (obj.status < 0 && obj.status > 2) {
+        errors.push("Status inválido");
+      }
+    }
+    if (obj.pedido === undefined || obj.pedido == null) {
+      errors.push("Pedido é obrigatório.");
+    }
+    if (obj.produto === undefined || obj.produto == null) {
+      errors.push("Produto é obrigatório.");
+    }
+    return errors;
+  }
+  
   @Column({
     type: 'int'
   })

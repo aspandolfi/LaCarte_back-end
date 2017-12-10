@@ -17,6 +17,19 @@ const base_entity_1 = require("../base-entity");
 const class_validator_1 = require("class-validator");
 const class_transformer_1 = require("class-transformer");
 let ItemPedidoAdicional = class ItemPedidoAdicional extends base_entity_1.BaseEntity {
+    validate(obj) {
+        let errors = [];
+        if (obj.quantidade === undefined || obj.quantidade == null) {
+            errors.push("Quantidade é obrigatório.");
+        }
+        if (obj.itemPedido === undefined || obj.itemPedido == null) {
+            errors.push("Item Pedido é obrigatório.");
+        }
+        if (obj.adicional === undefined || obj.adicional == null) {
+            errors.push("Adicional é obrigatório.");
+        }
+        return errors;
+    }
 };
 __decorate([
     typeorm_1.Column({

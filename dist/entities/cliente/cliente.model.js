@@ -15,6 +15,22 @@ const typeorm_1 = require("typeorm");
 const base_entity_1 = require("../base-entity");
 const class_validator_1 = require("class-validator");
 let Cliente = class Cliente extends base_entity_1.BaseEntity {
+    validate(obj) {
+        let errors = [];
+        if (obj.email === undefined || obj.email == null) {
+            errors.push("E-mail é obrigatório.");
+        }
+        if (obj.cnpj === undefined || obj.cnpj == null) {
+            errors.push("CNPJ é obrigatório.");
+        }
+        if (obj.senha === undefined || obj.senha == null) {
+            errors.push("Senha é obrigatório.");
+        }
+        if (obj.nome === undefined || obj.nome == null) {
+            errors.push("Nome é obrigatório.");
+        }
+        return errors;
+    }
 };
 __decorate([
     typeorm_1.Column({ unique: true }),

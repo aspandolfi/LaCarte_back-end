@@ -16,6 +16,13 @@ const typeorm_1 = require("typeorm");
 const base_entity_1 = require("../base-entity");
 const class_validator_1 = require("class-validator");
 let Adicional = class Adicional extends base_entity_1.BaseEntity {
+    validate(obj) {
+        let errors = [];
+        if (obj.nome === undefined || obj.nome == null) {
+            errors.push("Nome é obrigatório.");
+        }
+        return errors;
+    }
 };
 __decorate([
     typeorm_1.Column({

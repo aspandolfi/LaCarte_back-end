@@ -2,35 +2,39 @@ import { ProdutoAdicionais } from './produto-adicionais.model';
 import { Service } from 'typedi';
 import { IServiceBase } from "../base-entity/base-entity.service";
 import { Repository, getRepository } from 'typeorm';
+import { ResponseData } from '../response-data';
 
 @Service()
 export class ProdutoAdicionaisService implements IServiceBase<ProdutoAdicionais> {
 
   private repository: Repository<ProdutoAdicionais>;
+  private response: ResponseData;
 
   constructor() {
     this.repository = getRepository(ProdutoAdicionais);
+    this.response = new ResponseData();
   }
 
   async create(props: ProdutoAdicionais): Promise<ProdutoAdicionais> {
     return this.repository.create(props);
   }
-  readOne(id: number): Promise<ProdutoAdicionais> {
-    let result: any = {};
-    try {
-      result = this.repository
-        .findOneById(id)
-        .then()
-        .catch(res => (result = res));
-    } catch {
-      // console.log(Error);
+  
+  async readOne(id: number): Promise<ProdutoAdicionais | ResponseData> {
+    let result = await this.repository.findOneById(id);
+
+    if (result === undefined) {
+      this.response.mensagens.push("Produto Adicional não encontrado.");
+      this.response.status = false;
+      return this.response;
     }
     return result;
   }
-  update(props: ProdutoAdicionais): Promise<ProdutoAdicionais> {
+
+  async update(props: ProdutoAdicionais): Promise<ProdutoAdicionais> {
     return this.repository.preload(props);
   }
-  drop(id: number): Promise<ProdutoAdicionais> {
+
+  async drop(id: number): Promise<ProdutoAdicionais> {
     let result: any = {};
     try {
       result = this.readOne(id)
@@ -45,7 +49,8 @@ export class ProdutoAdicionaisService implements IServiceBase<ProdutoAdicionais>
     }
     return result;
   }
-  readAll(): Promise<ProdutoAdicionais[]> {
+
+  async readAll(): Promise<ProdutoAdicionais[]> {
     return this.repository.find();
   }
 }

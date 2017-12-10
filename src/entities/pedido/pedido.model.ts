@@ -7,7 +7,17 @@ import { IsNumber, IsBoolean } from "class-validator";
 import { Type } from "class-transformer";
 
 @Entity()
-export class Pedido extends BaseEntity {
+export class Pedido extends BaseEntity<Pedido> {
+  public validate(obj: Pedido): string[] {
+    let errors: string[] = [];
+    if (obj.user === undefined || obj.user == null) {
+      errors.push("Usuário é obrigatório.");
+    }
+    if (obj.mesa === undefined || obj.mesa == null) {
+      errors.push("Mesa é obrigatório.");
+    }
+    return errors;
+  }
   @Column({
     nullable: true
   })

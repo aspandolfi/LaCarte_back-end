@@ -4,7 +4,6 @@ import { Service } from "typedi";
 import { Repository, getRepository } from "typeorm";
 import { User } from "./user.model";
 import { ResponseData } from "../response-data";
-import { validate } from "class-validator";
 import { UserLogin } from "./user.login";
 import { genSaltSync, hashSync, compareSync } from "bcrypt";
 import { sign } from "jsonwebtoken";
@@ -25,7 +24,7 @@ export class UserService implements IServiceBase<User> {
 
         // const errors = await validate(props);
 
-        const errors = this.validate(props);
+        const errors = props.validate(props);
 
         if (errors.length == 0) {
             let newUser = await this.repository.create(props);
@@ -145,24 +144,5 @@ export class UserService implements IServiceBase<User> {
             this.response.status = false;
             return this.response;
         }
-    }
-
-    private validate(user: User): string[] {
-        let errors: string[] = [];
-        let emailRegex = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
-
-        if (user.nome === undefined || user.nome === null) {
-            errors.push("Nome é obrigatório.");
-        }
-
-        if (user.email === undefined || user.email === null) {
-            errors.push("E-mail é obrigatório.");
-            return errors;
-        }
-
-        if (!user.email.match(emailRegex)) {
-            errors.push("E-mail inválido.");
-        }
-        return errors;
     }
 }

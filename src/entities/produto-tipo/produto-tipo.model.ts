@@ -5,7 +5,15 @@ import { IsString, IsNotEmpty } from "class-validator";
 import { Type } from "class-transformer";
 
 @Entity()
-export class TipoProduto extends BaseEntity {
+export class TipoProduto extends BaseEntity<TipoProduto> {
+  public validate(obj: TipoProduto): string[] {
+    let errors: string[] = [];
+
+    if (obj.nome === undefined || obj.nome === null) {
+      errors.push("Nome é obrigatório.")
+    }
+    return errors;
+  }
   @Column({
     length: 20
   })

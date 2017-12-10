@@ -15,6 +15,16 @@ const base_entity_1 = require("../base-entity");
 const restaurante_1 = require("../restaurante");
 const class_validator_1 = require("class-validator");
 let Cardapio = class Cardapio extends base_entity_1.BaseEntity {
+    validate(obj) {
+        let errors = [];
+        if (obj.restaurante === undefined || obj.restaurante == null) {
+            errors.push("Restaurante é obrigatório.");
+        }
+        if (obj.nome === undefined || obj.nome == null) {
+            errors.push("Nome é obrigatório.");
+        }
+        return errors;
+    }
 };
 __decorate([
     typeorm_1.Column({

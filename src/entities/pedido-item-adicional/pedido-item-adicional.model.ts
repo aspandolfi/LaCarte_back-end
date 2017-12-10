@@ -7,7 +7,21 @@ import { IsInt } from "class-validator";
 import { Type } from "class-transformer";
 
 @Entity()
-export class ItemPedidoAdicional extends BaseEntity {
+export class ItemPedidoAdicional extends BaseEntity<ItemPedidoAdicional> {
+  public validate(obj: ItemPedidoAdicional): string[] {
+    let errors: string[] = [];
+    if (obj.quantidade === undefined || obj.quantidade == null) {
+      errors.push("Quantidade é obrigatório.");
+    }
+    if (obj.itemPedido === undefined || obj.itemPedido == null) {
+      errors.push("Item Pedido é obrigatório.");
+    }
+    if (obj.adicional === undefined || obj.adicional == null) {
+      errors.push("Adicional é obrigatório.");
+    }
+    return errors;
+  }
+  
   @Column({
     type: 'int'
   })

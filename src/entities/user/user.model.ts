@@ -13,7 +13,38 @@ import {
 } from "class-validator";
 
 @Entity()
-export class User extends BaseEntity {
+export class User extends BaseEntity<User> {
+
+    public validate(obj: User): string[] {
+        let errors: string[] = [];
+        let emailRegex = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+
+        if (obj.nome === undefined || obj.nome === null) {
+            errors.push("Nome é obrigatório.");
+        }
+
+        if (obj.email === undefined || obj.email === null) {
+            errors.push("E-mail é obrigatório.");
+        }
+        else {
+            if (!obj.email.match(emailRegex)) {
+                errors.push("E-mail inválido.");
+            }
+        }
+
+        if (obj.cpf.length > 11) {
+            errors.push("CPF inválido.");
+        }
+        else {
+            try {
+                parseInt(obj.cpf);
+            } catch (error) {
+                errors.push("CPF deve conter apenas números.");
+            }
+        }
+        return errors;
+    }
+
     @Column({
         nullable: true
     })

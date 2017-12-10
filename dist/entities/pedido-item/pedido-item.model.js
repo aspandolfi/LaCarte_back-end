@@ -23,6 +23,27 @@ var Status;
     Status[Status["Recusado"] = 2] = "Recusado";
 })(Status || (Status = {}));
 let ItemPedido = class ItemPedido extends base_entity_1.BaseEntity {
+    validate(obj) {
+        let errors = [];
+        if (obj.quantidade === undefined || obj.quantidade == null) {
+            errors.push("Quantidade é obrigatório.");
+        }
+        if (obj.status === undefined || obj.status == null) {
+            errors.push("Status é obrigatório.");
+        }
+        else {
+            if (obj.status < 0 && obj.status > 2) {
+                errors.push("Status inválido");
+            }
+        }
+        if (obj.pedido === undefined || obj.pedido == null) {
+            errors.push("Pedido é obrigatório.");
+        }
+        if (obj.produto === undefined || obj.produto == null) {
+            errors.push("Produto é obrigatório.");
+        }
+        return errors;
+    }
 };
 __decorate([
     typeorm_1.Column({

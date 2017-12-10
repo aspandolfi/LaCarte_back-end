@@ -1,6 +1,5 @@
 import { Cliente } from "../cliente/cliente.model";
-import { ManyToOne } from "typeorm";
-import { Column, Entity, OneToMany } from "typeorm";
+import { Column, Entity, OneToMany, ManyToOne } from "typeorm";
 import { BaseEntity } from "../base-entity";
 import { Cardapio } from "../cardapio";
 import { Mesa } from "../mesa/mesa.model";
@@ -8,7 +7,21 @@ import { IsString, IsNotEmpty, IsNumberString, IsUrl } from "class-validator";
 import { Exclude, Type, Expose } from "class-transformer";
 
 @Entity()
-export class Restaurante extends BaseEntity {
+export class Restaurante extends BaseEntity<Restaurante> {
+  public validate(obj: Restaurante): string[] {
+    let errors: string[] = [];
+
+    if (obj.nome === undefined || obj.nome === null) {
+      errors.push("Nome é obrigatório.");
+    }
+    if (obj.endereco === undefined || obj.endereco === null) {
+      errors.push("Endereço é obrigatório.");
+    }
+    if (obj.telefone === undefined || obj.telefone === null) {
+      errors.push("Telefone é obrigatório.");
+    }
+    return errors;
+  }
   @Column({
     length: 100
   })
@@ -25,7 +38,8 @@ export class Restaurante extends BaseEntity {
   public descricao: string;
 
   @Column({
-    length: 150
+    length: 150,
+    nullable: true
   })
   @IsNotEmpty()
   @IsString()

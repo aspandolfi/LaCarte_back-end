@@ -35,10 +35,10 @@
     "passport-jwt": "^3.0.0",
     "pg": "^7.4.0",
     "reflect-metadata": "^0.1.10",
-    "routing-controllers": "^0.7.0",
+    "routing-controllers": "^0.7.6",
     "ts-node": "^3.3.0",
     "typedi": "^0.5.2",
-    "typeorm": "^0.1.2"
+    "typeorm": "^0.1.7"
   },
   "devDependencies": {
     "@types/bcrypt": "^1.0.0",

@@ -17,6 +17,16 @@ const base_entity_1 = require("../base-entity");
 const class_validator_1 = require("class-validator");
 const class_transformer_1 = require("class-transformer");
 let Pedido = class Pedido extends base_entity_1.BaseEntity {
+    validate(obj) {
+        let errors = [];
+        if (obj.user === undefined || obj.user == null) {
+            errors.push("Usuário é obrigatório.");
+        }
+        if (obj.mesa === undefined || obj.mesa == null) {
+            errors.push("Mesa é obrigatório.");
+        }
+        return errors;
+    }
 };
 __decorate([
     typeorm_1.Column({

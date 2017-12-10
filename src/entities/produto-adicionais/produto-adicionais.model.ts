@@ -7,7 +7,19 @@ import { IsNumber } from "class-validator";
 import { Type } from "class-transformer";
 
 @Entity()
-export class ProdutoAdicionais extends BaseEntity {
+export class ProdutoAdicionais extends BaseEntity<ProdutoAdicionais> {
+  public validate(obj: ProdutoAdicionais): string[] {
+    let errors: string[] = [];
+
+    if (obj.valor === undefined || obj.valor === null) {
+      errors.push("Valor é obrigatório.");
+    }
+    if (obj.produto === undefined || obj.produto === null) {
+      errors.push("Produto é obrigatório.");
+    }
+    return errors;
+  }
+  
   @Column()
   @IsNumber()
   public valor: number;

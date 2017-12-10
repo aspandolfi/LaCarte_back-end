@@ -1,12 +1,26 @@
 import { Restaurante } from "../restaurante";
 import { Pedido } from '../pedido/pedido.model';
-import { Column, Entity, ManyToOne, OneToMany} from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from "../base-entity";
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { Type } from "class-transformer";
 
 @Entity()
-export class Mesa extends BaseEntity {
+export class Mesa extends BaseEntity<Mesa> {
+  public validate(obj: Mesa): string[] {
+    let errors: string[] = [];
+    if (obj.numero === undefined || obj.numero == null) {
+      errors.push("Numero da mesa é obrigatório.");
+    }
+    if (obj.qrcode === undefined || obj.qrcode == null) {
+      errors.push("QR CODE é obrigatório.");
+    }
+    if (obj.restaurante === undefined || obj.restaurante == null) {
+      errors.push("Restaurante é obrigatório.");
+    }
+    return errors;
+  }
+  
   @Column({
     unique: true
   })

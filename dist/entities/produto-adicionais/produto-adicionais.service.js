@@ -20,9 +20,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const produto_adicionais_model_1 = require("./produto-adicionais.model");
 const typedi_1 = require("typedi");
 const typeorm_1 = require("typeorm");
+const response_data_1 = require("../response-data");
 let ProdutoAdicionaisService = class ProdutoAdicionaisService {
     constructor() {
         this.repository = typeorm_1.getRepository(produto_adicionais_model_1.ProdutoAdicionais);
+        this.response = new response_data_1.ResponseData();
     }
     create(props) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -30,38 +32,42 @@ let ProdutoAdicionaisService = class ProdutoAdicionaisService {
         });
     }
     readOne(id) {
-        let result = {};
-        try {
-            result = this.repository
-                .findOneById(id)
-                .then()
-                .catch(res => (result = res));
-        }
-        catch (_a) {
-            // console.log(Error);
-        }
-        return result;
+        return __awaiter(this, void 0, void 0, function* () {
+            let result = yield this.repository.findOneById(id);
+            if (result === undefined) {
+                this.response.mensagens.push("Produto Adicional não encontrado.");
+                this.response.status = false;
+                return this.response;
+            }
+            return result;
+        });
     }
     update(props) {
-        return this.repository.preload(props);
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.repository.preload(props);
+        });
     }
     drop(id) {
-        let result = {};
-        try {
-            result = this.readOne(id)
-                .then(res => (result = res))
-                .catch(res => (result = res));
-            result = this.repository.remove(result)
-                .then()
-                .catch(res => (result = res));
-        }
-        catch (_a) {
-            // console.log(Error);
-        }
-        return result;
+        return __awaiter(this, void 0, void 0, function* () {
+            let result = {};
+            try {
+                result = this.readOne(id)
+                    .then(res => (result = res))
+                    .catch(res => (result = res));
+                result = this.repository.remove(result)
+                    .then()
+                    .catch(res => (result = res));
+            }
+            catch (_a) {
+                // console.log(Error);
+            }
+            return result;
+        });
     }
     readAll() {
-        return this.repository.find();
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.repository.find();
+        });
     }
 };
 ProdutoAdicionaisService = __decorate([

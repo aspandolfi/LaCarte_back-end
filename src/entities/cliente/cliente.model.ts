@@ -10,9 +10,27 @@ import {
     IsNotEmpty,
     IsOptional
 } from "class-validator";
+import { Cardapio } from "../cardapio";
 
 @Entity()
-export class Cliente extends BaseEntity {
+export class Cliente extends BaseEntity<Cliente> {
+    public validate(obj: Cliente): string[] {
+        let errors: string[] = [];
+        if (obj.email === undefined || obj.email == null) {
+            errors.push("E-mail é obrigatório.");
+        }
+        if (obj.cnpj === undefined || obj.cnpj == null) {
+            errors.push("CNPJ é obrigatório.");
+        }
+        if (obj.senha === undefined || obj.senha == null) {
+            errors.push("Senha é obrigatório.");
+        }
+        if (obj.nome === undefined || obj.nome == null) {
+            errors.push("Nome é obrigatório.");
+        }
+        return errors;
+    }
+
     @Column({ unique: true })
     @IsNotEmpty({ message: "E-mail não pode ser vazio." })
     @IsEmail({ require_tld: true }, { message: "E-mail inválido." })

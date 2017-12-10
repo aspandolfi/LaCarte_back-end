@@ -10,7 +10,7 @@ import {
   BeforeUpdate
 } from "typeorm";
 
-export abstract class BaseEntity {
+export abstract class BaseEntity<TModel> {
   @PrimaryGeneratedColumn({ type: 'int' })
   public id: number;
 
@@ -37,5 +37,7 @@ export abstract class BaseEntity {
     this.updatedAt = new Date();
     this.version++;
   }
+
+  protected abstract validate(obj: TModel): string[];
 
 }

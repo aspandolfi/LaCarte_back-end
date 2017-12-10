@@ -15,7 +15,21 @@ import { IsNotEmpty, IsNumber, IsOptional, IsString, IsUrl } from 'class-validat
 import { Exclude, Type } from "class-transformer";
 
 @Entity()
-export class Produto extends BaseEntity {
+export class Produto extends BaseEntity<Produto> {
+  public validate(obj: Produto): string[] {
+    let errors: string[] = [];
+    if (obj.nome === undefined || obj.nome === null) {
+      errors.push("Nome é obrigatório.");
+    }
+    if (obj.valor === undefined || obj.valor === null) {
+      errors.push("Valor é obrigatório.");
+    }
+    if (obj.urlImagem === undefined || obj.urlImagem === null) {
+      errors.push("URL é obrigatório.");
+    }
+    return errors;
+  }
+
   @Column({
     length: 50
   })
