@@ -15,10 +15,27 @@ export class ProdutoAdicionaisService implements IServiceBase<ProdutoAdicionais>
     this.response = new ResponseData();
   }
 
-  async create(props: ProdutoAdicionais): Promise<ProdutoAdicionais> {
-    return this.repository.create(props);
+  async create(props: ProdutoAdicionais): Promise<ProdutoAdicionais | ResponseData> {
+    let errors = props.validate(props);
+    if (errors.length == 0) {
+      let adicional = await this.repository.create(props);
+      let result = await this.repository.save(adicional);
+
+      if (result === undefined) {
+        this.response.mensagens.push("Erro ao salvar adicional no banco de dados.");
+        return this.response;
+      }
+
+      this.response.objeto = result;
+      this.response.mensagens.push("OK");
+    }
+    else {
+      errors.forEach(val => this.response.mensagens.push(val));
+      this.response.status = false;
+    }
+    return this.response;
   }
-  
+
   async readOne(id: number): Promise<ProdutoAdicionais | ResponseData> {
     let result = await this.repository.findOneById(id);
 
@@ -30,27 +47,50 @@ export class ProdutoAdicionaisService implements IServiceBase<ProdutoAdicionais>
     return result;
   }
 
-  async update(props: ProdutoAdicionais): Promise<ProdutoAdicionais> {
-    return this.repository.preload(props);
-  }
+  async update(props: ProdutoAdicionais): Promise<ProdutoAdicionais | ResponseData> {
+    let errors = props.validate(props);
 
-  async drop(id: number): Promise<ProdutoAdicionais> {
-    let result: any = {};
-    try {
-      result = this.readOne(id)
-        .then(res => (result = res))
-        .catch(res => (result = res));
+    if (errors.length > 0) {
+      errors.forEach(val => this.response.mensagens.push(val));
+      this.response.status = false;
+      return this.response;
+    }
+    let result = await this.repository.save(props);
 
-      result = this.repository.remove(result)
-        .then()
-        .catch(res => (result = res));
-    } catch {
-      // console.log(Error);
+    if (result === undefined) {
+      this.response.mensagens.push("Falha ao atualizar adicional.");
+      this.response.status = false;
+      return this.response;
     }
     return result;
   }
 
-  async readAll(): Promise<ProdutoAdicionais[]> {
-    return this.repository.find();
+  async drop(id: number): Promise<ProdutoAdicionais | ResponseData> {
+    let tipo = await this.repository.findOneById(id);
+
+    if (tipo === undefined) {
+      this.response.mensagens.push("Falha ao excluir: Id não encontrado.");
+      this.response.status = false;
+      return this.response;
+    }
+
+    let result = await this.repository.remove(tipo);
+
+    if (result === undefined) {
+      this.response.mensagens.push("Falha ao excluir.");
+      this.response.status = false;
+      return this.response;
+    }
+    return result;
+  }
+
+  async readAll(): Promise<ProdutoAdicionais[] | ResponseData> {
+    let query = await this.repository.find();
+    if (query === undefined) {
+      this.response.mensagens.push("Falha ao buscar tipo do produto.");
+      this.response.status = false;
+      return this.response;
+    }
+    return query;
   }
 }

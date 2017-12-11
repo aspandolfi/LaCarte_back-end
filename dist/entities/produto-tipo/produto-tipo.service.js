@@ -21,17 +21,16 @@ const response_data_model_1 = require("./../response-data/response-data.model");
 const produto_tipo_model_1 = require("./produto-tipo.model");
 const typedi_1 = require("typedi");
 const typeorm_1 = require("typeorm");
-const class_validator_1 = require("class-validator");
 let TipoProdutoService = class TipoProdutoService {
     constructor() {
         this.repository = typeorm_1.getRepository(produto_tipo_model_1.TipoProduto);
     }
     create(props, ...params) {
         return __awaiter(this, void 0, void 0, function* () {
-            let errors = yield class_validator_1.validate(props);
+            let errors = props.validate(props);
             if (errors.length == 0) {
-                let restauramte = yield this.repository.create(props);
-                let result = yield this.repository.save(restauramte);
+                let tipoProduto = yield this.repository.create(props);
+                let result = yield this.repository.save(tipoProduto);
                 if (result === undefined) {
                     this.response.mensagens.push("Erro ao salvar tipo do produto no banco de dados.");
                     return this.response;
@@ -40,7 +39,7 @@ let TipoProdutoService = class TipoProdutoService {
                 this.response.mensagens.push("OK");
             }
             else {
-                errors.forEach(val => this.response.mensagens.push(val.value));
+                errors.forEach(val => this.response.mensagens.push(val));
                 this.response.status = false;
             }
             return this.response;
@@ -59,9 +58,9 @@ let TipoProdutoService = class TipoProdutoService {
     }
     update(props) {
         return __awaiter(this, void 0, void 0, function* () {
-            let errors = yield class_validator_1.validate(props);
+            let errors = props.validate(props);
             if (errors.length > 0) {
-                errors.forEach(val => this.response.mensagens.push(val.value));
+                errors.forEach(val => this.response.mensagens.push(val));
                 this.response.status = false;
                 return this.response;
             }

@@ -22,7 +22,6 @@ const cliente_1 = require("../cliente");
 const response_data_1 = require("../response-data");
 const typedi_1 = require("typedi");
 const typeorm_1 = require("typeorm");
-const class_validator_1 = require("class-validator");
 let RestauranteService = class RestauranteService {
     constructor() {
         this.restauranteRepository = typeorm_1.getRepository(restaurante_model_1.Restaurante);
@@ -31,7 +30,7 @@ let RestauranteService = class RestauranteService {
     create(props, ...params) {
         return __awaiter(this, void 0, void 0, function* () {
             let idCliente = params[0];
-            let errors = yield class_validator_1.validate(props);
+            let errors = props.validate(props);
             if (errors.length == 0) {
                 let dbCliente = yield this.clienteRepository.findOneById(idCliente);
                 if (dbCliente === undefined) {
@@ -50,7 +49,7 @@ let RestauranteService = class RestauranteService {
                 this.response.mensagens.push("OK");
             }
             else {
-                errors.forEach(val => this.response.mensagens.push(val.value));
+                errors.forEach(val => this.response.mensagens.push(val));
                 this.response.status = false;
             }
             return this.response;
@@ -69,9 +68,9 @@ let RestauranteService = class RestauranteService {
     }
     update(props) {
         return __awaiter(this, void 0, void 0, function* () {
-            let errors = yield class_validator_1.validate(props);
+            let errors = props.validate(props);
             if (errors.length > 0) {
-                errors.forEach(val => this.response.mensagens.push(val.value));
+                errors.forEach(val => this.response.mensagens.push(val));
                 this.response.status = false;
                 return this.response;
             }

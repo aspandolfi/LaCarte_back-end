@@ -17,10 +17,7 @@ export class ProdutoService implements IServiceBase<Produto> {
     this.tipoProdutoRepository = getRepository(TipoProduto);
   }
 
-  public async create(
-    props: Produto,
-    ...params: any[]
-  ): Promise<Produto | ResponseData> {
+  public async create(props: Produto, ...params: any[]): Promise<Produto | ResponseData> {
     let idTipoProduto = params[0];
     let errors = await validate(props);
 
@@ -28,7 +25,7 @@ export class ProdutoService implements IServiceBase<Produto> {
       let dbTipo = await this.tipoProdutoRepository.findOneById(idTipoProduto);
 
       if (dbTipo === undefined) {
-        this.response.mensagens.push("tipo não encontrado.");
+        this.response.mensagens.push("Tipo não encontrado.");
         this.response.status = false;
         return this.response;
       }
@@ -38,9 +35,7 @@ export class ProdutoService implements IServiceBase<Produto> {
       let result = await this.produtoRepository.save(restauramte);
 
       if (result === undefined) {
-        this.response.mensagens.push(
-          "Erro ao salvar produto no banco de dados."
-        );
+        this.response.mensagens.push("Erro ao salvar produto no banco de dados.");
         return this.response;
       }
 
@@ -57,19 +52,21 @@ export class ProdutoService implements IServiceBase<Produto> {
     let result = await this.produtoRepository.findOneById(id);
 
     if (result === undefined) {
-      this.response.mensagens.push("produto não encontrado");
+      this.response.mensagens.push("Produto não encontrado.");
       this.response.status = false;
       return this.response;
     }
     return result;
   }
 
-  public async readOneByTipo(
-    tipoProduto: number
-  ): Promise<Produto[] | ResponseData> {
-    let query = await this.produtoRepository.find({
-      where: { tipoProduto: tipoProduto }
-    });
+  public async readOneByTipo(tipoProduto: number): Promise<Produto[] | ResponseData> {
+    let query = await this.produtoRepository.find({ where: { tipoProduto: tipoProduto } });
+
+    if (query === undefined) {
+      this.response.mensagens.push("Produto não encontrado.");
+      this.response.status = false;
+      return this.response;
+    }
 
     return query;
   }

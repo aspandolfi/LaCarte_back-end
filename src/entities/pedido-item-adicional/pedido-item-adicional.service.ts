@@ -8,8 +8,7 @@ import { ResponseData } from "../response-data";
 import { validate } from "class-validator";
 
 @Service()
-export class ItemPedidoAdicionalService
-  implements IServiceBase<ItemPedidoAdicional> {
+export class ItemPedidoAdicionalService implements IServiceBase<ItemPedidoAdicional> {
   @Inject() private response: ResponseData;
   private itemPedidoAdicionalRepository: Repository<ItemPedidoAdicional>;
   private itemPedidoRepository: Repository<ItemPedido>;
@@ -21,13 +20,10 @@ export class ItemPedidoAdicionalService
     this.adicionalRepository = getRepository(Adicional);
   }
 
-  public async create(
-    props: ItemPedidoAdicional,
-    ...params: any[]
-  ): Promise<ItemPedidoAdicional | ResponseData> {
+  public async create(props: ItemPedidoAdicional, ...params: any[]): Promise<ItemPedidoAdicional | ResponseData> {
     let idItemPedido = params[0];
     let idAdicional = params[1];
-    let errors = await validate(props);
+    let errors = props.validate(props);
 
     if (errors.length == 0) {
       let dbItemPedido = await this.itemPedidoRepository.findOneById(
@@ -52,23 +48,20 @@ export class ItemPedidoAdicionalService
       let result = await this.itemPedidoAdicionalRepository.save(itemPedido);
 
       if (result === undefined) {
-        this.response.mensagens.push(
-          "Erro ao pedido item adicional no banco de dados."
-        );
+        this.response.mensagens.push("Erro ao pedido item adicional no banco de dados.");
         return this.response;
       }
 
       this.response.objeto = result;
       this.response.mensagens.push("OK");
     } else {
-      errors.forEach(val => this.response.mensagens.push(val.value));
+      errors.forEach(val => this.response.mensagens.push(val));
       this.response.status = false;
     }
     return this.response;
   }
-  public async readOne(
-    id: number
-  ): Promise<ItemPedidoAdicional | ResponseData> {
+
+  public async readOne(id: number): Promise<ItemPedidoAdicional | ResponseData> {
     let result = await this.itemPedidoAdicionalRepository.findOneById(id);
 
     if (result === undefined) {
@@ -78,13 +71,12 @@ export class ItemPedidoAdicionalService
     }
     return result;
   }
-  public async update(
-    props: ItemPedidoAdicional
-  ): Promise<ItemPedidoAdicional | ResponseData> {
-    let errors = await validate(props);
+
+  public async update(props: ItemPedidoAdicional): Promise<ItemPedidoAdicional | ResponseData> {
+    let errors = props.validate(props);
 
     if (errors.length > 0) {
-      errors.forEach(val => this.response.mensagens.push(val.value));
+      errors.forEach(val => this.response.mensagens.push(val));
       this.response.status = false;
       return this.response;
     }
@@ -116,6 +108,7 @@ export class ItemPedidoAdicionalService
     }
     return result;
   }
+  
   public async readAll(...params: any[]): Promise<ItemPedidoAdicional[] | ResponseData> {
     let query = await this.itemPedidoAdicionalRepository.find();
     if (query === undefined) {

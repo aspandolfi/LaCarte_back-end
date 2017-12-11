@@ -21,7 +21,6 @@ const pedido_item_model_1 = require("./pedido-item.model");
 const typedi_1 = require("typedi");
 const typeorm_1 = require("typeorm");
 const response_data_1 = require("../response-data");
-const class_validator_1 = require("class-validator");
 const index_1 = require("../index");
 let ItemPedidoService = class ItemPedidoService {
     constructor() {
@@ -33,7 +32,7 @@ let ItemPedidoService = class ItemPedidoService {
         return __awaiter(this, void 0, void 0, function* () {
             let idPedido = params[0];
             let idProduto = params[1];
-            let errors = yield class_validator_1.validate(props);
+            let errors = props.validate(props);
             if (errors.length == 0) {
                 let dbPedido = yield this.PedidoRepository.findOneById(idPedido);
                 let dbProduto = yield this.ProdutoRepository.findOneById(idProduto);
@@ -59,7 +58,7 @@ let ItemPedidoService = class ItemPedidoService {
                 this.response.mensagens.push("OK");
             }
             else {
-                errors.forEach(val => this.response.mensagens.push(val.value));
+                errors.forEach(val => this.response.mensagens.push(val));
                 this.response.status = false;
             }
             return this.response;
@@ -78,9 +77,9 @@ let ItemPedidoService = class ItemPedidoService {
     }
     update(props) {
         return __awaiter(this, void 0, void 0, function* () {
-            let errors = yield class_validator_1.validate(props);
+            let errors = props.validate(props);
             if (errors.length > 0) {
-                errors.forEach(val => this.response.mensagens.push(val.value));
+                errors.forEach(val => this.response.mensagens.push(val));
                 this.response.status = false;
                 return this.response;
             }

@@ -35,7 +35,7 @@ let ProdutoService = class ProdutoService {
             if (errors.length == 0) {
                 let dbTipo = yield this.tipoProdutoRepository.findOneById(idTipoProduto);
                 if (dbTipo === undefined) {
-                    this.response.mensagens.push("tipo não encontrado.");
+                    this.response.mensagens.push("Tipo não encontrado.");
                     this.response.status = false;
                     return this.response;
                 }
@@ -60,7 +60,7 @@ let ProdutoService = class ProdutoService {
         return __awaiter(this, void 0, void 0, function* () {
             let result = yield this.produtoRepository.findOneById(id);
             if (result === undefined) {
-                this.response.mensagens.push("produto não encontrado");
+                this.response.mensagens.push("Produto não encontrado.");
                 this.response.status = false;
                 return this.response;
             }
@@ -69,9 +69,12 @@ let ProdutoService = class ProdutoService {
     }
     readOneByTipo(tipoProduto) {
         return __awaiter(this, void 0, void 0, function* () {
-            let query = yield this.produtoRepository.find({
-                where: { tipoProduto: tipoProduto }
-            });
+            let query = yield this.produtoRepository.find({ where: { tipoProduto: tipoProduto } });
+            if (query === undefined) {
+                this.response.mensagens.push("Produto não encontrado.");
+                this.response.status = false;
+                return this.response;
+            }
             return query;
         });
     }

@@ -23,7 +23,6 @@ const pedido_item_adicional_model_1 = require("./pedido-item-adicional.model");
 const typedi_1 = require("typedi");
 const typeorm_1 = require("typeorm");
 const response_data_1 = require("../response-data");
-const class_validator_1 = require("class-validator");
 let ItemPedidoAdicionalService = class ItemPedidoAdicionalService {
     constructor() {
         this.itemPedidoAdicionalRepository = typeorm_1.getRepository(pedido_item_adicional_model_1.ItemPedidoAdicional);
@@ -34,7 +33,7 @@ let ItemPedidoAdicionalService = class ItemPedidoAdicionalService {
         return __awaiter(this, void 0, void 0, function* () {
             let idItemPedido = params[0];
             let idAdicional = params[1];
-            let errors = yield class_validator_1.validate(props);
+            let errors = props.validate(props);
             if (errors.length == 0) {
                 let dbItemPedido = yield this.itemPedidoRepository.findOneById(idItemPedido);
                 let dbAdicional = yield this.adicionalRepository.findOneById(idAdicional);
@@ -60,7 +59,7 @@ let ItemPedidoAdicionalService = class ItemPedidoAdicionalService {
                 this.response.mensagens.push("OK");
             }
             else {
-                errors.forEach(val => this.response.mensagens.push(val.value));
+                errors.forEach(val => this.response.mensagens.push(val));
                 this.response.status = false;
             }
             return this.response;
@@ -79,9 +78,9 @@ let ItemPedidoAdicionalService = class ItemPedidoAdicionalService {
     }
     update(props) {
         return __awaiter(this, void 0, void 0, function* () {
-            let errors = yield class_validator_1.validate(props);
+            let errors = props.validate(props);
             if (errors.length > 0) {
-                errors.forEach(val => this.response.mensagens.push(val.value));
+                errors.forEach(val => this.response.mensagens.push(val));
                 this.response.status = false;
                 return this.response;
             }

@@ -28,7 +28,22 @@ let ProdutoAdicionaisService = class ProdutoAdicionaisService {
     }
     create(props) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.repository.create(props);
+            let errors = props.validate(props);
+            if (errors.length == 0) {
+                let adicional = yield this.repository.create(props);
+                let result = yield this.repository.save(adicional);
+                if (result === undefined) {
+                    this.response.mensagens.push("Erro ao salvar adicional no banco de dados.");
+                    return this.response;
+                }
+                this.response.objeto = result;
+                this.response.mensagens.push("OK");
+            }
+            else {
+                errors.forEach(val => this.response.mensagens.push(val));
+                this.response.status = false;
+            }
+            return this.response;
         });
     }
     readOne(id) {
@@ -44,29 +59,47 @@ let ProdutoAdicionaisService = class ProdutoAdicionaisService {
     }
     update(props) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.repository.preload(props);
+            let errors = props.validate(props);
+            if (errors.length > 0) {
+                errors.forEach(val => this.response.mensagens.push(val));
+                this.response.status = false;
+                return this.response;
+            }
+            let result = yield this.repository.save(props);
+            if (result === undefined) {
+                this.response.mensagens.push("Falha ao atualizar adicional.");
+                this.response.status = false;
+                return this.response;
+            }
+            return result;
         });
     }
     drop(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            let result = {};
-            try {
-                result = this.readOne(id)
-                    .then(res => (result = res))
-                    .catch(res => (result = res));
-                result = this.repository.remove(result)
-                    .then()
-                    .catch(res => (result = res));
+            let tipo = yield this.repository.findOneById(id);
+            if (tipo === undefined) {
+                this.response.mensagens.push("Falha ao excluir: Id não encontrado.");
+                this.response.status = false;
+                return this.response;
             }
-            catch (_a) {
-                // console.log(Error);
+            let result = yield this.repository.remove(tipo);
+            if (result === undefined) {
+                this.response.mensagens.push("Falha ao excluir.");
+                this.response.status = false;
+                return this.response;
             }
             return result;
         });
     }
     readAll() {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.repository.find();
+            let query = yield this.repository.find();
+            if (query === undefined) {
+                this.response.mensagens.push("Falha ao buscar tipo do produto.");
+                this.response.status = false;
+                return this.response;
+            }
+            return query;
         });
     }
 };

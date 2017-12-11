@@ -14,15 +14,12 @@ export class TipoProdutoService implements IServiceBase<TipoProduto> {
     this.repository = getRepository(TipoProduto);
   }
 
-  public async create(
-    props: TipoProduto,
-    ...params: any[]
-  ): Promise<TipoProduto | ResponseData> {
-    let errors = await validate(props);
+  public async create(props: TipoProduto, ...params: any[]): Promise<TipoProduto | ResponseData> {
+    let errors = props.validate(props);
 
     if (errors.length == 0) {
-      let restauramte = await this.repository.create(props);
-      let result = await this.repository.save(restauramte);
+      let tipoProduto = await this.repository.create(props);
+      let result = await this.repository.save(tipoProduto);
 
       if (result === undefined) {
         this.response.mensagens.push("Erro ao salvar tipo do produto no banco de dados.");
@@ -32,7 +29,7 @@ export class TipoProdutoService implements IServiceBase<TipoProduto> {
       this.response.objeto = result;
       this.response.mensagens.push("OK");
     } else {
-      errors.forEach(val => this.response.mensagens.push(val.value));
+      errors.forEach(val => this.response.mensagens.push(val));
       this.response.status = false;
     }
     return this.response;
@@ -50,10 +47,10 @@ export class TipoProdutoService implements IServiceBase<TipoProduto> {
   }
 
   public async update(props: TipoProduto): Promise<TipoProduto | ResponseData> {
-    let errors = await validate(props);
+    let errors = props.validate(props);
 
     if (errors.length > 0) {
-      errors.forEach(val => this.response.mensagens.push(val.value));
+      errors.forEach(val => this.response.mensagens.push(val));
       this.response.status = false;
       return this.response;
     }

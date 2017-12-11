@@ -19,7 +19,7 @@ export class RestauranteService implements IServiceBase<Restaurante> {
 
   async create(props: Restaurante, ...params: any[]): Promise<ResponseData> {
     let idCliente = params[0];
-    let errors = await validate(props);
+    let errors = props.validate(props);
 
     if (errors.length == 0) {
       let dbCliente = await this.clienteRepository.findOneById(idCliente);
@@ -44,7 +44,7 @@ export class RestauranteService implements IServiceBase<Restaurante> {
       this.response.objeto = result;
       this.response.mensagens.push("OK");
     } else {
-      errors.forEach(val => this.response.mensagens.push(val.value));
+      errors.forEach(val => this.response.mensagens.push(val));
       this.response.status = false;
     }
     return this.response;
@@ -62,10 +62,10 @@ export class RestauranteService implements IServiceBase<Restaurante> {
   }
 
   async update(props: Restaurante): Promise<Restaurante | ResponseData> {
-    let errors = await validate(props);
+    let errors = props.validate(props);
 
     if (errors.length > 0) {
-      errors.forEach(val => this.response.mensagens.push(val.value));
+      errors.forEach(val => this.response.mensagens.push(val));
       this.response.status = false;
       return this.response;
     }
