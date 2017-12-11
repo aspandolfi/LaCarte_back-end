@@ -29,7 +29,7 @@ export class PedidoController {
   }
 
   @Get()
-  public httpGetAll(): Promise<Pedido[]> {
+  public httpGetAll(): Promise<Pedido[] | any> {
     return this.pedidoService.readAll();
   }
 

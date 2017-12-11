@@ -29,7 +29,7 @@ export class ProdutoAdicionaisController {
   }
 
   @Get()
-  public httpGetAll(): Promise<ProdutoAdicionais[]> {
+  public httpGetAll(): Promise<ProdutoAdicionais[] | any> {
     return this.produtoAdicionaisService.readAll();
   }
 
